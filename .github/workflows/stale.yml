@@ -1,0 +1,13 @@
+name: StaleBot
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: "0 0 * * *"
+jobs:
+  stalebot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mark stale PRs
+        uses: Particular/stale-action@main
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
