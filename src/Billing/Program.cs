@@ -1,4 +1,4 @@
-﻿namespace ClientUI;
+﻿namespace Billing;
 
 using Microsoft.Extensions.Hosting;
 using MassTransit;
@@ -36,8 +36,7 @@ class Program
                     x.AddConsumers(Assembly.GetExecutingAssembly());
                 });
 
-                services.AddSingleton<SimulatedCustomers>();
-                services.AddHostedService(p => p.GetRequiredService<SimulatedCustomers>());
+                services.AddSingleton<SimulationEffects>();
             });
 
         return host;
@@ -45,41 +44,41 @@ class Program
 
     static async Task Main(string[] args)
     {
-        Console.Title = "Load (ClientUI)";
+        Console.Title = "Failure rate (Billing)";
         Console.SetWindowSize(65, 15);
 
         var host = CreateHostBuilder(args).Build();
         await host.StartAsync();
 
-        var customers = host.Services.GetService<SimulatedCustomers>();
-        await RunUserInterfaceLoop(customers);
+        var state = host.Services.GetService<SimulationEffects>();
+        await RunUserInterfaceLoop(state);
     }
 
-    static Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
+    static Task RunUserInterfaceLoop(SimulationEffects state)
     {
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("Simulating customers placing orders on a website");
-            Console.WriteLine("Press T to toggle High/Low traffic mode");
+            Console.WriteLine("Billing Endpoint");
+            Console.WriteLine("Press F to increase the simulated failure rate");
+            Console.WriteLine("Press S to decrease the simulated failure rate");
             Console.WriteLine("Press ESC to quit");
             Console.WriteLine();
 
-            simulatedCustomers.WriteState(Console.Out);
+            state.WriteState(Console.Out);
 
             var input = Console.ReadKey(true);
 
             switch (input.Key)
             {
-                case ConsoleKey.T:
-                    simulatedCustomers.ToggleTrafficMode();
+                case ConsoleKey.F:
+                    state.IncreaseFailureRate();
                     break;
-
+                case ConsoleKey.S:
+                    state.DecreaseFailureRate();
+                    break;
                 case ConsoleKey.Escape:
                     return Task.CompletedTask;
-
-                default:
-                    break;
             }
         }
     }

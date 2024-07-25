@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 
 class SimulatedCustomers(IBus _bus) : BackgroundService
 {
-    Guid g = Guid.NewGuid();
     public void WriteState(TextWriter output)
     {
         var trafficMode = highTrafficMode ? "High" : "Low";
