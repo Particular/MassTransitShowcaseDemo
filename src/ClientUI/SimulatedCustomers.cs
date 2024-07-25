@@ -1,9 +1,12 @@
-﻿using Messages;
+﻿namespace ClientUI;
 
-namespace ClientUI;
+using MassTransit;
+using Messages;
+using Microsoft.Extensions.Hosting;
 
-class SimulatedCustomers(IEndpointInstance endpointInstance)
+class SimulatedCustomers(IBus _bus) : BackgroundService
 {
+    Guid g = Guid.NewGuid();
     public void WriteState(TextWriter output)
     {
         var trafficMode = highTrafficMode ? "High" : "Low";
@@ -16,7 +19,17 @@ class SimulatedCustomers(IEndpointInstance endpointInstance)
         rate = highTrafficMode ? 8 : 1;
     }
 
-    public async Task Run(CancellationToken cancellationToken = default)
+    Task PlaceSingleOrder(CancellationToken cancellationToken)
+    {
+        var placeOrderCommand = new PlaceOrder
+        {
+            OrderId = Guid.NewGuid().ToString()
+        };
+
+        return _bus.Publish(placeOrderCommand, cancellationToken);
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         nextReset = DateTime.UtcNow.AddSeconds(1);
         currentIntervalCount = 0;
@@ -49,16 +62,6 @@ class SimulatedCustomers(IEndpointInstance endpointInstance)
                 break;
             }
         }
-    }
-
-    Task PlaceSingleOrder(CancellationToken cancellationToken)
-    {
-        var placeOrderCommand = new PlaceOrder
-        {
-            OrderId = Guid.NewGuid().ToString()
-        };
-
-        return endpointInstance.Send(placeOrderCommand, cancellationToken);
     }
 
     bool highTrafficMode;

@@ -1,60 +1,87 @@
-﻿Console.Title = "Load (ClientUI)";
-Console.SetWindowSize(65, 15);
+﻿namespace ClientUI;
 
-var endpointConfiguration = new EndpointConfiguration("ClientUI");
-var transport = endpointConfiguration.UseTransport<LearningTransport>();
+using Microsoft.Extensions.Hosting;
+using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 
-endpointConfiguration.AuditProcessedMessagesTo("audit");
-endpointConfiguration.SendHeartbeatTo("Particular.ServiceControl");
-
-endpointConfiguration.UniquelyIdentifyRunningInstance()
-    .UsingCustomIdentifier(new Guid("EA3E7D1B-8171-4098-B160-1FEA975CCB2C"))
-    .UsingCustomDisplayName("original-instance");
-
-var metrics = endpointConfiguration.EnableMetrics();
-metrics.SendMetricDataToServiceControl(
-    "Particular.Monitoring",
-    TimeSpan.FromMilliseconds(500)
-);
-
-var routing = transport.Routing();
-routing.RouteToEndpoint(typeof(PlaceOrder), "Sales");
-
-var endpointInstance = await Endpoint.Start(endpointConfiguration);
-
-var simulatedCustomers = new SimulatedCustomers(endpointInstance);
-var cancellation = new CancellationTokenSource();
-var simulatedWork = simulatedCustomers.Run(cancellation.Token);
-
-RunUserInterfaceLoop(simulatedCustomers);
-
-cancellation.Cancel();
-
-await simulatedWork;
-
-await endpointInstance.Stop();
-
-void RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
+class Program
 {
-    while (true)
+    public static IHostBuilder CreateHostBuilder(string[] args)
     {
-        Console.Clear();
-        Console.WriteLine("Simulating customers placing orders on a website");
-        Console.WriteLine("Press T to toggle High/Low traffic mode");
-        Console.WriteLine("Press ESC to quit");
-        Console.WriteLine();
+        var host = Host.CreateDefaultBuilder(args)
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddMassTransit(x =>
+                {
+                    x.UsingRabbitMq((context, cfg) =>
+                    {
+                        cfg.Host("localhost", "/", h =>
+                        {
+                            h.Username("guest");
+                            h.Password("guest");
+                        });
 
-        simulatedCustomers.WriteState(Console.Out);
+                        cfg.ConfigureEndpoints(context);
+                    });
 
-        var input = Console.ReadKey(true);
+                    x.AddConfigureEndpointsCallback((name, cfg) =>
+                    {
+                        if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
+                        {
+                            rmq.SetQuorumQueue();
+                        }
+                    });
+                });
 
-        switch (input.Key)
+                services.AddSingleton<SimulatedCustomers>();
+                services.AddHostedService(p => p.GetRequiredService<SimulatedCustomers>());
+            });
+
+        return host;
+    }
+
+    static async Task Main(string[] args)
+    {
+        Console.Title = "Load (ClientUI)";
+        Console.SetWindowSize(65, 15);
+
+        var host = CreateHostBuilder(args).Build();
+
+        await host.StartAsync();
+
+        var customers = host.Services.GetService<SimulatedCustomers>();
+
+        await RunUserInterfaceLoop(customers);
+    }
+
+    static Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
+    {
+        while (true)
         {
-            case ConsoleKey.T:
-                simulatedCustomers.ToggleTrafficMode();
-                break;
-            case ConsoleKey.Escape:
-                return;
+            Console.Clear();
+            Console.WriteLine("Simulating customers placing orders on a website");
+            Console.WriteLine("Press T to toggle High/Low traffic mode");
+            Console.WriteLine("Press ESC to quit");
+            Console.WriteLine();
+
+            simulatedCustomers.WriteState(Console.Out);
+
+            var input = Console.ReadKey(true);
+
+            switch (input.Key)
+            {
+                case ConsoleKey.T:
+                    simulatedCustomers.ToggleTrafficMode();
+                    break;
+
+                case ConsoleKey.Escape:
+                    return Task.CompletedTask;
+
+                default:
+                    break;
+            }
         }
+
+        return Task.CompletedTask;
     }
 }
