@@ -1,4 +1,5 @@
-﻿namespace ClientUI;
+﻿#pragma warning disable IDE0010
+namespace ClientUI;
 
 using Microsoft.Extensions.Hosting;
 using MassTransit;
@@ -77,9 +78,6 @@ class Program
 
                 case ConsoleKey.Escape:
                     return Task.CompletedTask;
-
-                default:
-                    break;
             }
         }
     }

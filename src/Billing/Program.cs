@@ -1,4 +1,5 @@
-﻿namespace Billing;
+﻿#pragma warning disable IDE0010
+namespace Billing;
 
 using Microsoft.Extensions.Hosting;
 using MassTransit;

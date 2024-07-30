@@ -1,4 +1,5 @@
-﻿namespace Shipping;
+﻿#pragma warning disable IDE0010
+namespace Shipping;
 
 using Microsoft.Extensions.Hosting;
 using MassTransit;

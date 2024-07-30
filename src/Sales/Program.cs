@@ -1,4 +1,5 @@
-﻿namespace Sales;
+﻿#pragma warning disable IDE0010
+namespace Sales;
 
 using Microsoft.Extensions.Hosting;
 using MassTransit;
