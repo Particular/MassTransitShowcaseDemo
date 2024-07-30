@@ -10,10 +10,8 @@ using System.Reflection;
 
 class Program
 {
-    public static IHostBuilder CreateHostBuilder(string instanceName, string[] args)
+    public static IHostBuilder CreateHostBuilder(string[] args)
     {
-        var instanceId = DeterministicGuid.Create("Sales", instanceName);
-
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
@@ -50,31 +48,21 @@ class Program
     static async Task Main(string[] args)
     {
         Console.SetWindowSize(65, 15);
+        Console.Title = "Processing (Sales)";
 
-        var instanceName = args.FirstOrDefault();
-        if (string.IsNullOrEmpty(instanceName))
-        {
-            Console.Title = "Processing (Sales)";
-            instanceName = "original-instance";
-        }
-        else
-        {
-            Console.Title = $"Sales - {instanceName}";
-        }
-
-        var host = CreateHostBuilder(instanceName, args).Build();
+        var host = CreateHostBuilder(args).Build();
         await host.StartAsync();
 
-        var state = host.Services.GetService<SimulationEffects>();
-        await RunUserInterfaceLoop(state, instanceName);
+        var state = host.Services.GetRequiredService<SimulationEffects>();
+        await RunUserInterfaceLoop(state);
     }
 
-    static Task RunUserInterfaceLoop(SimulationEffects state, string instanceName)
+    static Task RunUserInterfaceLoop(SimulationEffects state)
     {
         while (true)
         {
             Console.Clear();
-            Console.WriteLine($"Sales Endpoint - {instanceName}");
+            Console.WriteLine($"Sales Endpoint");
             Console.WriteLine("Press F to process messages faster");
             Console.WriteLine("Press S to process messages slower");
 
@@ -97,18 +85,5 @@ class Program
                     return Task.CompletedTask;
             }
         }
-    }
-}
-
-static class DeterministicGuid
-{
-    public static Guid Create(params object[] data)
-    {
-        // use MD5 hash to get a 16-byte hash of the string
-        using var provider = MD5.Create();
-        var inputBytes = Encoding.Default.GetBytes(string.Concat(data));
-        var hashBytes = provider.ComputeHash(inputBytes);
-        // generate a guid from the hash:
-        return new Guid(hashBytes);
     }
 }

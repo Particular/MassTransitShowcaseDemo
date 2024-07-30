@@ -11,7 +11,7 @@ class Program
     public static IHostBuilder CreateHostBuilder(string[] args)
     {
         var host = Host.CreateDefaultBuilder(args)
-            .ConfigureServices((hostContext, services) =>
+            .ConfigureServices((_, services) =>
             {
                 services.AddMassTransit(x =>
                 {
@@ -52,7 +52,8 @@ class Program
         var host = CreateHostBuilder(args).Build();
         await host.StartAsync();
 
-        var customers = host.Services.GetService<SimulatedCustomers>();
+        var customers = host.Services.GetRequiredService<SimulatedCustomers>();
+
         await RunUserInterfaceLoop(customers);
     }
 
@@ -75,7 +76,6 @@ class Program
                 case ConsoleKey.T:
                     simulatedCustomers.ToggleTrafficMode();
                     break;
-
                 case ConsoleKey.Escape:
                     return Task.CompletedTask;
             }

@@ -15,7 +15,7 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
     public void ToggleTrafficMode()
     {
         highTrafficMode = !highTrafficMode;
-        rate = highTrafficMode ? 8 : 1;
+        rate = highTrafficMode ? HightTrafficRate : LowTrafficRate;
     }
 
     Task PlaceSingleOrder(CancellationToken cancellationToken)
@@ -67,5 +67,8 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
 
     DateTime nextReset;
     int currentIntervalCount;
-    int rate = 1;
+    int rate = LowTrafficRate;
+
+    const int HightTrafficRate = 8;
+    const int LowTrafficRate = 1;
 }

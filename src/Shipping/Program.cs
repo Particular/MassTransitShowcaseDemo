@@ -13,7 +13,7 @@ class Program
     public static IHostBuilder CreateHostBuilder(string[] args)
     {
         var host = Host.CreateDefaultBuilder(args)
-            .ConfigureServices((hostContext, services) =>
+            .ConfigureServices((_, services) =>
             {
                 services.AddMassTransit(x =>
                 {
@@ -54,7 +54,7 @@ class Program
         var host = CreateHostBuilder(args).Build();
         await host.StartAsync();
 
-        var state = host.Services.GetService<SimulationEffects>();
+        var state = host.Services.GetRequiredService<SimulationEffects>();
         await RunUserInterfaceLoop(state);
     }
 
