@@ -61,8 +61,8 @@ class Program
         {
             Console.Clear();
             Console.WriteLine("Billing Endpoint");
-            Console.WriteLine("Press F to increase the simulated failure rate");
-            Console.WriteLine("Press S to decrease the simulated failure rate");
+            Console.WriteLine("Press I to increase the simulated failure rate");
+            Console.WriteLine("Press D to decrease the simulated failure rate");
             Console.WriteLine("Press ESC to quit");
             Console.WriteLine();
 
@@ -72,10 +72,10 @@ class Program
 
             switch (input.Key)
             {
-                case ConsoleKey.F:
+                case ConsoleKey.I:
                     state.IncreaseFailureRate();
                     break;
-                case ConsoleKey.S:
+                case ConsoleKey.D:
                     state.DecreaseFailureRate();
                     break;
                 case ConsoleKey.Escape:

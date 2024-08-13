@@ -12,6 +12,11 @@ public class SimulationEffects
 
     public Task SimulateOrderBilledMessageProcessing(CancellationToken cancellationToken = default)
     {
+        if (Random.Shared.NextDouble() < failureRate)
+        {
+            throw new Exception("BOOM! A failure occurred");
+        }
+
         return Task.Delay(baseProcessingTime, cancellationToken);
     }
 
@@ -30,6 +35,11 @@ public class SimulationEffects
 
     public Task SimulateOrderPlacedMessageProcessing(CancellationToken cancellationToken = default)
     {
+        if (Random.Shared.NextDouble() < failureRate)
+        {
+            throw new Exception("BOOM! A failure occurred");
+        }
+
         var delay = TimeSpan.FromMilliseconds(200) + Degradation();
         return Task.Delay(delay, cancellationToken);
     }
@@ -50,9 +60,22 @@ public class SimulationEffects
         return new TimeSpan(timeSinceDegradationStarted.Ticks / degradationRate);
     }
 
+    public void IncreaseFailureRate()
+    {
+        failureRate = Math.Min(1, failureRate + failureRateIncrement);
+    }
+
+    public void DecreaseFailureRate()
+    {
+        failureRate = Math.Max(0, failureRate - failureRateIncrement);
+    }
+
     TimeSpan baseProcessingTime = TimeSpan.FromMilliseconds(700);
     TimeSpan increment = TimeSpan.FromMilliseconds(100);
 
     DateTime? degradingResourceSimulationStarted;
     const int degradationRate = 5;
+
+    double failureRate;
+    const double failureRateIncrement = 0.1;
 }

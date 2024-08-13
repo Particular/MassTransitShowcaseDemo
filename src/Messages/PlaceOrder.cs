@@ -2,5 +2,5 @@
 
 public class PlaceOrder
 {
-    public string? OrderId { get; set; }
+    public string OrderId { get; set; }
 }
