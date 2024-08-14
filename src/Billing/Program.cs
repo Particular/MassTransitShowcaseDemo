@@ -1,7 +1,5 @@
-﻿#pragma warning disable IDE0010
-namespace Billing;
+﻿namespace Billing;
 
-using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Hosting;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,0 +1,47 @@
+x-transport: &transport-env
+  env_file: "rabbit.env"
+   
+services:
+  service-control-db:
+    container_name: "servicecontrol-db"
+    image: "particular/servicecontrol-ravendb:latest"
+    ports:
+      - "8080:8080"
+    volumes:
+      - C:\servicecontrol\db:/opt/RavenDB/Server/RavenData
+  servicecontrol-setup:
+    depends_on:
+      - service-control-db
+    container_name: "servicecontrol-setup"
+    image: "particular/servicecontrol:latest"
+    command: "--setup"
+    ports:
+      - "33333:33333"
+    << : [*transport-env]
+  service-control:
+    depends_on:
+      service-control-db:
+        condition: service_started
+      servicecontrol-setup:
+        condition: service_completed_successfully
+    container_name: "servicecontrol"
+    image: "particular/servicecontrol:latest"
+    ports:
+      - "33333:33333"
+    << : [*transport-env]
+  masstransit-connector:
+    depends_on:
+      - service-control
+    container_name: "masstransit-connector"
+    image: "servicecontrol-connector-masstransit:latest"
+    pull_policy: if_not_present
+    << : [*transport-env]
+  service-pulse:
+    depends_on:
+      - service-control
+    container_name: "servicepulse"
+    image: "particular/servicepulse:latest"
+    ports:
+        - 9090:9090
+    environment:
+        - SERVICECONTROL_URL=http://servicecontrol:33333/api/
