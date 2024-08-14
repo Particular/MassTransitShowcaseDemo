@@ -60,6 +60,7 @@ class Program
 
     static async Task RunUserInterfaceLoop(SimulationEffects state, CancellationToken cancellationToken)
     {
+        await Task.Yield();
         while (true)
         {
             Console.Clear();
