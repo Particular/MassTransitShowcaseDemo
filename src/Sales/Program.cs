@@ -51,24 +51,27 @@ class Program
         Console.Title = "Processing (Sales)";
 
         var host = CreateHostBuilder(args).Build();
-        await host.StartAsync();
 
         var state = host.Services.GetRequiredService<SimulationEffects>();
-        await RunUserInterfaceLoop(state);
+        _ = RunUserInterfaceLoop(state, CancellationToken.None);
+
+        await host.RunAsync();
     }
 
-    static Task RunUserInterfaceLoop(SimulationEffects state)
+    static async Task RunUserInterfaceLoop(SimulationEffects state, CancellationToken cancellationToken)
     {
         while (true)
         {
             Console.Clear();
-            Console.WriteLine($"Sales Endpoint");
-            Console.WriteLine("Press Q to process messages faster");
-            Console.WriteLine("Press S to process messages slower");
-            Console.WriteLine("Press I to increase the simulated failure rate");
-            Console.WriteLine("Press D to decrease the simulated failure rate");
-            Console.WriteLine("Press ESC to quit");
-            Console.WriteLine();
+            await Console.Out.WriteAsync("""
+                Sales Endpoint
+                Press Q to process messages faster
+                Press S to process messages slower
+                Press I to increase the simulated failure rate
+                Press D to decrease the simulated failure rate
+                Press CTRL+C to quit
+
+                """);
 
             state.WriteState(Console.Out);
 
@@ -88,8 +91,6 @@ class Program
                 case ConsoleKey.S:
                     state.ProcessMessagesSlower();
                     break;
-                case ConsoleKey.Escape:
-                    return Task.CompletedTask;
             }
         }
     }

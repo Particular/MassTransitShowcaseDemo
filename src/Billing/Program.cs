@@ -1,6 +1,7 @@
 ﻿#pragma warning disable IDE0010
 namespace Billing;
 
+using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Hosting;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,22 +50,25 @@ class Program
         Console.SetWindowSize(65, 15);
 
         var host = CreateHostBuilder(args).Build();
-        await host.StartAsync();
 
         var state = host.Services.GetRequiredService<SimulationEffects>();
-        await RunUserInterfaceLoop(state);
+        _ = RunUserInterfaceLoop(state);
+
+        await host.RunAsync();
     }
 
-    static Task RunUserInterfaceLoop(SimulationEffects state)
+    static async Task RunUserInterfaceLoop(SimulationEffects state)
     {
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("Billing Endpoint");
-            Console.WriteLine("Press I to increase the simulated failure rate");
-            Console.WriteLine("Press D to decrease the simulated failure rate");
-            Console.WriteLine("Press ESC to quit");
-            Console.WriteLine();
+            await Console.Out.WriteLineAsync("""
+                Billing Endpoint
+                Press I to increase the simulated failure rate
+                Press D to decrease the simulated failure rate
+                Press CTRL+C to quit
+
+                """);
 
             state.WriteState(Console.Out);
 
@@ -78,8 +82,6 @@ class Program
                 case ConsoleKey.D:
                     state.DecreaseFailureRate();
                     break;
-                case ConsoleKey.Escape:
-                    return Task.CompletedTask;
             }
         }
     }

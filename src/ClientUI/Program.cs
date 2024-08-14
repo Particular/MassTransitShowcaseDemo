@@ -50,22 +50,24 @@ class Program
         Console.SetWindowSize(65, 15);
 
         var host = CreateHostBuilder(args).Build();
-        await host.StartAsync();
 
         var customers = host.Services.GetRequiredService<SimulatedCustomers>();
+        _ = RunUserInterfaceLoop(customers);
 
-        await RunUserInterfaceLoop(customers);
+        await host.RunAsync();
     }
 
-    static Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
+    static async Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
     {
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("Simulating customers placing orders on a website");
-            Console.WriteLine("Press T to toggle High/Low traffic mode");
-            Console.WriteLine("Press ESC to quit");
-            Console.WriteLine();
+            await Console.Out.WriteLineAsync("""
+                Simulating customers placing orders on a website
+                Press T to toggle High/Low traffic mode
+                Press CTRL+C to quit
+
+                """);
 
             simulatedCustomers.WriteState(Console.Out);
 
@@ -76,8 +78,6 @@ class Program
                 case ConsoleKey.T:
                     simulatedCustomers.ToggleTrafficMode();
                     break;
-                case ConsoleKey.Escape:
-                    return Task.CompletedTask;
             }
         }
     }
