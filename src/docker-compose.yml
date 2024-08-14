@@ -33,7 +33,7 @@ services:
     depends_on:
       - service-control
     container_name: "masstransit-connector"
-    image: "servicecontrol-connector-masstransit:latest"
+    image: "particular/servicecontrol-connector-masstransit:latest"
     pull_policy: if_not_present
     << : [*transport-env]
   service-pulse:
