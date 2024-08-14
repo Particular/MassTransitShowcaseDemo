@@ -8,11 +8,13 @@ public class ConsoleHelper
     {
         if (DateTime.UtcNow - sentTime >= TimeSpan.FromSeconds(10))
         {
-            await Console.Out.WriteAsync("\x1b[91;40m.\x1b[0m");
+            await Console.Out.WriteAsync("\x1b[91;■\x1b[0m")
+                .ConfigureAwait(false);
         }
         else
         {
-            await Console.Out.WriteAsync(".");
+            await Console.Out.WriteAsync("·")
+                .ConfigureAwait(false);
         }
     }
 }
