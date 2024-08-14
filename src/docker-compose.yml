@@ -1,3 +1,4 @@
+name: servicecontrol-masstransit-demo
 x-transport: &transport-env
   env_file: "rabbit.env"
    
