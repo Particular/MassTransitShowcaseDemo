@@ -7,9 +7,9 @@ services:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
     ports:
-      - "8080:8080"
+      - 8080:8080
     volumes:
-      - C:\servicecontrol\db:/opt/RavenDB/Server/RavenData
+      - sc-data:/opt/RavenDB/Server/RavenData
   servicecontrol-setup:
     depends_on:
       - service-control-db
@@ -17,7 +17,7 @@ services:
     image: "particular/servicecontrol:latest"
     command: "--setup"
     ports:
-      - "33333:33333"
+      - 33333:33333
     << : [*transport-env]
   service-control:
     depends_on:
@@ -28,7 +28,7 @@ services:
     container_name: "servicecontrol"
     image: "particular/servicecontrol:latest"
     ports:
-      - "33333:33333"
+      - 33333:33333
     << : [*transport-env]
   masstransit-connector:
     depends_on:
@@ -46,3 +46,6 @@ services:
         - 9090:9090
     environment:
         - SERVICECONTROL_URL=http://servicecontrol:33333/api/
+
+volumes:
+  sc-data:
