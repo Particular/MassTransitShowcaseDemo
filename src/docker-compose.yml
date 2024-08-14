@@ -4,6 +4,7 @@ x-transport: &transport-env
    
 services:
   rabbitmq:
+    container_name: "rabbitmq"
     image: rabbitmq:3-management
     restart: unless-stopped
     hostname: rabbitmq
@@ -27,6 +28,7 @@ services:
     volumes:
       - sc-data:/opt/RavenDB/Server/RavenData
   servicecontrol-setup:
+    restart: on-failure
     depends_on:
       service-control-db:
         condition: service_healthy
@@ -39,6 +41,7 @@ services:
       - 33333:33333
     << : [*transport-env]
   service-control:
+    restart: on-failure
     depends_on:
       rabbitmq:
         condition: service_started
@@ -52,6 +55,7 @@ services:
       - 33333:33333
     << : [*transport-env]
   masstransit-connector:
+    restart: on-failure
     depends_on:
       - service-control
       - rabbitmq
