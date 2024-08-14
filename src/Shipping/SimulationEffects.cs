@@ -8,6 +8,7 @@ public class SimulationEffects
 
         output.Write("Simulated degrading resource: ");
         output.WriteLine(degradingResourceSimulationStarted.HasValue ? "ON" : "OFF");
+        output.WriteLine("Failure rate: {0:P0}", failureRate);
     }
 
     public Task SimulateOrderBilledMessageProcessing(CancellationToken cancellationToken = default)

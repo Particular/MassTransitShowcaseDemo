@@ -3,8 +3,9 @@
 using Messages;
 using MassTransit;
 using System.Threading.Tasks;
+using Helper;
 
-public class PlaceOrderHandler(SimulationEffects simulationEffects) : IConsumer<PlaceOrder>
+public class PlaceOrderConsumer(SimulationEffects simulationEffects) : IConsumer<PlaceOrder>
 {
     public async Task Consume(ConsumeContext<PlaceOrder> context)
     {
@@ -17,5 +18,7 @@ public class PlaceOrderHandler(SimulationEffects simulationEffects) : IConsumer<
         };
 
         await context.Publish(orderPlaced);
+
+        await ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow);
     }
 }

@@ -1,10 +1,11 @@
 ﻿namespace Billing;
 
 using System.Threading.Tasks;
+using Helper;
 using MassTransit;
 using Messages;
 
-public class OrderPlacedHandler(SimulationEffects simulationEffects) : IConsumer<OrderPlaced>
+public class OrderPlacedConsumer(SimulationEffects simulationEffects) : IConsumer<OrderPlaced>
 {
     public async Task Consume(ConsumeContext<OrderPlaced> context)
     {
@@ -16,5 +17,7 @@ public class OrderPlacedHandler(SimulationEffects simulationEffects) : IConsumer
         };
 
         await context.Publish(orderBilled);
+
+        await ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow);
     }
 }

@@ -5,6 +5,7 @@ public class SimulationEffects
     public void WriteState(TextWriter output)
     {
         output.WriteLine("Base time to handle each order: {0} seconds", baseProcessingTime.TotalSeconds);
+        output.WriteLine("Failure rate: {0:P0}", failureRate);
     }
 
     public void IncreaseFailureRate()

@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sales", "Sales\Sales.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing", "Billing\Billing.csproj", "{709E5DF7-B76F-4FA6-BCB3-EF0C43C51FC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipping", "Shipping\Shipping.csproj", "{457FCA71-C1D9-43FF-838A-825A47E9E112}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping", "Shipping\Shipping.csproj", "{457FCA71-C1D9-43FF-838A-825A47E9E112}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{4D67822F-34B2-46D9-858B-3B63E457ABA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{457FCA71-C1D9-43FF-838A-825A47E9E112}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{457FCA71-C1D9-43FF-838A-825A47E9E112}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{457FCA71-C1D9-43FF-838A-825A47E9E112}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D67822F-34B2-46D9-858B-3B63E457ABA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D67822F-34B2-46D9-858B-3B63E457ABA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D67822F-34B2-46D9-858B-3B63E457ABA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D67822F-34B2-46D9-858B-3B63E457ABA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
