@@ -1,6 +1,7 @@
 ﻿namespace Billing;
 
 using System.Threading.Tasks;
+using Helper;
 using MassTransit;
 using Messages;
 
@@ -17,14 +18,6 @@ public class OrderPlacedConsumer(SimulationEffects simulationEffects) : IConsume
 
         await context.Publish(orderBilled);
 
-        if (DateTime.UtcNow - context.SentTime >= TimeSpan.FromSeconds(10))
-        {
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-        Console.Write(".");
+        ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow);
     }
 }
