@@ -52,9 +52,8 @@ class Program
         var host = CreateHostBuilder(args).Build();
 
         var state = host.Services.GetRequiredService<SimulationEffects>();
-        _ = RunUserInterfaceLoop(state);
 
-        await host.RunAsync();
+        await Task.WhenAny(host.RunAsync(), RunUserInterfaceLoop(state));
     }
 
     static async Task RunUserInterfaceLoop(SimulationEffects state)

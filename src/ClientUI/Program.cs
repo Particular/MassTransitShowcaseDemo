@@ -52,9 +52,8 @@ class Program
         var host = CreateHostBuilder(args).Build();
 
         var customers = host.Services.GetRequiredService<SimulatedCustomers>();
-        _ = RunUserInterfaceLoop(customers);
 
-        await host.RunAsync();
+        await Task.WhenAny(host.RunAsync(), RunUserInterfaceLoop(customers));
     }
 
     static async Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
