@@ -1,0 +1,25 @@
+﻿namespace Shipping;
+
+using System.Threading.Tasks;
+using MassTransit;
+using Messages;
+
+public class OrderPlacedConsumer(SimulationEffects simulationEffects) : IConsumer<OrderPlaced>
+{
+    public Task Consume(ConsumeContext<OrderPlaced> context)
+    {
+        var delay = simulationEffects.SimulateOrderPlacedMessageProcessing(context.CancellationToken);
+
+        if (DateTime.UtcNow - context.SentTime >= TimeSpan.FromSeconds(10))
+        {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        Console.Write(".");
+
+        return delay;
+    }
+}

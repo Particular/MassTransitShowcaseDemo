@@ -4,7 +4,7 @@ using Messages;
 using MassTransit;
 using System.Threading.Tasks;
 
-public class PlaceOrderHandler(SimulationEffects simulationEffects) : IConsumer<PlaceOrder>
+public class PlaceOrderConsumer(SimulationEffects simulationEffects) : IConsumer<PlaceOrder>
 {
     public async Task Consume(ConsumeContext<PlaceOrder> context)
     {
@@ -17,5 +17,15 @@ public class PlaceOrderHandler(SimulationEffects simulationEffects) : IConsumer<
         };
 
         await context.Publish(orderPlaced);
+
+        if (DateTime.UtcNow - context.SentTime >= TimeSpan.FromSeconds(10))
+        {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        Console.Write(".");
     }
 }
