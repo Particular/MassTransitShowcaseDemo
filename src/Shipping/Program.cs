@@ -50,25 +50,28 @@ class Program
         Console.Title = "Processing (Shipping)";
 
         var host = CreateHostBuilder(args).Build();
-        await host.StartAsync();
 
         var state = host.Services.GetRequiredService<SimulationEffects>();
-        await RunUserInterfaceLoop(state);
+        _ = RunUserInterfaceLoop(state);
+
+        await host.RunAsync();
     }
 
-    static Task RunUserInterfaceLoop(SimulationEffects state)
+    static async Task RunUserInterfaceLoop(SimulationEffects state)
     {
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("Shipping Endpoint");
-            Console.WriteLine("Press W to toggle resource degradation simulation");
-            Console.WriteLine("Press F to process OrderBilled events faster");
-            Console.WriteLine("Press S to process OrderBilled events slower");
-            Console.WriteLine("Press I to increase the simulated failure rate");
-            Console.WriteLine("Press D to decrease the simulated failure rate");
-            Console.WriteLine("Press ESC to quit");
-            Console.WriteLine();
+            await Console.Out.WriteAsync("""
+                Shipping Endpoint
+                Press W to toggle resource degradation simulation
+                Press F to process OrderBilled events faster
+                Press S to process OrderBilled events slower
+                Press I to increase the simulated failure rate
+                Press D to decrease the simulated failure rate
+                Press CTRL+C to quit
+
+                """);
 
             state.WriteState(Console.Out);
 
@@ -91,8 +94,6 @@ class Program
                 case ConsoleKey.S:
                     state.ProcessMessagesSlower();
                     break;
-                case ConsoleKey.Escape:
-                    return Task.CompletedTask;
             }
         }
     }
