@@ -7,12 +7,11 @@ using Messages;
 
 public class OrderBilledHandler(SimulationEffects simulationEffects) : IConsumer<OrderBilled>
 {
-    public Task Consume(ConsumeContext<OrderBilled> context)
+    public async Task Consume(ConsumeContext<OrderBilled> context)
     {
-        var delay = simulationEffects.SimulateOrderBilledMessageProcessing(context.CancellationToken);
-
-        ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow);
-
-        return delay;
+        await Task.WhenAll(
+            simulationEffects.SimulateOrderBilledMessageProcessing(context.CancellationToken),
+            ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow)
+            );
     }
 }

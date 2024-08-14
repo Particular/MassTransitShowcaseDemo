@@ -19,6 +19,6 @@ public class PlaceOrderConsumer(SimulationEffects simulationEffects) : IConsumer
 
         await context.Publish(orderPlaced);
 
-        ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow);
+        await ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow);
     }
 }

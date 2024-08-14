@@ -1,17 +1,18 @@
-﻿namespace Helper
+﻿namespace Helper;
+
+public class ConsoleHelper
 {
-    public class ConsoleHelper
+#pragma warning disable PS0018
+    public static async Task WriteMessageProcessed(DateTime sentTime)
+#pragma warning restore PS0018
     {
-        public static void WriteMessageProcessed(DateTime sentTime)
+        if (DateTime.UtcNow - sentTime >= TimeSpan.FromSeconds(10))
         {
-            if (DateTime.UtcNow - sentTime >= TimeSpan.FromSeconds(10))
-            {
-                Console.Write("\x1b[91;40m.\x1b[0m");
-            }
-            else
-            {
-                Console.Write(".");
-            }
+            await Console.Out.WriteAsync("\x1b[91;40m.\x1b[0m");
+        }
+        else
+        {
+            await Console.Out.WriteAsync(".");
         }
     }
 }

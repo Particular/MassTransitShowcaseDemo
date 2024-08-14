@@ -7,12 +7,11 @@ using Messages;
 
 public class OrderPlacedConsumer(SimulationEffects simulationEffects) : IConsumer<OrderPlaced>
 {
-    public Task Consume(ConsumeContext<OrderPlaced> context)
+    public async Task Consume(ConsumeContext<OrderPlaced> context)
     {
-        var delay = simulationEffects.SimulateOrderPlacedMessageProcessing(context.CancellationToken);
-
-        ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow);
-
-        return delay;
+        await Task.WhenAll(
+            ConsoleHelper.WriteMessageProcessed(context.SentTime ?? DateTime.UtcNow),
+            simulationEffects.SimulateOrderPlacedMessageProcessing(context.CancellationToken)
+        );
     }
 }
