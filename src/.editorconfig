@@ -26,7 +26,7 @@ insert_final_newline = false
 dotnet_diagnostic.CA1068.severity = error
 dotnet_diagnostic.CA1710.severity = error
 dotnet_diagnostic.CA1711.severity = error
-dotnet_diagnostic.CA2007.severity = error
+dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.CA2016.severity = error
 
 

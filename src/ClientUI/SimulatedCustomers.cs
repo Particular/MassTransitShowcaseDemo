@@ -28,7 +28,7 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
         return _bus.Publish(placeOrderCommand, cancellationToken);
     }
 
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
         nextReset = DateTime.UtcNow.AddSeconds(1);
         currentIntervalCount = 0;

@@ -63,9 +63,10 @@ class Program
         {
             Console.Clear();
             Console.WriteLine($"Sales Endpoint");
-            Console.WriteLine("Press F to process messages faster");
+            Console.WriteLine("Press Q to process messages faster");
             Console.WriteLine("Press S to process messages slower");
-
+            Console.WriteLine("Press I to increase the simulated failure rate");
+            Console.WriteLine("Press D to decrease the simulated failure rate");
             Console.WriteLine("Press ESC to quit");
             Console.WriteLine();
 
@@ -75,6 +76,12 @@ class Program
 
             switch (input.Key)
             {
+                case ConsoleKey.I:
+                    state.IncreaseFailureRate();
+                    break;
+                case ConsoleKey.D:
+                    state.DecreaseFailureRate();
+                    break;
                 case ConsoleKey.F:
                     state.ProcessMessagesFaster();
                     break;

@@ -7,8 +7,23 @@ public class SimulationEffects
         output.WriteLine("Base time to handle each order: {0} seconds", baseProcessingTime.TotalSeconds);
     }
 
+    public void IncreaseFailureRate()
+    {
+        failureRate = Math.Min(1, failureRate + failureRateIncrement);
+    }
+
+    public void DecreaseFailureRate()
+    {
+        failureRate = Math.Max(0, failureRate - failureRateIncrement);
+    }
+
     public Task SimulateMessageProcessing(CancellationToken cancellationToken = default)
     {
+        if (Random.Shared.NextDouble() < failureRate)
+        {
+            throw new Exception("BOOM! A failure occurred");
+        }
+
         return Task.Delay(baseProcessingTime, cancellationToken);
     }
 
@@ -27,4 +42,7 @@ public class SimulationEffects
 
     TimeSpan baseProcessingTime = TimeSpan.FromMilliseconds(1300);
     TimeSpan increment = TimeSpan.FromMilliseconds(100);
+
+    double failureRate;
+    const double failureRateIncrement = 0.1;
 }
