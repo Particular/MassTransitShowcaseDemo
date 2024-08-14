@@ -3,6 +3,16 @@ x-transport: &transport-env
   env_file: "rabbit.env"
    
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    hostname: rabbitmq
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-logs:/var/log/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
   service-control-db:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
@@ -20,6 +30,8 @@ services:
     depends_on:
       service-control-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
     container_name: "servicecontrol-setup"
     image: "particular/servicecontrol:latest"
     command: "--setup"
@@ -28,6 +40,8 @@ services:
     << : [*transport-env]
   service-control:
     depends_on:
+      rabbitmq:
+        condition: service_started
       service-control-db:
         condition: service_healthy
       servicecontrol-setup:
@@ -40,6 +54,7 @@ services:
   masstransit-connector:
     depends_on:
       - service-control
+      - rabbitmq
     container_name: "masstransit-connector"
     image: "particular/servicecontrol-connector-masstransit:latest"
     pull_policy: if_not_present
@@ -56,3 +71,5 @@ services:
 
 volumes:
   sc-data:
+  rabbitmq-data:
+  rabbitmq-logs:
