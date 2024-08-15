@@ -7,6 +7,12 @@ services:
     container_name: "rabbitmq"
     image: rabbitmq:3-management
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "node_health_check"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
     hostname: rabbitmq
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
@@ -33,7 +39,7 @@ services:
       service-control-db:
         condition: service_healthy
       rabbitmq:
-        condition: service_started
+        condition: service_healthy
     container_name: "servicecontrol-setup"
     image: "particular/servicecontrol:latest"
     command: "--setup"
@@ -44,7 +50,7 @@ services:
     restart: on-failure
     depends_on:
       rabbitmq:
-        condition: service_started
+        condition: service_healthy
       service-control-db:
         condition: service_healthy
       servicecontrol-setup:
@@ -65,7 +71,10 @@ services:
     << : [*transport-env]
   service-pulse:
     depends_on:
-      - service-control
+      rabbitmq:
+        condition: service_healthy
+      service-control:
+        condition: service_started
     container_name: "servicepulse"
     image: "particular/servicepulse:latest"
     ports:
