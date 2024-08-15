@@ -6,28 +6,22 @@ using Microsoft.Extensions.Hosting;
 
 class SimulatedCustomers(IBus _bus) : BackgroundService
 {
-    enum TrafficModes
-    {
-        Low = 0,
-        High = 1,
-        Paused = 2
-    }
-
     public void WriteState(TextWriter output)
     {
-        output.WriteLine($"{highTrafficMode} traffic mode - sending {rate} orders / second");
+        output.WriteLine($"Sending {rate} orders / second");
     }
 
-    public void ToggleTrafficMode()
+    public void IncreaseTraffic()
     {
-        highTrafficMode = (TrafficModes)(((int)highTrafficMode + 1) % 3);
-        rate = highTrafficMode switch
+        rate++;
+    }
+
+    public void DecreaseTraffic()
+    {
+        if (rate > 0)
         {
-            TrafficModes.High => HighTrafficRate,
-            TrafficModes.Low => LowTrafficRate,
-            TrafficModes.Paused => 0,
-            _ => rate
-        };
+            rate--;
+        }
     }
 
     Task PlaceSingleOrder(CancellationToken cancellationToken)
@@ -40,35 +34,15 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        nextReset = DateTime.UtcNow.AddSeconds(1);
-        currentIntervalCount = 0;
-
         while (!cancellationToken.IsCancellationRequested)
         {
-            var now = DateTime.UtcNow;
-            if (now > nextReset)
-            {
-                currentIntervalCount = 0;
-                nextReset = now.AddSeconds(1);
-            }
-
-            if (rate > 0)
-            {
-                await PlaceSingleOrder(cancellationToken);
-            }
-
-            currentIntervalCount++;
-
             try
             {
-                if (currentIntervalCount >= rate)
-                {
-                    var delay = nextReset - DateTime.UtcNow;
-                    if (delay > TimeSpan.Zero)
-                    {
-                        await Task.Delay(delay, cancellationToken);
-                    }
-                }
+                await Task.WhenAll(
+                    SendBatch(cancellationToken),
+                    Task.Delay(1000, cancellationToken)
+                );
+
             }
             catch (TaskCanceledException)
             {
@@ -77,12 +51,21 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
         }
     }
 
-    TrafficModes highTrafficMode;
+    async Task SendBatch(CancellationToken cancellationToken)
+    {
+        var x = rate;
+        if (rate > 0)
+        {
+            var tasks = new List<Task>(x);
 
-    DateTime nextReset;
-    int currentIntervalCount;
-    int rate = LowTrafficRate;
+            for (int i = 0; i < x; i++)
+            {
+                tasks.Add(PlaceSingleOrder(cancellationToken));
+            }
 
-    const int HighTrafficRate = 8;
-    const int LowTrafficRate = 1;
+            await Task.WhenAll(tasks);
+        }
+    }
+
+    int rate = 1;
 }
