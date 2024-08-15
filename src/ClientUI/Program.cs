@@ -1,5 +1,4 @@
-﻿#pragma warning disable IDE0010
-namespace ClientUI;
+﻿namespace ClientUI;
 
 using Microsoft.Extensions.Hosting;
 using MassTransit;
@@ -39,6 +38,7 @@ class Program
 
                 services.AddSingleton<SimulatedCustomers>();
                 services.AddHostedService(p => p.GetRequiredService<SimulatedCustomers>());
+                services.AddHostedService<ConsoleBackgroundService>();
             });
 
         return host;
@@ -50,39 +50,6 @@ class Program
         Console.SetWindowSize(65, 15);
 
         var host = CreateHostBuilder(args).Build();
-
-        var customers = host.Services.GetRequiredService<SimulatedCustomers>();
-
-        await Task.WhenAny(host.RunAsync(), RunUserInterfaceLoop(customers));
-    }
-
-    static async Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
-    {
-        while (true)
-        {
-            Console.Clear();
-            await Console.Out.WriteLineAsync("""
-                Simulating customers placing orders on a website
-                Press T to toggle High/Low traffic mode
-                Press CTRL+C to quit
-
-                """);
-
-            simulatedCustomers.WriteState(Console.Out);
-
-            while (!Console.KeyAvailable)
-            {
-                await Task.Delay(15);
-            }
-
-            var input = Console.ReadKey(true);
-
-            switch (input.Key)
-            {
-                case ConsoleKey.T:
-                    simulatedCustomers.ToggleTrafficMode();
-                    break;
-            }
-        }
+        await host.RunAsync();
     }
 }
