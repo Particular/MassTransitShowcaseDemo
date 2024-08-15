@@ -6,13 +6,20 @@ services:
   service-control-db:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "localhost:8080/setup/alive"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
     ports:
       - 8080:8080
     volumes:
       - sc-data:/opt/RavenDB/Server/RavenData
   servicecontrol-setup:
     depends_on:
-      - service-control-db
+      service-control-db:
+        condition: service_healthy
     container_name: "servicecontrol-setup"
     image: "particular/servicecontrol:latest"
     command: "--setup"
@@ -22,7 +29,7 @@ services:
   service-control:
     depends_on:
       service-control-db:
-        condition: service_started
+        condition: service_healthy
       servicecontrol-setup:
         condition: service_completed_successfully
     container_name: "servicecontrol"
