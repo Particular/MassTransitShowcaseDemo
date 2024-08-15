@@ -37,6 +37,7 @@ class Program
                 });
 
                 services.AddSingleton<SimulationEffects>();
+                services.AddHostedService<ConsoleBackgroundService>();
             });
 
         return host;
@@ -48,40 +49,6 @@ class Program
         Console.SetWindowSize(65, 15);
 
         var host = CreateHostBuilder(args).Build();
-
-        var state = host.Services.GetRequiredService<SimulationEffects>();
-        _ = RunUserInterfaceLoop(state);
-
         await host.RunAsync();
-    }
-
-    static async Task RunUserInterfaceLoop(SimulationEffects state)
-    {
-        await Task.Yield();
-        while (true)
-        {
-            Console.Clear();
-            await Console.Out.WriteLineAsync("""
-                Billing Endpoint
-                Press I to increase the simulated failure rate
-                Press D to decrease the simulated failure rate
-                Press CTRL+C to quit
-
-                """);
-
-            state.WriteState(Console.Out);
-
-            var input = Console.ReadKey(true);
-
-            switch (input.Key)
-            {
-                case ConsoleKey.I:
-                    state.IncreaseFailureRate();
-                    break;
-                case ConsoleKey.D:
-                    state.DecreaseFailureRate();
-                    break;
-            }
-        }
     }
 }
