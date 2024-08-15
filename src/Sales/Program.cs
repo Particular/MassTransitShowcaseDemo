@@ -50,7 +50,6 @@ class Program
 
     static async Task Main(string[] args)
     {
-        Console.SetWindowSize(65, 15);
         Console.Title = "Processing (Sales)";
 
         var host = CreateHostBuilder(args).Build();

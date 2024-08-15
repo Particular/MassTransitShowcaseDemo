@@ -51,7 +51,6 @@ class Program
     static async Task Main(string[] args)
     {
         Console.Title = "Load (ClientUI)";
-        Console.SetWindowSize(65, 15);
 
         var host = CreateHostBuilder(args).Build();
         await host.RunAsync();

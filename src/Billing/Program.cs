@@ -50,7 +50,6 @@ class Program
     static async Task Main(string[] args)
     {
         Console.Title = "Failure rate (Billing)";
-        Console.SetWindowSize(65, 15);
 
         var host = CreateHostBuilder(args).Build();
         await host.RunAsync();
