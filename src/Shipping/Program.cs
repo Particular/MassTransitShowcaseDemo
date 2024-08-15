@@ -59,6 +59,7 @@ class Program
 
     static async Task RunUserInterfaceLoop(SimulationEffects state)
     {
+        await Task.Yield();
         while (true)
         {
             Console.Clear();

@@ -59,6 +59,7 @@ class Program
 
     static async Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
     {
+        await Task.Yield();
         while (true)
         {
             Console.Clear();
