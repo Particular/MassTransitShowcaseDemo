@@ -5,7 +5,7 @@ using Helper;
 using MassTransit;
 using Messages;
 
-public class OrderBilledConsumer(SimulationEffects simulationEffects) : IConsumer<OrderBilled>
+public class ShipOrderConsumer(SimulationEffects simulationEffects) : IConsumer<OrderBilled>
 {
     public async Task Consume(ConsumeContext<OrderBilled> context)
     {

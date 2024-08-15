@@ -5,7 +5,7 @@ using MassTransit;
 using System.Threading.Tasks;
 using Helper;
 
-public class PlaceOrderConsumer(SimulationEffects simulationEffects) : IConsumer<PlaceOrder>
+public class ProcessOrderConsumer(SimulationEffects simulationEffects) : IConsumer<PlaceOrder>
 {
     public async Task Consume(ConsumeContext<PlaceOrder> context)
     {
