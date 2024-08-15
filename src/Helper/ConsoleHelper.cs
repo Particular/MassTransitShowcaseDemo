@@ -10,7 +10,7 @@ public class ConsoleHelper
         {
             if (DateTime.UtcNow - sentTime >= TimeSpan.FromSeconds(10))
             {
-                Console.Write("■");
+                Console.Write("\x1b[92m■\x1b[0m");
             }
             else
             {
