@@ -23,12 +23,6 @@ services:
   service-control-db:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "localhost:8080/setup/alive"]
-      interval: 5s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
     ports:
       - 8080:8080
     volumes:
@@ -49,8 +43,6 @@ services:
   service-control:
     restart: on-failure
     depends_on:
-      rabbitmq:
-        condition: service_healthy
       service-control-db:
         condition: service_healthy
       servicecontrol-setup:
