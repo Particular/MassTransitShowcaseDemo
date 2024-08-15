@@ -54,12 +54,11 @@ class Program
 
         var state = host.Services.GetRequiredService<SimulationEffects>();
 
-        await Task.WhenAny(host.RunAsync(), RunUserInterfaceLoop(state, CancellationToken.None));
+        await Task.WhenAny(host.RunAsync(), RunUserInterfaceLoop(state));
     }
 
-    static async Task RunUserInterfaceLoop(SimulationEffects state, CancellationToken cancellationToken)
+    static async Task RunUserInterfaceLoop(SimulationEffects state)
     {
-        await Task.Yield();
         while (true)
         {
             Console.Clear();
@@ -74,6 +73,11 @@ class Program
                 """);
 
             state.WriteState(Console.Out);
+
+            while (!Console.KeyAvailable)
+            {
+                await Task.Delay(15);
+            }
 
             var input = Console.ReadKey(true);
 

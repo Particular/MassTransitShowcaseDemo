@@ -58,7 +58,6 @@ class Program
 
     static async Task RunUserInterfaceLoop(SimulatedCustomers simulatedCustomers)
     {
-        await Task.Yield();
         while (true)
         {
             Console.Clear();
@@ -70,6 +69,11 @@ class Program
                 """);
 
             simulatedCustomers.WriteState(Console.Out);
+
+            while (!Console.KeyAvailable)
+            {
+                await Task.Delay(15);
+            }
 
             var input = Console.ReadKey(true);
 

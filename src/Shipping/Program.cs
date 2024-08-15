@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Threading;
 
 class Program
 {
@@ -58,7 +59,6 @@ class Program
 
     static async Task RunUserInterfaceLoop(SimulationEffects state)
     {
-        await Task.Yield();
         while (true)
         {
             Console.Clear();
@@ -74,6 +74,11 @@ class Program
                 """);
 
             state.WriteState(Console.Out);
+
+            while (!Console.KeyAvailable)
+            {
+                await Task.Delay(15);
+            }
 
             var input = Console.ReadKey(true);
 
