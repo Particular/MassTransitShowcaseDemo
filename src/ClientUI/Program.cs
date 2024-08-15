@@ -4,12 +4,16 @@ using Microsoft.Extensions.Hosting;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Text;
+using Microsoft.Extensions.Logging;
 
 class Program
 {
     public static IHostBuilder CreateHostBuilder(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
         var host = Host.CreateDefaultBuilder(args)
+            .ConfigureLogging(cfg => cfg.ClearProviders())
             .ConfigureServices((_, services) =>
             {
                 services.AddMassTransit(x =>

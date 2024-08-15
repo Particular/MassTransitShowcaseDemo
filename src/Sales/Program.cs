@@ -4,15 +4,17 @@ namespace Sales;
 using Microsoft.Extensions.Hosting;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 
 class Program
 {
     public static IHostBuilder CreateHostBuilder(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
         var host = Host.CreateDefaultBuilder(args)
+            .ConfigureLogging(cfg => cfg.ClearProviders())
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddMassTransit(x =>
