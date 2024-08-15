@@ -20,4 +20,9 @@ public class SimulationEffects
 
     double failureRate;
     const double FailureRateIncrement = 0.1;
+
+    public void Reset()
+    {
+        failureRate = 0;
+    }
 }

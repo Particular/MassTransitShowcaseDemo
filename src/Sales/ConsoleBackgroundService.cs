@@ -17,6 +17,7 @@
                 Press S to process messages slower
                 Press I to increase the simulated failure rate
                 Press D to decrease the simulated failure rate
+                Press R to reset simulation
                 Press CTRL+C to quit
 
                 """);
@@ -43,6 +44,9 @@
                         break;
                     case ConsoleKey.S:
                         state.ProcessMessagesSlower();
+                        break;
+                    case ConsoleKey.R:
+                        state.Reset();
                         break;
                 }
             }

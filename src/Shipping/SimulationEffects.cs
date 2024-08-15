@@ -72,11 +72,17 @@ public class SimulationEffects
     }
 
     TimeSpan baseProcessingTime = TimeSpan.FromMilliseconds(700);
-    TimeSpan increment = TimeSpan.FromMilliseconds(100);
+    readonly TimeSpan increment = TimeSpan.FromMilliseconds(100);
 
     DateTime? degradingResourceSimulationStarted;
     const int degradationRate = 5;
 
     double failureRate;
     const double failureRateIncrement = 0.1;
+
+    public void Reset()
+    {
+        failureRate = 0;
+        baseProcessingTime = TimeSpan.Zero;
+    }
 }

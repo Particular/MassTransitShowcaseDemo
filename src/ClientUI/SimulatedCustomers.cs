@@ -6,25 +6,35 @@ using Microsoft.Extensions.Hosting;
 
 class SimulatedCustomers(IBus _bus) : BackgroundService
 {
+    enum TrafficModes
+    {
+        Low = 0,
+        High = 1,
+        Paused = 2
+    }
+
     public void WriteState(TextWriter output)
     {
-        var trafficMode = highTrafficMode ? "High" : "Low";
-        output.WriteLine($"{trafficMode} traffic mode - sending {rate} orders / second");
+        output.WriteLine($"{highTrafficMode} traffic mode - sending {rate} orders / second");
     }
 
     public void ToggleTrafficMode()
     {
-        highTrafficMode = !highTrafficMode;
-        rate = highTrafficMode ? HightTrafficRate : LowTrafficRate;
+        highTrafficMode = (TrafficModes)(((int)highTrafficMode + 1) % 3);
+        rate = highTrafficMode switch
+        {
+            TrafficModes.High => HighTrafficRate,
+            TrafficModes.Low => LowTrafficRate,
+            TrafficModes.Paused => 0,
+            _ => rate
+        };
     }
 
     Task PlaceSingleOrder(CancellationToken cancellationToken)
     {
-        var placeOrderCommand = new PlaceOrder
-        {
-            OrderId = Guid.NewGuid().ToString()
-        };
+        var placeOrderCommand = new PlaceOrder { OrderId = Guid.NewGuid().ToString() };
 
+        Console.Write("!");
         return _bus.Publish(placeOrderCommand, cancellationToken);
     }
 
@@ -42,7 +52,11 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
                 nextReset = now.AddSeconds(1);
             }
 
-            await PlaceSingleOrder(cancellationToken);
+            if (rate > 0)
+            {
+                await PlaceSingleOrder(cancellationToken);
+            }
+
             currentIntervalCount++;
 
             try
@@ -63,12 +77,12 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
         }
     }
 
-    bool highTrafficMode;
+    TrafficModes highTrafficMode;
 
     DateTime nextReset;
     int currentIntervalCount;
     int rate = LowTrafficRate;
 
-    const int HightTrafficRate = 8;
+    const int HighTrafficRate = 8;
     const int LowTrafficRate = 1;
 }
