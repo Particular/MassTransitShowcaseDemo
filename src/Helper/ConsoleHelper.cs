@@ -3,16 +3,21 @@
 public class ConsoleHelper
 {
 #pragma warning disable PS0018
-    public static async Task WriteMessageProcessed(DateTime sentTime)
+    public static Task WriteMessageProcessed(DateTime sentTime)
 #pragma warning restore PS0018
     {
-        if (DateTime.UtcNow - sentTime >= TimeSpan.FromSeconds(10))
+        lock (Console.Out)
         {
-            await Console.Out.WriteAsync("\x1b[1;91m■\x1b[0m");
+            if (DateTime.UtcNow - sentTime >= TimeSpan.FromSeconds(10))
+            {
+                Console.Write("■");
+            }
+            else
+            {
+                Console.Write("·");
+            }
         }
-        else
-        {
-            await Console.Out.WriteAsync("·");
-        }
+
+        return Task.CompletedTask;
     }
 }
