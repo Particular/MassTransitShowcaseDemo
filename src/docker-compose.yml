@@ -5,7 +5,7 @@ x-transport: &transport-env
 services:
   rabbitmq:
     container_name: "rabbitmq"
-    image: rabbitmq:3-management
+    image: rabbitmq:management-alpine
     restart: unless-stopped
     healthcheck:
       test: rabbitmq-diagnostics -q ping
@@ -13,7 +13,6 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
-    hostname: rabbitmq
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-logs:/var/log/rabbitmq
@@ -23,12 +22,9 @@ services:
   service-control-db:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
-    ports:
-      - 8080:8080
     volumes:
       - sc-data:/opt/RavenDB/Server/RavenData
   servicecontrol-setup:
-    restart: on-failure
     depends_on:
       service-control-db:
         condition: service_healthy
@@ -37,11 +33,8 @@ services:
     container_name: "servicecontrol-setup"
     image: "particular/servicecontrol:latest"
     command: "--setup"
-    ports:
-      - 33333:33333
     << : [*transport-env]
   service-control:
-    restart: on-failure
     depends_on:
       service-control-db:
         condition: service_healthy
@@ -53,7 +46,6 @@ services:
       - 33333:33333
     << : [*transport-env]
   masstransit-connector:
-    restart: on-failure
     depends_on:
       - service-control
       - rabbitmq
@@ -63,10 +55,7 @@ services:
     << : [*transport-env]
   service-pulse:
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-      service-control:
-        condition: service_started
+      - service-control
     container_name: "servicepulse"
     image: "particular/servicepulse:latest"
     ports:
