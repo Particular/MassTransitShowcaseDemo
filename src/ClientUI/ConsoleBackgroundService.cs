@@ -12,11 +12,12 @@
             {
                 Console.Clear();
                 await Console.Out.WriteLineAsync("""
-                Simulating customers placing orders on a website
-                Press T to toggle High/Low traffic mode
-                Press CTRL+C to quit
+                    Simulating customers placing orders on a website
+                    Press I to increate order rate
+                    Press D to decrease order rate
+                    Press CTRL+C to quit
 
-                """);
+                    """);
 
                 simulatedCustomers.WriteState(Console.Out);
 
@@ -29,8 +30,11 @@
 
                 switch (input.Key)
                 {
-                    case ConsoleKey.T:
-                        simulatedCustomers.ToggleTrafficMode();
+                    case ConsoleKey.I:
+                        simulatedCustomers.IncreaseTraffic();
+                        break;
+                    case ConsoleKey.D:
+                        simulatedCustomers.DecreaseTraffic();
                         break;
                 }
             }
