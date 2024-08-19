@@ -8,7 +8,7 @@ services:
     image: rabbitmq:3-management
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "node_health_check"]
+      test: rabbitmq-diagnostics -q ping
       interval: 5s
       timeout: 30s
       retries: 5
