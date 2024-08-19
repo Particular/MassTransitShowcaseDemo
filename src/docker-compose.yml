@@ -3,28 +3,36 @@ x-transport: &transport-env
   env_file: "rabbit.env"
    
 services:
-  service-control-db:
-    container_name: "servicecontrol-db"
-    image: "particular/servicecontrol-ravendb:latest"
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: rabbitmq:management-alpine
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "localhost:8080/setup/alive"]
+      test: rabbitmq-diagnostics -q ping
       interval: 5s
       timeout: 30s
       retries: 5
       start_period: 30s
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-logs:/var/log/rabbitmq
     ports:
-      - 8080:8080
+      - 5672:5672
+      - 15672:15672
+  service-control-db:
+    container_name: "servicecontrol-db"
+    image: "particular/servicecontrol-ravendb:latest"
     volumes:
       - sc-data:/opt/RavenDB/Server/RavenData
   servicecontrol-setup:
     depends_on:
       service-control-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     container_name: "servicecontrol-setup"
     image: "particular/servicecontrol:latest"
     command: "--setup"
-    ports:
-      - 33333:33333
     << : [*transport-env]
   service-control:
     depends_on:
@@ -40,6 +48,7 @@ services:
   masstransit-connector:
     depends_on:
       - service-control
+      - rabbitmq
     container_name: "masstransit-connector"
     image: "particular/servicecontrol-connector-masstransit:latest"
     pull_policy: if_not_present
@@ -56,3 +65,5 @@ services:
 
 volumes:
   sc-data:
+  rabbitmq-data:
+  rabbitmq-logs:
