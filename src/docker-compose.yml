@@ -17,33 +17,19 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-logs:/var/log/rabbitmq
     ports:
-      - 5672:5672
       - 15672:15672
   service-control-db:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
     volumes:
       - sc-data:/opt/RavenDB/Server/RavenData
-  servicecontrol-setup:
-    depends_on:
-      service-control-db:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-    container_name: "servicecontrol-setup"
-    image: "particular/servicecontrol:latest"
-    command: "--setup"
-    << : [*transport-env]
   service-control:
     depends_on:
       service-control-db:
         condition: service_healthy
-      servicecontrol-setup:
-        condition: service_completed_successfully
     container_name: "servicecontrol"
     image: "particular/servicecontrol:latest"
-    ports:
-      - 33333:33333
+    command: "--setup-and-run"
     << : [*transport-env]
   masstransit-connector:
     depends_on:
