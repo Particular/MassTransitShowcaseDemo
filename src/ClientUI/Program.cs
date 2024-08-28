@@ -18,23 +18,15 @@ class Program
             {
                 services.AddMassTransit(x =>
                 {
-                    x.UsingRabbitMq((context, cfg) =>
+                    x.UsingAmazonSqs((ctx, cfg) =>
                     {
-                        cfg.Host("localhost", "/", h =>
+                        cfg.Host(Environment.GetEnvironmentVariable("AWS_REGION"), h =>
                         {
-                            h.Username("guest");
-                            h.Password("guest");
+                            h.AccessKey(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"));
+                            h.SecretKey(Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"));
                         });
 
-                        cfg.ConfigureEndpoints(context);
-                    });
-
-                    x.AddConfigureEndpointsCallback((name, cfg) =>
-                    {
-                        if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
-                        {
-                            rmq.SetQuorumQueue();
-                        }
+                        cfg.ConfigureEndpoints(ctx);
                     });
 
                     x.AddConsumers(Assembly.GetExecutingAssembly());
