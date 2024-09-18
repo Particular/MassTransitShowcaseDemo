@@ -30,6 +30,8 @@ services:
     container_name: "servicecontrol"
     image: "particular/servicecontrol:latest"
     command: "--setup-and-run"
+    ports:
+      - 33333:33333
     << : [*transport-env]
   masstransit-connector:
     depends_on:
