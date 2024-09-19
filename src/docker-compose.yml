@@ -29,6 +29,8 @@ services:
     depends_on:
       service-control-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     container_name: "servicecontrol"
     image: "particular/servicecontrol:latest"
     command: "--setup-and-run"
@@ -38,6 +40,8 @@ services:
   masstransit-connector:
     depends_on:
       rabbitmq:
+        condition: service_healthy
+      service-control:
         condition: service_healthy
     container_name: "masstransit-connector"
     image: "particular/servicecontrol-connector-masstransit:latest"
