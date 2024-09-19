@@ -1,6 +1,6 @@
 ﻿namespace Messages;
 
-public class OrderBilled
+public record OrderBilled
 {
-    public string OrderId { get; set; }
+    public string OrderId { get; init; }
 }

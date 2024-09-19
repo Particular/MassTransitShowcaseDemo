@@ -18,6 +18,16 @@ class Program
             {
                 services.AddMassTransit(x =>
                 {
+                    x.AddConsumers(Assembly.GetExecutingAssembly());
+
+                    x.AddConfigureEndpointsCallback((name, cfg) =>
+                    {
+                        if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
+                        {
+                            rmq.SetQuorumQueue();
+                        }
+                    });
+
                     x.UsingRabbitMq((context, cfg) =>
                     {
                         cfg.Host("localhost", "/", h =>
@@ -28,20 +38,10 @@ class Program
 
                         cfg.ConfigureEndpoints(context);
                     });
-
-                    x.AddConfigureEndpointsCallback((name, cfg) =>
-                    {
-                        if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
-                        {
-                            rmq.SetQuorumQueue();
-                        }
-                    });
-
-                    x.AddConsumers(Assembly.GetExecutingAssembly());
                 });
 
                 services.AddSingleton<SimulatedCustomers>();
-                services.AddHostedService(p => p.GetRequiredService<SimulatedCustomers>());
+                services.AddHostedService<SimulatedCustomers>();
                 services.AddHostedService<ConsoleBackgroundService>();
             });
 
