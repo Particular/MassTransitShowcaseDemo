@@ -2,34 +2,40 @@
 
 using MassTransit;
 using Messages;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-class SimulatedCustomers(IBus _bus) : BackgroundService
+class SimulatedCustomers(IServiceScopeFactory factory) : BackgroundService
 {
+    int _rate = 1;
+
     public void WriteState(TextWriter output)
     {
-        output.WriteLine($"Sending {rate} orders / second");
+        output.WriteLine($"Sending {_rate} orders / second");
     }
 
     public void IncreaseTraffic()
     {
-        rate++;
+        _rate++;
     }
 
     public void DecreaseTraffic()
     {
-        if (rate > 0)
+        if (_rate > 0)
         {
-            rate--;
+            _rate--;
         }
     }
 
-    Task PlaceSingleOrder(CancellationToken cancellationToken)
+    async Task PlaceSingleOrder(CancellationToken cancellationToken)
     {
+        await using var scope = factory.CreateAsyncScope();
+
         var placeOrderCommand = new PlaceOrder { OrderId = Guid.NewGuid().ToString() };
 
         Console.Write("!");
-        return _bus.Publish(placeOrderCommand, cancellationToken);
+
+        await scope.ServiceProvider.GetRequiredService<IPublishEndpoint>().Publish(placeOrderCommand, cancellationToken);
     }
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken = default)
@@ -42,7 +48,6 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
                     SendBatch(cancellationToken),
                     Task.Delay(1000, cancellationToken)
                 );
-
             }
             catch (TaskCanceledException)
             {
@@ -53,8 +58,8 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
 
     async Task SendBatch(CancellationToken cancellationToken)
     {
-        var x = rate;
-        if (rate > 0)
+        int x = _rate;
+        if (_rate > 0)
         {
             var tasks = new List<Task>(x);
 
@@ -66,6 +71,4 @@ class SimulatedCustomers(IBus _bus) : BackgroundService
             await Task.WhenAll(tasks);
         }
     }
-
-    int rate = 1;
 }

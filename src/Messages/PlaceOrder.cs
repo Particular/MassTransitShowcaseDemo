@@ -1,6 +1,6 @@
 ﻿namespace Messages;
 
-public class PlaceOrder
+public record PlaceOrder
 {
-    public string OrderId { get; set; }
+    public string OrderId { get; init; }
 }
