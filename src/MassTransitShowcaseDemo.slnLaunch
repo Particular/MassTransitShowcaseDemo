@@ -1,0 +1,27 @@
+[
+  {
+    "Name": "AmazonSQS",
+    "Projects": [
+      {
+        "Path": "ClientUI\\ClientUI.csproj",
+        "Action": "Start",
+        "DebugTarget": "AmazonSQS"
+      },
+      {
+        "Path": "Sales\\Sales.csproj",
+        "Action": "Start",
+        "DebugTarget": "AmazonSQS"
+      },
+      {
+        "Path": "Billing\\Billing.csproj",
+        "Action": "Start",
+        "DebugTarget": "AmazonSQS"
+      },
+      {
+        "Path": "Shipping\\Shipping.csproj",
+        "Action": "Start",
+        "DebugTarget": "AmazonSQS"
+      }
+    ]
+  }
+]

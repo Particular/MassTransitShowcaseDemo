@@ -20,24 +20,7 @@ class Program
                 {
                     x.AddConsumers(Assembly.GetExecutingAssembly());
 
-                    x.AddConfigureEndpointsCallback((name, cfg) =>
-                    {
-                        if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
-                        {
-                            rmq.SetQuorumQueue();
-                        }
-                    });
-
-                    x.UsingRabbitMq((context, cfg) =>
-                    {
-                        cfg.Host("localhost", "/", h =>
-                        {
-                            h.Username("guest");
-                            h.Password("guest");
-                        });
-
-                        cfg.ConfigureEndpoints(context);
-                    });
+                    x.SetupTransport(args);
                 });
 
                 services.AddSingleton<SimulatedCustomers>();

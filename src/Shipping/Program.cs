@@ -1,5 +1,4 @@
-﻿#pragma warning disable IDE0010
-namespace Shipping;
+﻿namespace Shipping;
 
 using Microsoft.Extensions.Hosting;
 using MassTransit;
@@ -21,24 +20,7 @@ class Program
                 {
                     x.AddConsumers(Assembly.GetExecutingAssembly());
 
-                    x.AddConfigureEndpointsCallback((name, cfg) =>
-                    {
-                        if (cfg is IRabbitMqReceiveEndpointConfigurator rmq)
-                        {
-                            rmq.SetQuorumQueue();
-                        }
-                    });
-
-                    x.UsingRabbitMq((context, cfg) =>
-                    {
-                        cfg.Host("localhost", "/", h =>
-                        {
-                            h.Username("guest");
-                            h.Password("guest");
-                        });
-
-                        cfg.ConfigureEndpoints(context);
-                    });
+                    x.SetupTransport(args);
                 });
 
                 services.AddSingleton<SimulationEffects>();
