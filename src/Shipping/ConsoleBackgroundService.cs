@@ -12,16 +12,14 @@
             {
                 Console.Clear();
                 await Console.Out.WriteAsync("""
-                Shipping Endpoint
-                Press W to toggle resource degradation simulation
-                Press F to process OrderBilled events faster
-                Press S to process OrderBilled events slower
-                Press I to increase the simulated failure rate
-                Press D to decrease the simulated failure rate
-                Press R to reset simulation
-                Press CTRL+C to quit
+                    Shipping Endpoint:
 
-                """);
+                    - Press I to increase the simulated failure rate
+                    - Press D to decrease the simulated failure rate
+                    - Press R to reset simulation
+                    - Press CTRL+C to quit
+
+                    """);
 
                 state.WriteState(Console.Out);
 

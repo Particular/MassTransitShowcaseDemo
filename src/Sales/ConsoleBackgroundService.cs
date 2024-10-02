@@ -12,15 +12,14 @@
             {
                 Console.Clear();
                 await Console.Out.WriteAsync("""
-                Sales Endpoint
-                Press Q to process messages faster
-                Press S to process messages slower
-                Press I to increase the simulated failure rate
-                Press D to decrease the simulated failure rate
-                Press R to reset simulation
-                Press CTRL+C to quit
+                    Sales Endpoint:
 
-                """);
+                    - Press I to increase the simulated failure rate
+                    - Press D to decrease the simulated failure rate
+                    - Press R to reset simulation
+                    - Press CTRL+C to quit
+
+                    """);
 
                 state.WriteState(Console.Out);
 

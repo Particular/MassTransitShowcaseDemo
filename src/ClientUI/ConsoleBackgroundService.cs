@@ -12,10 +12,11 @@
             {
                 Console.Clear();
                 await Console.Out.WriteLineAsync("""
-                    Simulating customers placing orders on a website
-                    Press I to increate order rate
-                    Press D to decrease order rate
-                    Press CTRL+C to quit
+                    Simulating customers placing orders on a website:
+
+                    - Press I to increate order rate
+                    - Press D to decrease order rate
+                    - Press CTRL+C to quit
 
                     """);
 
