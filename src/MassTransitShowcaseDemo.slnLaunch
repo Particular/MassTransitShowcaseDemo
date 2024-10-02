@@ -23,5 +23,55 @@
         "DebugTarget": "AmazonSQS"
       }
     ]
+  },
+  {
+    "Name": "Azure Service Bus",
+    "Projects": [
+      {
+        "Path": "ClientUI\\ClientUI.csproj",
+        "Action": "Start",
+        "DebugTarget": "Azure Service Bus"
+      },
+      {
+        "Path": "Sales\\Sales.csproj",
+        "Action": "Start",
+        "DebugTarget": "Azure Service Bus"
+      },
+      {
+        "Path": "Billing\\Billing.csproj",
+        "Action": "Start",
+        "DebugTarget": "Azure Service Bus"
+      },
+      {
+        "Path": "Shipping\\Shipping.csproj",
+        "Action": "Start",
+        "DebugTarget": "Azure Service Bus"
+      }
+    ]
+  },
+  {
+    "Name": "RabbitMQ",
+    "Projects": [
+      {
+        "Path": "ClientUI\\ClientUI.csproj",
+        "Action": "Start",
+        "DebugTarget": "RabbitMQ"
+      },
+      {
+        "Path": "Sales\\Sales.csproj",
+        "Action": "Start",
+        "DebugTarget": "RabbitMQ"
+      },
+      {
+        "Path": "Billing\\Billing.csproj",
+        "Action": "Start",
+        "DebugTarget": "RabbitMQ"
+      },
+      {
+        "Path": "Shipping\\Shipping.csproj",
+        "Action": "Start",
+        "DebugTarget": "RabbitMQ"
+      }
+    ]
   }
 ]
