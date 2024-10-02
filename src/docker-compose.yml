@@ -37,6 +37,7 @@ services:
       - rabbitmq
     container_name: "masstransit-connector"
     image: "particular/servicecontrol-connector-masstransit:latest"
+    command: "--setup-and-run"
     pull_policy: if_not_present
     << : [*transport-env]
   service-pulse:
