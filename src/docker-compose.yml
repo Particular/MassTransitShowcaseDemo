@@ -18,6 +18,7 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-logs:/var/log/rabbitmq
     ports:
+      - 5672:5672
       - 15672:15672
       - 5672:5672 
   service-control-db:
@@ -45,6 +46,7 @@ services:
         condition: service_healthy
     container_name: "masstransit-connector"
     image: "particular/servicecontrol-connector-masstransit:latest"
+    command: "--setup-and-run"
     pull_policy: if_not_present
     << : [*transport-env]
   service-pulse:
