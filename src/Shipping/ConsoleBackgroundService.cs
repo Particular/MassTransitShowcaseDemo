@@ -1,58 +1,55 @@
-﻿namespace Shipping
-{
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Hosting;
+﻿namespace Shipping;
 
-    class ConsoleBackgroundService(SimulationEffects state) : BackgroundService
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+
+class ConsoleBackgroundService(SimulationEffects state) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        while (true)
         {
-            while (true)
-            {
-                Console.Clear();
-                await Console.Out.WriteAsync("""
-                Shipping Endpoint
-                Press W to toggle resource degradation simulation
-                Press F to process OrderBilled events faster
-                Press S to process OrderBilled events slower
-                Press I to increase the simulated failure rate
-                Press D to decrease the simulated failure rate
-                Press R to reset simulation
-                Press CTRL+C to quit
+            Console.Clear();
+            await Console.Out.WriteAsync("""
+                Shipping Endpoint:
+
+                - Press I to increase the simulated failure rate
+                - Press D to decrease the simulated failure rate
+                - Press R to reset simulation
+                - Press CTRL+C to quit
 
                 """);
 
-                state.WriteState(Console.Out);
+            state.WriteState(Console.Out);
 
-                while (!Console.KeyAvailable)
-                {
-                    await Task.Delay(15, stoppingToken);
-                }
+            while (!Console.KeyAvailable)
+            {
+                await Task.Delay(15, stoppingToken);
+            }
 
-                var input = Console.ReadKey(true);
+            var input = Console.ReadKey(true);
 
-                switch (input.Key)
-                {
-                    case ConsoleKey.I:
-                        state.IncreaseFailureRate();
-                        break;
-                    case ConsoleKey.D:
-                        state.DecreaseFailureRate();
-                        break;
-                    case ConsoleKey.W:
-                        state.ToggleDegradationSimulation();
-                        break;
-                    case ConsoleKey.F:
-                        state.ProcessMessagesFaster();
-                        break;
-                    case ConsoleKey.S:
-                        state.ProcessMessagesSlower();
-                        break;
-                    case ConsoleKey.R:
-                        state.Reset();
-                        break;
-                }
+            switch (input.Key)
+            {
+                case ConsoleKey.I:
+                    state.IncreaseFailureRate();
+                    break;
+                case ConsoleKey.D:
+                    state.DecreaseFailureRate();
+                    break;
+                case ConsoleKey.W:
+                    state.ToggleDegradationSimulation();
+                    break;
+                case ConsoleKey.F:
+                    state.ProcessMessagesFaster();
+                    break;
+                case ConsoleKey.S:
+                    state.ProcessMessagesSlower();
+                    break;
+                case ConsoleKey.R:
+                    state.Reset();
+                    break;
             }
         }
     }

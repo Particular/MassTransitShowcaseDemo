@@ -1,42 +1,42 @@
-﻿namespace ClientUI
+﻿namespace ClientUI;
+
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
+
+class ConsoleBackgroundService(SimulatedCustomers simulatedCustomers) : BackgroundService
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Hosting;
-
-    class ConsoleBackgroundService(SimulatedCustomers simulatedCustomers) : BackgroundService
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        while (true)
         {
-            while (true)
+            Console.Clear();
+            await Console.Out.WriteLineAsync("""
+                Simulating customers placing orders on a website:
+
+                - Press I to increate order rate
+                - Press D to decrease order rate
+                - Press CTRL+C to quit
+
+                """);
+
+            simulatedCustomers.WriteState(Console.Out);
+
+            while (!Console.KeyAvailable)
             {
-                Console.Clear();
-                await Console.Out.WriteLineAsync("""
-                    Simulating customers placing orders on a website
-                    Press I to increate order rate
-                    Press D to decrease order rate
-                    Press CTRL+C to quit
+                await Task.Delay(15, stoppingToken);
+            }
 
-                    """);
+            var input = Console.ReadKey(true);
 
-                simulatedCustomers.WriteState(Console.Out);
-
-                while (!Console.KeyAvailable)
-                {
-                    await Task.Delay(15, stoppingToken);
-                }
-
-                var input = Console.ReadKey(true);
-
-                switch (input.Key)
-                {
-                    case ConsoleKey.I:
-                        simulatedCustomers.IncreaseTraffic();
-                        break;
-                    case ConsoleKey.D:
-                        simulatedCustomers.DecreaseTraffic();
-                        break;
-                }
+            switch (input.Key)
+            {
+                case ConsoleKey.I:
+                    simulatedCustomers.IncreaseTraffic();
+                    break;
+                case ConsoleKey.D:
+                    simulatedCustomers.DecreaseTraffic();
+                    break;
             }
         }
     }
