@@ -8,7 +8,8 @@ services:
     image: rabbitmq:management-alpine
     restart: unless-stopped
     healthcheck:
-      test: rabbitmq-diagnostics -q ping
+      test: netstat | grep ":15672"
+      #test: rabbitmq-plugins list | grep "rabbitmq_management " | grep "[E*]"
       interval: 5s
       timeout: 30s
       retries: 5
@@ -18,6 +19,7 @@ services:
       - rabbitmq-logs:/var/log/rabbitmq
     ports:
       - 15672:15672
+      - 5672:5672 
   service-control-db:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
@@ -27,14 +29,20 @@ services:
     depends_on:
       service-control-db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     container_name: "servicecontrol"
     image: "particular/servicecontrol:latest"
     command: "--setup-and-run"
+    ports:
+      - 33333:33333
     << : [*transport-env]
   masstransit-connector:
     depends_on:
-      - service-control
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      service-control:
+        condition: service_healthy
     container_name: "masstransit-connector"
     image: "particular/servicecontrol-connector-masstransit:latest"
     pull_policy: if_not_present
