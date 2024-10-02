@@ -5,4 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.2.5" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.5" />
+    <PackageReference Include="MassTransit.AmazonSQS" Version="8.2.5" />
+  </ItemGroup>
+
 </Project>
