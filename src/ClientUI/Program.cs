@@ -24,8 +24,10 @@ class Program
                 });
 
                 services.AddSingleton<SimulatedCustomers>();
-                services.AddHostedService<SimulatedCustomers>();
-                services.AddHostedService<ConsoleBackgroundService>();
+                services.AddSingleton<ConsoleBackgroundService>();
+
+                services.AddHostedService(b => b.GetRequiredService<SimulatedCustomers>());
+                services.AddHostedService(b => b.GetRequiredService<ConsoleBackgroundService>());
             });
 
         return host;
