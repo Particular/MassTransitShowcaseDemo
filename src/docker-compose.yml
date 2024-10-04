@@ -8,8 +8,8 @@ services:
     image: rabbitmq:management-alpine
     restart: unless-stopped
     healthcheck:
-      test: netstat | grep ":15672"
-      #test: rabbitmq-plugins list | grep "rabbitmq_management " | grep "[E*]"
+      #test: netstat | grep ":15672"
+      test: rabbitmq-plugins list | grep "rabbitmq_management " | grep "[E*]"
       interval: 5s
       timeout: 30s
       retries: 5
@@ -20,7 +20,6 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
-      - 5672:5672 
   service-control-db:
     container_name: "servicecontrol-db"
     image: "particular/servicecontrol-ravendb:latest"
