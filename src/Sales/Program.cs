@@ -21,6 +21,8 @@ class Program
                     x.AddConsumers(Assembly.GetExecutingAssembly());
 
                     x.SetupTransport(args);
+
+                    x.AddServiceControl();
                 });
 
                 services.AddSingleton<SimulationEffects>();
