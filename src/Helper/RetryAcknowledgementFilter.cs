@@ -18,7 +18,7 @@ class RetryAcknowledgementFilter : IFilter<ConsumeContext>
 
     static readonly Dummy markMessagesConsumed = new();
 
-    public async Task Send(ConsumeContext context, IPipe<ConsumeContext> next)
+    async Task IFilter<ConsumeContext>.Send(ConsumeContext context, IPipe<ConsumeContext> next)
     {
         var proxy = new RetryAcknowledgementProxy(context);
 
