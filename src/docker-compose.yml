@@ -41,8 +41,13 @@ services:
       - 33333:33333
     << : [*transport-env]
   masstransit-connector:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      service-control:
+        condition: service_healthy
     container_name: "masstransit-connector"
-    image: "localhost/particular/servicecontrol-connector-masstransit:latest"
+    image: "particular/servicecontrol-connector-masstransit:latest"
     command: "--setup-and-run"
     << : [*transport-env]
   service-pulse:
