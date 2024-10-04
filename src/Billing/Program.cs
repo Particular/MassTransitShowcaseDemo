@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using System;
 
 class Program
 {
@@ -13,7 +14,7 @@ class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
         var host = Host.CreateDefaultBuilder(args)
-            .ConfigureLogging(cfg => cfg.ClearProviders())
+            .ConfigureLogging(cfg => cfg.SetMinimumLevel(LogLevel.Warning))
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddMassTransit(x =>

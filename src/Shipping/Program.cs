@@ -13,7 +13,7 @@ class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
         var host = Host.CreateDefaultBuilder(args)
-            .ConfigureLogging(cfg => cfg.ClearProviders())
+            .ConfigureLogging(cfg => cfg.SetMinimumLevel(LogLevel.Warning))
             .ConfigureServices((_, services) =>
             {
                 services.AddMassTransit(x =>
