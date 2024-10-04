@@ -14,6 +14,9 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-logs:/var/log/rabbitmq
@@ -38,15 +41,9 @@ services:
       - 33333:33333
     << : [*transport-env]
   masstransit-connector:
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-      service-control:
-        condition: service_healthy
     container_name: "masstransit-connector"
-    image: "particular/servicecontrol-connector-masstransit:latest"
+    image: "localhost/particular/servicecontrol-connector-masstransit:latest"
     command: "--setup-and-run"
-    pull_policy: if_not_present
     << : [*transport-env]
   service-pulse:
     depends_on:
