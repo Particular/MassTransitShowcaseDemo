@@ -58,7 +58,9 @@ services:
     ports:
         - 9090:9090
     environment:
-        - SERVICECONTROL_URL=http://servicecontrol:33333/api/
+      - SERVICECONTROL_URL=http://servicecontrol:33333/api/
+      - SHOW_PENDING_RETRY=true
+      - ALLOW_MESSAGE_EDITING=true
 
 volumes:
   sc-data:
