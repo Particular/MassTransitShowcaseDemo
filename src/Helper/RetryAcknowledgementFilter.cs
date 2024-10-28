@@ -3,6 +3,7 @@
 using System;
 using System.Globalization;
 using MassTransit;
+
 record Dummy
 {
 }
@@ -48,7 +49,8 @@ class RetryAcknowledgementFilter : IFilter<ConsumeContext>
                 c =>
                 {
                     //NServiceBus non ISO1806 compliant format
-                    var timestamp = DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:ffffff Z", CultureInfo.InvariantCulture);
+                    var timestamp =
+                        DateTimeOffset.UtcNow.ToString("yyyy-MM-dd HH:mm:ss:ffffff Z", CultureInfo.InvariantCulture);
 
                     var h = c.Headers;
                     h.Set("ServiceControl.Retry.Successful", timestamp);
@@ -56,7 +58,7 @@ class RetryAcknowledgementFilter : IFilter<ConsumeContext>
                     h.Set(ControlMessageHeader, bool.TrueString);
                     return Task.CompletedTask;
                 }
-                ).ConfigureAwait(false);
+            ).ConfigureAwait(false);
         }
     }
 
@@ -64,21 +66,23 @@ class RetryAcknowledgementFilter : IFilter<ConsumeContext>
     {
     }
 
-    static bool IsRetriedMessage(ConsumeContext context, out string retryUniqueMessageId, out Uri retryAcknowledgementAddress)
+    static bool IsRetriedMessage(ConsumeContext context, out string retryUniqueMessageId,
+        out Uri retryAcknowledgementAddress)
     {
         var h = context.ReceiveContext.TransportHeaders;
 
         // check if the message is coming from a manual retry attempt
-        if (h.TryGetHeader(RetryUniqueMessageIdHeaderKey, out var uniqueMessageId) &&
-            // The SC version that supports the confirmation message also started to add the SC version header
-            h.TryGetHeader(RetryConfirmationQueueHeaderKey, out var acknowledgementQueue))
+        if (h.TryGetHeader(RetryUniqueMessageIdHeaderKey, out var uniqueMessageId)
+            && h.TryGetHeader(RetryConfirmationQueueHeaderKey, out var acknowledgementQueue)) // The SC version that supports the confirmation message also started to add the SC version header
         {
             retryUniqueMessageId = (string)uniqueMessageId;
             var retryAcknowledgementQueue = (string)acknowledgementQueue;
             if (!Uri.TryCreate(retryAcknowledgementQueue, addressUriCreationOptions, out retryAcknowledgementAddress))
             {
-                throw new InvalidOperationException($"Header '{RetryConfirmationQueueHeaderKey}' value contains a non addressable value");
+                throw new InvalidOperationException(
+                    $"Header '{RetryConfirmationQueueHeaderKey}' value contains a non addressable value");
             }
+
             return true;
         }
 
