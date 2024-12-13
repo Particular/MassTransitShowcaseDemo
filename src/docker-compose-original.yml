@@ -1,4 +1,12 @@
 name: particular-platform-masstransit-recoverability
+x-transport: &transport-env
+  environment:
+    RAVENDB_CONNECTIONSTRING: "http://servicecontrol-db:8080"
+    ALLOWMESSAGEEDITING: true
+    SHOW_PENDING_RETRY: true
+    TRANSPORTTYPE: "RabbitMQ.QuorumConventionalRouting"
+    CONNECTIONSTRING: "host=rabbitmq"
+    MANAGEMENTAPI: "http://guest:guest@rabbitmq:15672"
 
 services:
   rabbitmq:

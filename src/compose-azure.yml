@@ -1,0 +1,68 @@
+name: particular-platform-masstransit-recoverability
+x-transport: &transport-env
+  env_file: "asb.env"
+   
+services:
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: rabbitmq:management-alpine
+    restart: unless-stopped
+    healthcheck:
+      #test: netstat | grep ":15672"
+      test: rabbitmq-plugins list | grep "rabbitmq_management " | grep "[E*]"
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-logs:/var/log/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+  service-control-db:
+    container_name: "servicecontrol-db"
+    image: "particular/servicecontrol-ravendb:latest"
+    volumes:
+      - sc-data:/opt/RavenDB/Server/RavenData
+  service-control:
+    depends_on:
+      service-control-db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    container_name: "servicecontrol"
+    image: "particular/servicecontrol:latest"
+    command: "--setup-and-run"
+    ports:
+      - 33333:33333
+    << : [*transport-env]
+  masstransit-connector:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      service-control:
+        condition: service_healthy
+    container_name: "masstransit-connector"
+    image: "particular/servicecontrol-connector-masstransit:latest"
+    command: "--setup-and-run"
+    << : [*transport-env]
+  service-pulse:
+    depends_on:
+      - service-control
+    container_name: "servicepulse"
+    image: "particular/servicepulse:latest"
+    ports:
+        - 9090:9090
+    environment:
+      - SERVICECONTROL_URL=http://servicecontrol:33333/api/
+      - SHOW_PENDING_RETRY=true
+      - ALLOW_MESSAGE_EDITING=true
+
+volumes:
+  sc-data:
+  rabbitmq-data:
+  rabbitmq-logs:
