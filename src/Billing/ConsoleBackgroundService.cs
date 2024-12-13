@@ -13,7 +13,7 @@ class ConsoleBackgroundService(SimulationEffects state) : BackgroundService
             Console.Clear();
             await Console.Out.WriteLineAsync("""
                 Billing Endpoint:
-
+                 
                 - Press I to increase the simulated failure rate
                 - Press D to decrease the simulated failure rate
                 - Press R to reset simulation
