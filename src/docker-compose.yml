@@ -1,12 +1,4 @@
 name: particular-platform-masstransit-recoverability
-x-transport: &transport-env
-  environment:
-    RAVENDB_CONNECTIONSTRING: "http://servicecontrol-db:8080"
-    ALLOWMESSAGEEDITING: true
-    SHOW_PENDING_RETRY: true
-    TRANSPORTTYPE: "RabbitMQ.QuorumConventionalRouting"
-    CONNECTIONSTRING: "host=rabbitmq"
-    MANAGEMENTAPI: "http://guest:guest@rabbitmq:15672"
 
 services:
   rabbitmq:
@@ -28,6 +20,8 @@ services:
     ports:
       - 15672:15672
       - 56721:5672
+    env_file:
+      - ${ENV_FILENAME}
   service-control-db:
     profiles: [platform]
     container_name: servicecontrol-db
@@ -46,7 +40,8 @@ services:
     command: "--setup-and-run"
     ports:
       - 33333:33333
-    << : [*transport-env]
+    env_file:
+      - ${ENV_FILENAME}
   masstransit-connector:
     profiles: [platform]
     depends_on:
@@ -56,7 +51,8 @@ services:
     image: particular/servicecontrol-connector-masstransit:latest
     #image: servicecontrol-connector-masstransit:8.0
     command: "--setup-and-run"
-    << : [*transport-env]
+    env_file:
+      - ${ENV_FILENAME}
   service-pulse:
     profiles: [platform]
     depends_on:
