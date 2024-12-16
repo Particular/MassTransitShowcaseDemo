@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using MassTransit;
+﻿using MassTransit;
 
 public static class BusRegistrationConfiguratorExt
 {

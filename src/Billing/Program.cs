@@ -1,5 +1,4 @@
 ﻿namespace Billing;
-
 using Microsoft.Extensions.Hosting;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +19,6 @@ class Program
                 services.AddMassTransit(x =>
                 {
                     x.AddConsumers(Assembly.GetExecutingAssembly());
-
                     x.SetupTransport(args);
                 });
 

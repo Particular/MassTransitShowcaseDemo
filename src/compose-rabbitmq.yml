@@ -1,0 +1,42 @@
+name: particular-platform-masstransit-recoverability-rabbit
+
+services:
+  rabbitmq:
+    container_name: "rabbitmq"
+    image: rabbitmq:management-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+      - rabbitmq-logs:/var/log/rabbitmq
+    ports:
+      - 56721:5672
+      - 15672:15672
+    configs:
+      - source: plugins
+        target: /etc/rabbitmq/enabled_plugins
+
+  service-control:
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  masstransit-connector:
+    environment:
+      - MANAGEMENTAPI
+
+configs:
+  plugins:
+    content: "[rabbitmq_management, rabbitmq_shovel_management]."
+
+volumes:
+  rabbitmq-data:
+  rabbitmq-logs:

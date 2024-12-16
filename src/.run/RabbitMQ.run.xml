@@ -1,0 +1,9 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RabbitMQ" type="CompoundRunConfigurationType">
+    <toRun name="Billing: RabbitMQ" type="LaunchSettings" />
+    <toRun name="ClientUI: RabbitMQ" type="LaunchSettings" />
+    <toRun name="Sales: RabbitMQ" type="LaunchSettings" />
+    <toRun name="Shipping: RabbitMQ" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>

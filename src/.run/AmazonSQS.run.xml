@@ -1,0 +1,9 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AmazonSQS" type="CompoundRunConfigurationType">
+    <toRun name="Billing: AmazonSQS" type="LaunchSettings" />
+    <toRun name="ClientUI: AmazonSQS" type="LaunchSettings" />
+    <toRun name="Sales: AmazonSQS" type="LaunchSettings" />
+    <toRun name="Shipping: AmazonSQS" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>
