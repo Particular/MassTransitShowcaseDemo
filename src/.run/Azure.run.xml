@@ -1,0 +1,9 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Azure" type="CompoundRunConfigurationType">
+    <toRun name="Billing: Azure Service Bus" type="LaunchSettings" />
+    <toRun name="ClientUI: Azure Service Bus" type="LaunchSettings" />
+    <toRun name="Sales: Azure Service Bus" type="LaunchSettings" />
+    <toRun name="Shipping: Azure Service Bus" type="LaunchSettings" />
+    <method v="2" />
+  </configuration>
+</component>
