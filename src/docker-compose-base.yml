@@ -41,7 +41,6 @@ services:
         SERVICECONTROL_URL: http://localhost:33333/api/
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
-        MONITORING_URL: !
 
 volumes:
   sc-data:
