@@ -1,0 +1,47 @@
+services:
+  service-control-db:
+    container_name: servicecontrol-db
+    image: particular/servicecontrol-ravendb:6
+    volumes:
+      - sc-data:/var/lib/ravendb/data
+  service-control:
+    depends_on:
+      service-control-db:
+        condition: service_healthy
+    container_name: servicecontrol
+    image: particular/servicecontrol:6
+    command: "--setup-and-run"
+    ports:
+      - 33333:33333
+    environment:
+      - TRANSPORTTYPE
+      - CONNECTIONSTRING
+      - RAVENDB_CONNECTIONSTRING=http://servicecontrol-db:8080
+      - ALLOWMESSAGEEDITING=true
+      - SHOW_PENDING_RETRY=true
+  masstransit-connector:
+    depends_on:
+      service-control:
+        condition: service_healthy
+    container_name: masstransit-connector
+    image: particular/servicecontrol-connector-masstransit:latest
+    command: "--setup-and-run"
+    environment:
+      - TRANSPORTTYPE
+      - CONNECTIONSTRING
+  service-pulse:
+    depends_on:
+      service-control:
+        condition: service_healthy
+    container_name: servicepulse
+    image: particular/servicepulse:latest
+    ports:
+        - 9090:9090
+    environment:
+        SERVICECONTROL_URL: http://localhost:33333/api/
+        ENABLE_REVERSE_PROXY: false
+        SHOW_PENDING_RETRY: true
+        MONITORING_URL: !
+
+volumes:
+  sc-data:

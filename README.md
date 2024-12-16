@@ -2,14 +2,30 @@
 
 A MassTransit version of the [NServiceBus Monitoring Demo](https://github.com/Particular/MonitoringDemo/)
 
-## Launching the Particular Platform
+## Launching the Particular Platform for MassTransit
 
-The Particular Service Platform can be pulled down using [the showcase provided `docker-compose.yml`](/src/docker-compose.yml) which uses **RabbitMQ**
-
+To launch using **RabbitMQ**:
 ```cmd
 cd src
-docker compose up
+docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
 ```
+
+To launch using **Amazon SQS**:
+
+First you need to update the variables in `sqs.env` with all the account details and then
+```cmd
+cd src
+docker compose -f docker-compose-base.yml -f compose-sqs.yml --env-file sqs.env up -d
+```
+
+To launch using **Azure ServiceBus**:
+
+First you need to update the variables in `asb.env` with all the account details and then
+```cmd
+cd src
+docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
+```
+
 ## Prerequisites
 
 - Have "Enable Multi-Project Launch profiles" enabled
@@ -22,4 +38,4 @@ Allow Visual Studio 2024 "multi-launch" so you can easily select the profile you
 
 Each project has 3 launch profiles to select Azure Service Bus, AmazonSQS, or RabbitMQ as the transport and reads environment variables to initialize the transport.
 
-The demo requires running the Particular Service Platform for MassTransit as well as a RabbitMQ broker. The whole package can be pulled down using Docker compose and the dockerfile at [~/src/docker-compose.yml](/src/docker-compose.yml)
+The demo requires running the Particular Service Platform for MassTransit as described above.
