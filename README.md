@@ -23,3 +23,28 @@ Allow Visual Studio 2024 "multi-launch" so you can easily select the profile you
 Each project has 3 launch profiles to select Azure Service Bus, AmazonSQS, or RabbitMQ as the transport and reads environment variables to initialize the transport.
 
 The demo requires running the Particular Service Platform for MassTransit as well as a RabbitMQ broker. The whole package can be pulled down using Docker compose and the dockerfile at [~/src/docker-compose.yml](/src/docker-compose.yml)
+
+
+
+## Running  different transports
+
+### RabbitMQ
+
+```cmd
+cd src
+docker compose -f compose-rabbitmq.yml --profile platform up -d
+```
+
+### Azure Service Bus
+
+```cmd
+cd src
+docker compose -f compose-azure.yml --profile platform up -d
+```
+
+### Amazon SQS
+
+```cmd
+cd src
+docker compose -f compose-sqs.yml --profile platform up -d
+```
