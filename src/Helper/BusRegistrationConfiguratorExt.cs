@@ -36,7 +36,7 @@ public static class BusRegistrationConfiguratorExt
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host("localhost", "/", h =>
+                cfg.Host("localhost", 56721, "/", h =>
                 {
                     h.Username("guest");
                     h.Password("guest");
