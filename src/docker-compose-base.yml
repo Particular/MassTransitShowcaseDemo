@@ -24,7 +24,7 @@ services:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image: particular/servicecontrol-connector-masstransit:latest
+    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.2
     command: "--setup-and-run"
     environment:
       - TRANSPORTTYPE
