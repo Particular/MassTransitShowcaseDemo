@@ -71,3 +71,5 @@ After opening the solutions (from Visual Studio or Rider), choose one of the run
 - `RabbitMQ`
 - `AmazonSQS`
 - `Azure Service Bus`
+
+Run the solution to start the demo.
