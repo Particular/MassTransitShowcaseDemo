@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using dotenv.net;
+using MassTransit;
 
 public static class BusRegistrationConfiguratorExt
 {
@@ -10,10 +11,11 @@ public static class BusRegistrationConfiguratorExt
         {
             x.UsingAmazonSqs((ctx, cfg) =>
             {
-                cfg.Host(Environment.GetEnvironmentVariable("AWS_REGION"), h =>
+                var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../sqs.env")]));
+                cfg.Host(envs["AWS_REGION"], h =>
                 {
-                    h.AccessKey(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID"));
-                    h.SecretKey(Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY"));
+                    h.AccessKey(envs["AWS_ACCESS_KEY_ID"]);
+                    h.SecretKey(envs["AWS_SECRET_ACCESS_KEY"]);
                 });
 
                 cfg.ConfigureEndpoints(ctx);
@@ -22,10 +24,10 @@ public static class BusRegistrationConfiguratorExt
         }
         else if (args.Contains("--azureservicebus"))
         {
-
+            var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../asb.env")], ignoreExceptions: false));
             x.UsingAzureServiceBus((context, cfg) =>
             {
-                cfg.Host(Environment.GetEnvironmentVariable("CONNECTIONSTRING_AZURESERVICEBUS"));
+                cfg.Host(envs["CONNECTIONSTRING"]);
 
                 cfg.ConfigureEndpoints(context);
             });
@@ -64,8 +66,9 @@ public static class BusRegistrationConfiguratorExt
 
             if (cfg is IServiceBusReceiveEndpointConfigurator sb)
             {
-                sb.ConfigureDeadLetterQueueDeadLetterTransport();
-                sb.ConfigureDeadLetterQueueErrorTransport();
+                // Uncomment this code to use deadletter
+                //sb.ConfigureDeadLetterQueueDeadLetterTransport();
+                //sb.ConfigureDeadLetterQueueErrorTransport();
             }
         });
     }
