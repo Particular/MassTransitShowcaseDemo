@@ -31,7 +31,9 @@ services:
 
   masstransit-connector:
     environment:
-      - MANAGEMENTAPI
+      - RABBITMQ_MANAGEMENT_API_URL
+      - RABBITMQ_MANAGEMENT_API_USERNAME
+      - RABBITMQ_MANAGEMENT_API_PASSWORD
 
 configs:
   plugins:
