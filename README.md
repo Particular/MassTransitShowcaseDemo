@@ -59,3 +59,10 @@ After opening the solutions (from Visual Studio or Rider), choose one of the run
 - `Azure Service Bus`
 
 Run the solution to start the demo.
+
+## High-level solution overview
+
+The sample consists of 4 console applications hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
+
+
+![System Overview](diagram.svg "width=680")
