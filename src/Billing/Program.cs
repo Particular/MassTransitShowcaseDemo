@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 
 class Program
 {
@@ -14,16 +16,29 @@ class Program
         Console.OutputEncoding = Encoding.UTF8;
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureLogging(cfg => cfg.SetMinimumLevel(LogLevel.Warning))
-            .ConfigureServices((hostContext, services) =>
+            .ConfigureWebHostDefaults(webBuilder =>
             {
-                services.AddMassTransit(x =>
+                webBuilder.ConfigureServices(services =>
                 {
-                    x.AddConsumers(Assembly.GetExecutingAssembly());
-                    x.SetupTransport(args);
-                });
+                    services.AddMassTransit(x =>
+                    {
+                        x.AddConsumers(Assembly.GetExecutingAssembly());
+                        x.SetupTransport(args);
+                    });
 
-                services.AddSingleton<SimulationEffects>();
-                services.AddHostedService<ConsoleBackgroundService>();
+                    services.AddSignalR();
+                    services.AddSingleton<SimulationEffects>();
+                    services.AddHostedService<ConsoleBackgroundService>();
+                });
+                webBuilder.Configure(app =>
+                {
+                    app.UseRouting();
+                    app.UseEndpoints(endpoints =>
+                    {
+                        string url = $"/ServerHub";
+                        endpoints.MapHub<MyHub>(url);
+                    });
+                });
             });
 
         return host;
