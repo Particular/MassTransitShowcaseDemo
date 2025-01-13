@@ -60,6 +60,7 @@ After opening the solutions (from Visual Studio or Rider), choose one of the run
 
 Run the solution to start the demo.
 
+Navigate to http://localhost:9090/ to see the UI
 ## High-level solution overview
 
 The sample consists of 4 console applications hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
