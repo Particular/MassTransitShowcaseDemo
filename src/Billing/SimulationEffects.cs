@@ -1,10 +1,22 @@
 ﻿namespace Billing;
 
-public class SimulationEffects
-{
-    public void IncreaseFailureRate() => failureRate = Math.Min(1, failureRate + FailureRateIncrement);
+using Microsoft.AspNetCore.SignalR;
 
-    public void DecreaseFailureRate() => failureRate = Math.Max(0, failureRate - FailureRateIncrement);
+public class SimulationEffects(IHubContext<BillingHub> billingHub)
+{
+    public event EventHandler RateChanged;
+
+    public async Task IncreaseFailureRate()
+    {
+        failureRate = Math.Min(1, failureRate + FailureRateIncrement);
+        await NotifyOfRateChange();
+    }
+
+    public async Task DecreaseFailureRate()
+    {
+        failureRate = Math.Max(0, failureRate - FailureRateIncrement);
+        await NotifyOfRateChange();
+    }
 
     public void WriteState(TextWriter output) => output.WriteLine("Failure rate: {0:P0}", failureRate);
 
@@ -18,11 +30,18 @@ public class SimulationEffects
         }
     }
 
-    double failureRate;
-    const double FailureRateIncrement = 0.1;
-
-    public void Reset()
+    public async Task Reset()
     {
         failureRate = 0;
+        await NotifyOfRateChange();
     }
+
+    async Task NotifyOfRateChange()
+    {
+        await billingHub.Clients.All.SendAsync("RateChanged", (int)(failureRate * 100));
+        RateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    double failureRate;
+    const double FailureRateIncrement = 0.1;
 }

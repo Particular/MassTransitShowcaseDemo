@@ -26,17 +26,18 @@ class Program
                         x.SetupTransport(args);
                     });
 
-                    services.AddSignalR();
+                    services.AddCors();
+                    services.AddSignalR(options => { options.EnableDetailedErrors = true; });
                     services.AddSingleton<SimulationEffects>();
                     services.AddHostedService<ConsoleBackgroundService>();
                 });
                 webBuilder.Configure(app =>
                 {
+                    app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:61335").AllowCredentials());
                     app.UseRouting();
                     app.UseEndpoints(endpoints =>
                     {
-                        string url = $"/ServerHub";
-                        endpoints.MapHub<MyHub>(url);
+                        endpoints.MapHub<BillingHub>("/billingHub");
                     });
                 });
             });
