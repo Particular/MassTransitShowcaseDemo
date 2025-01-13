@@ -31,7 +31,7 @@ class Program
                     services.AddSingleton<SimulationEffects>();
                     services.AddHostedService<ConsoleBackgroundService>();
                 });
-                webBuilder.UseUrls("http://*:5001");
+                webBuilder.UseUrls("http://*:5002");
                 webBuilder.Configure(app =>
                 {
                     app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:61335").AllowCredentials());

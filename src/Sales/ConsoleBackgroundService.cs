@@ -8,20 +8,11 @@ class ConsoleBackgroundService(SimulationEffects state) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        state.RateChanged += async (s, e) => await WriteState();
+
         while (true)
         {
-            Console.Clear();
-            await Console.Out.WriteAsync("""
-                Sales Endpoint:
-
-                - Press I to increase the simulated failure rate
-                - Press D to decrease the simulated failure rate
-                - Press R to reset simulation
-                - Press CTRL+C to quit
-
-                """);
-
-            state.WriteState(Console.Out);
+            await WriteState();
 
             while (!Console.KeyAvailable)
             {
@@ -33,21 +24,37 @@ class ConsoleBackgroundService(SimulationEffects state) : BackgroundService
             switch (input.Key)
             {
                 case ConsoleKey.I:
-                    state.IncreaseFailureRate();
+                    await state.IncreaseFailureRate();
                     break;
                 case ConsoleKey.D:
-                    state.DecreaseFailureRate();
+                    await state.DecreaseFailureRate();
                     break;
                 case ConsoleKey.Q:
-                    state.ProcessMessagesFaster();
+                    await state.ProcessMessagesFaster();
                     break;
                 case ConsoleKey.S:
-                    state.ProcessMessagesSlower();
+                    await state.ProcessMessagesSlower();
                     break;
                 case ConsoleKey.R:
-                    state.Reset();
+                    await state.Reset();
                     break;
             }
         }
+    }
+
+    async Task WriteState()
+    {
+        Console.Clear();
+        await Console.Out.WriteAsync("""
+                Sales Endpoint:
+
+                - Press I to increase the simulated failure rate
+                - Press D to decrease the simulated failure rate
+                - Press R to reset simulation
+                - Press CTRL+C to quit
+
+                """);
+
+        state.WriteState(Console.Out);
     }
 }

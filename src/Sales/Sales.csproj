@@ -16,6 +16,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Helper\Helper.csproj" />
     <ProjectReference Include="..\Messages\Messages.csproj" />
   </ItemGroup>

@@ -1,55 +1,82 @@
 ﻿namespace Sales;
 
-public class SimulationEffects
+using Messages;
+using Microsoft.AspNetCore.SignalR;
+
+public class SimulationEffects(IHubContext<SalesHub> salesHub)
 {
+    public event EventHandler RateChanged;
+    public double FailureRate { get; private set; }
+    public TimeSpan BaseProcessingTime { get; private set; } = TimeSpan.FromMilliseconds(1300);
+
     public void WriteState(TextWriter output)
     {
-        output.WriteLine("Base time to handle each order: {0} seconds", baseProcessingTime.TotalSeconds);
-        output.WriteLine("Failure rate: {0:P0}", failureRate);
+        output.WriteLine("Base time to handle each order: {0} seconds", BaseProcessingTime.TotalSeconds);
+        output.WriteLine("Failure rate: {0:P0}", FailureRate);
     }
 
-    public void IncreaseFailureRate()
+    public async Task IncreaseFailureRate()
     {
-        failureRate = Math.Min(1, failureRate + failureRateIncrement);
+        FailureRate = Math.Min(1, FailureRate + failureRateIncrement);
+        await NotifyOfRateChange();
     }
 
-    public void DecreaseFailureRate()
+    public async Task DecreaseFailureRate()
     {
-        failureRate = Math.Max(0, failureRate - failureRateIncrement);
+        FailureRate = Math.Max(0, FailureRate - failureRateIncrement);
+        await NotifyOfRateChange();
     }
 
-    public Task SimulateMessageProcessing(CancellationToken cancellationToken = default)
+    public async Task SimulateMessageProcessing(CancellationToken cancellationToken = default)
     {
-        if (Random.Shared.NextDouble() < failureRate)
+        try
         {
-            throw new Exception("BOOM! A failure occurred");
+            if (Random.Shared.NextDouble() < FailureRate)
+            {
+                messagesErrored++;
+                throw new Exception("BOOM! A failure occurred");
+            }
+
+            messagesProcessed++;
+            await Task.Delay(BaseProcessingTime, cancellationToken);
         }
-
-        return Task.Delay(baseProcessingTime, cancellationToken);
-    }
-
-    public void ProcessMessagesFaster()
-    {
-        if (baseProcessingTime > TimeSpan.Zero)
+        finally
         {
-            baseProcessingTime -= increment;
+            await salesHub.Clients.All.SendAsync("MessagesProcessed", messagesProcessed, messagesErrored, cancellationToken);
         }
     }
 
-    public void ProcessMessagesSlower()
+    public async Task ProcessMessagesFaster()
     {
-        baseProcessingTime += increment;
+        if (BaseProcessingTime > TimeSpan.Zero)
+        {
+            BaseProcessingTime -= increment;
+            await NotifyOfRateChange();
+        }
     }
 
-    TimeSpan baseProcessingTime = TimeSpan.FromMilliseconds(1300);
+    public async Task ProcessMessagesSlower()
+    {
+        BaseProcessingTime += increment;
+        await NotifyOfRateChange();
+    }
+
+    public async Task Reset()
+    {
+        FailureRate = 0;
+        BaseProcessingTime = TimeSpan.Zero;
+        await NotifyOfRateChange();
+    }
+
+    async Task NotifyOfRateChange()
+    {
+        await salesHub.Clients.All.SendAsync("FailureRateChanged", Math.Round(FailureRate * 100, 0));
+        await salesHub.Clients.All.SendAsync("ProcessingTimeChanged", BaseProcessingTime.TotalSeconds);
+        RateChanged?.Invoke(this, EventArgs.Empty);
+    }
+
     TimeSpan increment = TimeSpan.FromMilliseconds(100);
-
-    double failureRate;
     const double failureRateIncrement = 0.1;
-
-    public void Reset()
-    {
-        failureRate = 0;
-        baseProcessingTime = TimeSpan.Zero;
-    }
+    int messagesProcessed = 0;
+    int messagesErrored = 0;
 }

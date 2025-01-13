@@ -30,25 +30,25 @@ async function decreaseTraffic() {
 </script>
 
 <template>
-  <div class="client">
+  <div class="withCount">
     <!-- TODO: make this into a RateChange control -->
-    <div class="percentChangeControl">
+    <div class="valueChangeControl">
       <label>Customer Order Rate:</label>
       <button type="button" @click="decreaseTraffic">-</button>
       <div>{{ rate }} orders / second</div>
       <button type="button" @click="increaseTraffic">+</button>
     </div>
-    <span>{{ orderCount }}</span>
+    <span>{{ orderCount }} orders sent</span>
   </div>
 </template>
 
 <style scoped>
-.client {
+.withCount {
   display: flex;
   gap: 0.5em;
 }
 
-.percentChangeControl {
+.valueChangeControl {
   display: flex;
   gap: 0.25em;
 }

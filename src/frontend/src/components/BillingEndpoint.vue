@@ -3,17 +3,18 @@ import { onMounted, ref } from "vue";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 
 var connection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5001/billingHub")
+  .withUrl("http://localhost:5002/billingHub")
   .build();
 
-const rate = ref(0);
+const failureRate = ref(0);
 
-connection.on("RateChanged", function (newValue) {
-  rate.value = newValue;
+connection.on("FailureRateChanged", function (newValue) {
+  failureRate.value = newValue;
 });
 
 onMounted(async () => {
   await connection.start();
+  await connection.invoke("ClientConnected");
 });
 
 async function changeBillingRateUp() {
@@ -27,16 +28,16 @@ async function changeBillingRateDown() {
 
 <template>
   <!-- TODO: make this into a RateChange control -->
-  <div class="percentChangeControl">
-    <label>Billing Endpoint Simulated Failure Rate:</label>
+  <div class="valueChangeControl">
+    <label>Billing Endpoint Failure Rate:</label>
     <button type="button" @click="changeBillingRateDown">-</button>
-    <div>{{ rate }}%</div>
+    <div>{{ failureRate }}%</div>
     <button type="button" @click="changeBillingRateUp">+</button>
   </div>
 </template>
 
 <style scoped>
-.percentChangeControl {
+.valueChangeControl {
   display: flex;
   gap: 0.25em;
 }
