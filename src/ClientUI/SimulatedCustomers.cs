@@ -2,28 +2,35 @@
 
 using MassTransit;
 using Messages;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-class SimulatedCustomers(IServiceScopeFactory factory) : BackgroundService
+public class SimulatedCustomers(IServiceScopeFactory factory, IHubContext<ClientHub> clientHub) : BackgroundService
 {
-    int _rate = 1;
+    long ordersPlaced = 0;
+
+    public int Rate { get; private set; } = 1;
+
+    public event EventHandler RateChanged;
 
     public void WriteState(TextWriter output)
     {
-        output.WriteLine($"Sending {_rate} orders / second");
+        output.WriteLine($"Sending {Rate} orders / second");
     }
 
-    public void IncreaseTraffic()
+    public async Task IncreaseTraffic()
     {
-        _rate++;
+        Rate++;
+        await NotifyOfRateChange();
     }
 
-    public void DecreaseTraffic()
+    public async Task DecreaseTraffic()
     {
-        if (_rate > 0)
+        if (Rate > 0)
         {
-            _rate--;
+            Rate--;
+            await NotifyOfRateChange();
         }
     }
 
@@ -36,6 +43,8 @@ class SimulatedCustomers(IServiceScopeFactory factory) : BackgroundService
         Console.Write("!");
 
         await scope.ServiceProvider.GetRequiredService<IPublishEndpoint>().Publish(placeOrderCommand, cancellationToken);
+        ordersPlaced++;
+        await clientHub.Clients.All.SendAsync("OrderPlaced", ordersPlaced, cancellationToken);
     }
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken = default)
@@ -58,8 +67,8 @@ class SimulatedCustomers(IServiceScopeFactory factory) : BackgroundService
 
     async Task SendBatch(CancellationToken cancellationToken)
     {
-        int x = _rate;
-        if (_rate > 0)
+        int x = Rate;
+        if (Rate > 0)
         {
             var tasks = new List<Task>(x);
 
@@ -70,5 +79,11 @@ class SimulatedCustomers(IServiceScopeFactory factory) : BackgroundService
 
             await Task.WhenAll(tasks);
         }
+    }
+
+    async Task NotifyOfRateChange()
+    {
+        await clientHub.Clients.All.SendAsync("RateChanged", Rate);
+        RateChanged?.Invoke(this, EventArgs.Empty);
     }
 }

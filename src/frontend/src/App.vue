@@ -1,42 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { HubConnectionBuilder } from "@microsoft/signalr";
-
-var connection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5000/billingHub")
-  .build();
-
-const rate = ref(0);
-
-connection.on("RateChanged", function (newValue) {
-  rate.value = newValue;
-});
-
-onMounted(async () => {
-  await connection.start();
-});
-
-async function changeBillingRateUp() {
-  await connection.invoke("IncreaseFailureRate");
-}
-
-async function changeBillingRateDown() {
-  await connection.invoke("DecreaseFailureRate");
-}
+import BillingEndpoint from "./components/BillingEndpoint.vue";
+import ClientEndpoint from "./components/ClientEndpoint.vue";
 </script>
 
 <template>
-  <div class="percentChangeControl">
-    <label>Billing Endpoint Simulated Failure Rate:</label>
-    <button type="button" @click="changeBillingRateDown">-</button>
-    <div>{{ rate }}%</div>
-    <button type="button" @click="changeBillingRateUp">+</button>
+  <div>
+    <h2>Simulating customers placing orders on a website</h2>
   </div>
+  <ClientEndpoint />
+  <BillingEndpoint />
 </template>
-
-<style scoped>
-.percentChangeControl {
-  display: flex;
-  gap: 0.25em;
-}
-</style>

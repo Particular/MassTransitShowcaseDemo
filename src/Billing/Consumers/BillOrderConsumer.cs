@@ -4,12 +4,22 @@ using System.Threading.Tasks;
 using Helper;
 using MassTransit;
 using Messages;
+using Microsoft.AspNetCore.SignalR;
 
-public class BillOrderConsumer(SimulationEffects simulationEffects) : IConsumer<OrderPlaced>
+public class BillOrderConsumer(SimulationEffects simulationEffects, IHubContext<BillingHub> billingHub) : IConsumer<OrderPlaced>
 {
     public async Task Consume(ConsumeContext<OrderPlaced> context)
     {
-        await simulationEffects.SimulatedMessageProcessing(context.CancellationToken);
+        try
+        {
+            await simulationEffects.SimulatedMessageProcessing(context.CancellationToken);
+        }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested) { throw; }
+        catch (Exception e)
+        {
+            await billingHub.Clients.All.SendAsync("Exception", e.Message);
+            throw;
+        }
 
         var orderBilled = new OrderBilled
         {

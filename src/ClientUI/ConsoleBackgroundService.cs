@@ -8,19 +8,11 @@ class ConsoleBackgroundService(SimulatedCustomers simulatedCustomers) : Backgrou
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        simulatedCustomers.RateChanged += async (s, e) => await WriteState();
+
         while (true)
         {
-            Console.Clear();
-            await Console.Out.WriteLineAsync("""
-                Simulating customers placing orders on a website:
-
-                - Press I to increate order rate
-                - Press D to decrease order rate
-                - Press CTRL+C to quit
-
-                """);
-
-            simulatedCustomers.WriteState(Console.Out);
+            await WriteState();
 
             while (!Console.KeyAvailable)
             {
@@ -32,12 +24,27 @@ class ConsoleBackgroundService(SimulatedCustomers simulatedCustomers) : Backgrou
             switch (input.Key)
             {
                 case ConsoleKey.I:
-                    simulatedCustomers.IncreaseTraffic();
+                    await simulatedCustomers.IncreaseTraffic();
                     break;
                 case ConsoleKey.D:
-                    simulatedCustomers.DecreaseTraffic();
+                    await simulatedCustomers.DecreaseTraffic();
                     break;
             }
         }
+    }
+
+    async Task WriteState()
+    {
+        Console.Clear();
+        await Console.Out.WriteLineAsync("""
+                Simulating customers placing orders on a website:
+
+                - Press I to increate order rate
+                - Press D to decrease order rate
+                - Press CTRL+C to quit
+
+                """);
+
+        simulatedCustomers.WriteState(Console.Out);
     }
 }
