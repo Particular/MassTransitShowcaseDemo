@@ -66,9 +66,12 @@ async function changeProcessingTimeDown() {
       <div>{{ processingTime }} seconds</div>
       <button type="button" @click="changeProcessingTimeDown">+</button>
     </div>
-    <span>
-      {{ processedCount }} messages processed / {{ erroredCount }} errored
-    </span>
+    <div class="counter-info">
+      <span
+        >{{ processedCount }} messages processed /
+        <span class="red"> {{ erroredCount }} errored</span></span
+      >
+    </div>
   </div>
 </template>
 

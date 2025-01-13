@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import { GA4 } from "../utils/analytics";
 
 var connection = new HubConnectionBuilder()
   .withUrl("http://localhost:5000/clientHub")
@@ -25,6 +26,7 @@ async function increaseTraffic() {
 }
 
 async function decreaseTraffic() {
+  GA4.showcaseMessageSent();
   await connection.invoke("DecreaseTraffic");
 }
 </script>
@@ -38,7 +40,9 @@ async function decreaseTraffic() {
       <div>{{ rate }} orders / second</div>
       <button type="button" @click="increaseTraffic">+</button>
     </div>
-    <span>{{ orderCount }} orders sent</span>
+    <div class="counter-info">
+      <span>{{ orderCount }} orders sent</span>
+    </div>
   </div>
 </template>
 
