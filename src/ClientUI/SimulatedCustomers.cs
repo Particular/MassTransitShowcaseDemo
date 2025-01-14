@@ -10,7 +10,7 @@ public class SimulatedCustomers(IServiceScopeFactory factory)
 
     static readonly OrderGenerator orderGenerator = new();
 
-    public async Task<PlaceOrder> PlaceSingleOrder(CancellationToken cancellationToken)
+    public async Task<PlaceOrder> PlaceSingleOrder(string failOn, CancellationToken cancellationToken)
     {
         await using var scope = factory.CreateAsyncScope();
 
@@ -20,7 +20,12 @@ public class SimulatedCustomers(IServiceScopeFactory factory)
             Contents = orderGenerator.Generate()
         };
 
-        await scope.ServiceProvider.GetRequiredService<IPublishEndpoint>().Publish(placeOrderCommand, cancellationToken);
+        var failureEndpoint = Enum.TryParse(typeof(EndpointNames), failOn, out var _failureEndpoint) ? (EndpointNames)_failureEndpoint : EndpointNames.None;
+
+        await scope.ServiceProvider.GetRequiredService<IPublishEndpoint>().Publish(
+            placeOrderCommand,
+            context => context.Headers.Set("FailOn", failureEndpoint.ToString()),
+            cancellationToken);
         OrdersPlaced++;
         return placeOrderCommand;
     }
