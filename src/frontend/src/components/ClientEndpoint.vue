@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { GA4 } from "../utils/analytics";
 import useSignalR from "../composables/useSignalR";
+import EndpointHeader from "./EndpointHeader.vue";
 
 var { connection, state } = useSignalR("http://localhost:5000/clientHub");
 
@@ -14,29 +15,21 @@ connection.on(
   (currentCount) => (orderCount.value = currentCount)
 );
 
-onMounted(async () => {
-  await connection.start();
-});
-
-async function increaseTraffic() {
-  await connection.invoke("IncreaseTraffic");
-}
-
-async function decreaseTraffic() {
-  GA4.showcaseMessageSent();
-  await connection.invoke("DecreaseTraffic");
+async function createOrder() {
+  try {
+    GA4.showcaseMessageSent();
+  } catch (e) {
+    console.error(e);
+  }
+  await connection.invoke("CreateOrder");
 }
 </script>
 
 <template>
-  <div>{{ state }}</div>
+  <EndpointHeader label="Customer Order Client" :state="state" />
   <div class="withCount">
-    <!-- TODO: make this into a RateChange control -->
     <div class="valueChangeControl">
-      <label>Customer Order Rate:</label>
-      <button type="button" @click="decreaseTraffic">-</button>
-      <div>{{ rate }} orders / second</div>
-      <button type="button" @click="increaseTraffic">+</button>
+      <button type="button" @click="createOrder">Create Customer Order</button>
     </div>
     <div class="counter-info">
       <span>{{ orderCount }} orders sent</span>

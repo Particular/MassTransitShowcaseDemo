@@ -29,10 +29,6 @@ class Program
                     services.AddCors();
                     services.AddSignalR(options => { options.EnableDetailedErrors = true; });
                     services.AddSingleton<SimulatedCustomers>();
-                    services.AddSingleton<ConsoleBackgroundService>();
-
-                    services.AddHostedService(b => b.GetRequiredService<SimulatedCustomers>());
-                    services.AddHostedService(b => b.GetRequiredService<ConsoleBackgroundService>());
                 });
                 webBuilder.UseUrls("http://*:5000");
                 webBuilder.Configure(app =>

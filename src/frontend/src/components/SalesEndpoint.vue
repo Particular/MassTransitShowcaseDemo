@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useSignalR from "../composables/useSignalR";
 import { ref } from "vue";
+import EndpointHeader from "./EndpointHeader.vue";
 
 var { connection, state } = useSignalR("http://localhost:5001/salesHub");
 
@@ -45,7 +46,7 @@ async function changeProcessingTimeDown() {
 </script>
 
 <template>
-  <div>{{ state }}</div>
+  <EndpointHeader label="Sales Endpoint" :state="state" />
   <!-- TODO: make this into a RateChange control -->
   <div class="valueChangeControl">
     <label>Sales Endpoint Failure Rate:</label>

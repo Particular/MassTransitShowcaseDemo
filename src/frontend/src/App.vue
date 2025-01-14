@@ -5,6 +5,7 @@ import SalesEndpoint from "./components/SalesEndpoint.vue";
 </script>
 
 <template>
+  <h1>Mass Transit message retry showcase</h1>
   <div>
     <h2>Simulating customers placing orders on a website</h2>
   </div>

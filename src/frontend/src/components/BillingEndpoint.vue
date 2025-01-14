@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import useSignalR from "../composables/useSignalR";
+import EndpointHeader from "./EndpointHeader.vue";
 
 var { connection, state } = useSignalR("http://localhost:5002/billingHub");
 
@@ -8,10 +9,6 @@ const failureRate = ref(0);
 
 connection.on("FailureRateChanged", function (newValue) {
   failureRate.value = newValue;
-});
-
-onMounted(async () => {
-  await connection.start();
 });
 
 async function changeBillingRateUp() {
@@ -24,7 +21,7 @@ async function changeBillingRateDown() {
 </script>
 
 <template>
-  <div>{{ state }}</div>
+  <EndpointHeader label="Billing Endpoint" :state="state" />
   <!-- TODO: make this into a RateChange control -->
   <div class="valueChangeControl">
     <label>Billing Endpoint Failure Rate:</label>
