@@ -7,21 +7,21 @@ import EndpointHeader from "./EndpointHeader.vue";
 var { connection, state } = useSignalR("http://localhost:5000/clientHub");
 
 const orderCount = ref(0);
-const orders = ref<string[]>([]);
+const messages = ref<string[]>([]);
 const requestCount = ref(1);
 const requestFailureEndpoint = ref("");
 const failureEndpointNames = ref<string[]>([]);
 
-connection.on("OrderPlaced", (order, currentCount) => {
+connection.on("OrderRequested", (order, currentCount) => {
   orderCount.value = currentCount ?? 0;
   if (order) {
     var date = new Date();
-    orders.value = [
+    messages.value = [
       `${date.toLocaleDateString()} ${date.toLocaleTimeString()} Order ${
         order.orderId
       } requested for ${order.contents}`,
-      ...orders.value,
-    ].slice(0, Math.max(orders.value.length, 100));
+      ...messages.value,
+    ].slice(0, Math.max(messages.value.length, 100));
   }
 });
 
@@ -30,8 +30,6 @@ connection.on("Initialise", (currentCount, endpointNames) => {
   failureEndpointNames.value = endpointNames;
   requestFailureEndpoint.value =
     requestFailureEndpoint.value || endpointNames[0];
-  console.log(requestFailureEndpoint.value);
-  console.log(failureEndpointNames.value[0]);
 });
 
 async function createOrder() {
@@ -69,7 +67,7 @@ async function createOrder() {
       <span>{{ orderCount }} orders sent</span>
     </div>
   </div>
-  <textarea rows="3" v-text="orders.join('\n')" />
+  <textarea rows="3" readonly v-text="messages.join('\n')" />
 </template>
 
 <style scoped>
@@ -89,6 +87,7 @@ async function createOrder() {
 }
 
 textarea {
+  margin-top: 0.5em;
   width: 100%;
 }
 </style>

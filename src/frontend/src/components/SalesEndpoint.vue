@@ -5,69 +5,48 @@ import EndpointHeader from "./EndpointHeader.vue";
 
 var { connection, state } = useSignalR("http://localhost:5001/salesHub");
 
-const failureRate = ref(0);
-const processingTime = ref(0.0);
 const processedCount = ref(0);
 const erroredCount = ref(0);
+const messages = ref<string[]>([]);
 
-connection.on("FailureRateChanged", function (newValue) {
-  failureRate.value = newValue;
+connection.on("ProcessingMessage", (order) => {
+  if (order) {
+    var date = new Date();
+    messages.value = [
+      `${date.toLocaleDateString()} ${date.toLocaleTimeString()} Received order request ${
+        order.orderId
+      } for ${order.contents}`,
+      ...messages.value,
+    ].slice(0, Math.max(messages.value.length, 100));
+  }
 });
-
-connection.on("ProcessingTimeChanged", function (newValue) {
-  processingTime.value = newValue;
+connection.on("OrderPlaced", (order) => {
+  if (order) {
+    var date = new Date();
+    messages.value = [
+      `${date.toLocaleDateString()} ${date.toLocaleTimeString()} Order ${
+        order.orderId
+      } placed`,
+      ...messages.value,
+    ].slice(0, Math.max(messages.value.length, 100));
+  }
 });
-
-connection.on(
-  "OrderPlaced",
-  (currentCount) => (processedCount.value = currentCount)
-);
 
 connection.on("MessagesProcessed", (processed, errored) => {
   processedCount.value = processed;
   erroredCount.value = errored;
 });
-
-async function changeBillingRateUp() {
-  await connection.invoke("IncreaseFailureRate");
-}
-
-async function changeBillingRateDown() {
-  await connection.invoke("DecreaseFailureRate");
-}
-
-async function changeProcessingTimeUp() {
-  await connection.invoke("IncreaseProcessingTime");
-}
-
-async function changeProcessingTimeDown() {
-  await connection.invoke("DecreaseProcessingTime");
-}
 </script>
 
 <template>
   <EndpointHeader label="Sales Endpoint" :state="state" />
-  <!-- TODO: make this into a RateChange control -->
-  <div class="valueChangeControl">
-    <label>Sales Endpoint Failure Rate:</label>
-    <button type="button" @click="changeBillingRateDown">-</button>
-    <div>{{ failureRate }}%</div>
-    <button type="button" @click="changeBillingRateUp">+</button>
+  <div class="counter-info">
+    <span>
+      {{ processedCount }} messages processed /
+      <span class="red"> {{ erroredCount }} errored</span>
+    </span>
   </div>
-  <div class="withCount">
-    <div class="valueChangeControl">
-      <label>Sales Endpoint Processing Time:</label>
-      <button type="button" @click="changeProcessingTimeUp">-</button>
-      <div>{{ processingTime }} seconds</div>
-      <button type="button" @click="changeProcessingTimeDown">+</button>
-    </div>
-    <div class="counter-info">
-      <span>
-        {{ processedCount }} messages processed /
-        <span class="red"> {{ erroredCount }} errored</span>
-      </span>
-    </div>
-  </div>
+  <textarea rows="3" readonly v-text="messages.join('\n')" />
 </template>
 
 <style scoped>
@@ -79,5 +58,10 @@ async function changeProcessingTimeDown() {
 .withCount {
   display: flex;
   gap: 0.5em;
+}
+
+textarea {
+  margin-top: 0.5em;
+  width: 100%;
 }
 </style>

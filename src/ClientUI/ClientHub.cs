@@ -16,7 +16,7 @@
             for (int i = 0; i < (int)requestCount; i++)
             {
                 var order = await simulatedCustomers.PlaceSingleOrder(failOn, Context.ConnectionAborted);
-                await Clients.All.SendAsync("OrderPlaced", order, simulatedCustomers.OrdersPlaced, Context.ConnectionAborted);
+                await Clients.All.SendAsync("OrderRequested", order, simulatedCustomers.OrdersPlaced, Context.ConnectionAborted);
             }
         }
     }

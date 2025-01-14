@@ -29,7 +29,6 @@ class Program
                     services.AddCors();
                     services.AddSignalR(options => { options.EnableDetailedErrors = true; });
                     services.AddSingleton<SimulationEffects>();
-                    services.AddHostedService<ConsoleBackgroundService>();
                 });
                 webBuilder.UseUrls("http://*:5001");
                 webBuilder.Configure(app =>
