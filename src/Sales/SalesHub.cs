@@ -4,11 +4,13 @@
 
     public class SalesHub(SimulationEffects simulationEffects) : Hub
     {
-        public async Task ClientConnected()
+        public override async Task OnConnectedAsync()
         {
             await Clients.Caller.SendAsync("FailureRateChanged", Math.Round(simulationEffects.FailureRate * 100, 0));
             await Clients.Caller.SendAsync("ProcessingTimeChanged", simulationEffects.BaseProcessingTime.TotalSeconds);
+            await base.OnConnectedAsync();
         }
+
         public async Task IncreaseFailureRate() => await simulationEffects.IncreaseFailureRate();
         public async Task DecreaseFailureRate() => await simulationEffects.DecreaseFailureRate();
 

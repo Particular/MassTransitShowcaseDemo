@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import useSignalR from "../composables/useSignalR";
+import { ref } from "vue";
 
-var connection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5001/salesHub")
-  .build();
+var { connection, state } = useSignalR("http://localhost:5001/salesHub");
 
 const failureRate = ref(0);
 const processingTime = ref(0.0);
@@ -29,11 +27,6 @@ connection.on("MessagesProcessed", (processed, errored) => {
   erroredCount.value = errored;
 });
 
-onMounted(async () => {
-  await connection.start();
-  await connection.invoke("ClientConnected");
-});
-
 async function changeBillingRateUp() {
   await connection.invoke("IncreaseFailureRate");
 }
@@ -52,6 +45,7 @@ async function changeProcessingTimeDown() {
 </script>
 
 <template>
+  <div>{{ state }}</div>
   <!-- TODO: make this into a RateChange control -->
   <div class="valueChangeControl">
     <label>Sales Endpoint Failure Rate:</label>
@@ -67,10 +61,10 @@ async function changeProcessingTimeDown() {
       <button type="button" @click="changeProcessingTimeDown">+</button>
     </div>
     <div class="counter-info">
-      <span
-        >{{ processedCount }} messages processed /
-        <span class="red"> {{ erroredCount }} errored</span></span
-      >
+      <span>
+        {{ processedCount }} messages processed /
+        <span class="red"> {{ erroredCount }} errored</span>
+      </span>
     </div>
   </div>
 </template>

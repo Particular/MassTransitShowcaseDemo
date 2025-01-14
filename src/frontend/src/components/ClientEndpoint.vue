@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { HubConnectionBuilder } from "@microsoft/signalr";
 import { GA4 } from "../utils/analytics";
+import useSignalR from "../composables/useSignalR";
 
-var connection = new HubConnectionBuilder()
-  .withUrl("http://localhost:5000/clientHub")
-  .build();
+var { connection, state } = useSignalR("http://localhost:5000/clientHub");
 
 const rate = ref(0);
 const orderCount = ref(0);
@@ -18,7 +16,6 @@ connection.on(
 
 onMounted(async () => {
   await connection.start();
-  await connection.invoke("ClientConnected");
 });
 
 async function increaseTraffic() {
@@ -32,6 +29,7 @@ async function decreaseTraffic() {
 </script>
 
 <template>
+  <div>{{ state }}</div>
   <div class="withCount">
     <!-- TODO: make this into a RateChange control -->
     <div class="valueChangeControl">
