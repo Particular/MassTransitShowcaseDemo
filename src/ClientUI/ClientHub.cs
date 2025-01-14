@@ -6,14 +6,15 @@
     {
         public override async Task OnConnectedAsync()
         {
-            //await Clients.Caller.SendAsync("RateChanged", simulatedCustomers.Rate);
+            await Clients.Caller.SendAsync("OrderPlaced", null, simulatedCustomers.OrdersPlaced);
             await base.OnConnectedAsync();
         }
 
         public async Task CreateOrder()
         {
-            await simulatedCustomers.PlaceSingleOrder(Context.ConnectionAborted);
-            await Clients.All.SendAsync("OrderPlaced", simulatedCustomers.OrdersPlaced, Context.ConnectionAborted);
+            var order = await simulatedCustomers.PlaceSingleOrder(Context.ConnectionAborted);
+            await Clients.All.SendAsync("OrderPlaced", order, simulatedCustomers.OrdersPlaced, Context.ConnectionAborted);
         }
     }
+
 }

@@ -6,14 +6,21 @@ import EndpointHeader from "./EndpointHeader.vue";
 
 var { connection, state } = useSignalR("http://localhost:5000/clientHub");
 
-const rate = ref(0);
 const orderCount = ref(0);
+const orders = ref<string[]>([]);
 
-connection.on("RateChanged", (newValue) => (rate.value = newValue));
-connection.on(
-  "OrderPlaced",
-  (currentCount) => (orderCount.value = currentCount)
-);
+connection.on("OrderPlaced", (order, currentCount) => {
+  orderCount.value = currentCount;
+  if (order) {
+    var date = new Date();
+    orders.value = [
+      `${date.toLocaleDateString()} ${date.toLocaleTimeString()} Order ${
+        order.orderId
+      } placed for ${order.contents}`,
+      ...orders.value,
+    ].slice(0, Math.max(orders.value.length, 100));
+  }
+});
 
 async function createOrder() {
   try {
@@ -35,6 +42,7 @@ async function createOrder() {
       <span>{{ orderCount }} orders sent</span>
     </div>
   </div>
+  <textarea rows="3" v-text="orders.join('\n')" />
 </template>
 
 <style scoped>
@@ -46,5 +54,9 @@ async function createOrder() {
 .valueChangeControl {
   display: flex;
   gap: 0.25em;
+}
+
+textarea {
+  width: 100%;
 }
 </style>
