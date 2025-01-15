@@ -2,31 +2,34 @@
 import useSignalR from "../composables/useSignalR";
 import { ref } from "vue";
 import EndpointHeader from "./EndpointHeader.vue";
+import {
+  isOrderPlaced,
+  OrderPlaced,
+  PlaceOrder,
+  type Message,
+  type Order,
+} from "./types";
+import MessageContainer from "./MessageContainer.vue";
+import { store } from "./shared";
 
 var { connection, state } = useSignalR("http://localhost:5001/salesHub");
 
 const processedCount = ref(0);
 const erroredCount = ref(0);
-const messages = ref<string[]>([]);
+const messages = ref<Message[]>([]);
 
-connection.on("ProcessingMessage", (order) => {
+connection.on("ProcessingMessage", (order: Order) => {
   if (order) {
-    var date = new Date();
     messages.value = [
-      `${date.toLocaleDateString()} ${date.toLocaleTimeString()} Received order request ${
-        order.orderId
-      } for ${order.contents}`,
+      { timestamp: new Date(), message: new PlaceOrder(order) },
       ...messages.value,
     ].slice(0, Math.max(messages.value.length, 100));
   }
 });
-connection.on("OrderPlaced", (order) => {
+connection.on("OrderPlaced", (order: Order) => {
   if (order) {
-    var date = new Date();
     messages.value = [
-      `${date.toLocaleDateString()} ${date.toLocaleTimeString()} Order ${
-        order.orderId
-      } placed`,
+      { timestamp: new Date(), message: new OrderPlaced(order) },
       ...messages.value,
     ].slice(0, Math.max(messages.value.length, 100));
   }
@@ -46,22 +49,28 @@ connection.on("MessagesProcessed", (processed, errored) => {
       <span class="red"> {{ erroredCount }} errored</span>
     </span>
   </div>
-  <textarea rows="3" readonly v-text="messages.join('\n')" />
+  <MessageContainer :messages="messages" v-slot="{ message }">
+    <span>{{ message.timestamp.toLocaleTimeString() }}</span>
+    <template v-if="isOrderPlaced(message.message)">
+      <span>Order</span>
+      <span
+        class="coloured"
+        :class="store.selectedMessage === message.message.orderId && 'selected'"
+      >
+        {{ message.message.orderId }}
+      </span>
+      <span>placed</span>
+    </template>
+    <template v-else>
+      <span>Received order request</span>
+      <span
+        class="coloured"
+        :class="store.selectedMessage === message.message.orderId && 'selected'"
+      >
+        {{ message.message.orderId }}
+      </span>
+    </template>
+  </MessageContainer>
 </template>
 
-<style scoped>
-.valueChangeControl {
-  display: flex;
-  gap: 0.25em;
-}
-
-.withCount {
-  display: flex;
-  gap: 0.5em;
-}
-
-textarea {
-  margin-top: 0.5em;
-  width: 100%;
-}
-</style>
+<style scoped></style>

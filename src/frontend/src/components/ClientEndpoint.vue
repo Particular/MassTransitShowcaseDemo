@@ -3,23 +3,23 @@ import { ref } from "vue";
 import { GA4 } from "../utils/analytics";
 import useSignalR from "../composables/useSignalR";
 import EndpointHeader from "./EndpointHeader.vue";
+import { store } from "./shared";
+import type { PlaceOrder, Message } from "./types";
+import MessageContainer from "./MessageContainer.vue";
 
 var { connection, state } = useSignalR("http://localhost:5000/clientHub");
 
 const orderCount = ref(0);
-const messages = ref<string[]>([]);
+const messages = ref<Message[]>([]);
 const requestCount = ref(1);
 const requestFailureEndpoint = ref("");
 const failureEndpointNames = ref<string[]>([]);
 
-connection.on("OrderRequested", (order, currentCount) => {
+connection.on("OrderRequested", (order: PlaceOrder, currentCount: number) => {
   orderCount.value = currentCount ?? 0;
   if (order) {
-    var date = new Date();
     messages.value = [
-      `${date.toLocaleDateString()} ${date.toLocaleTimeString()} Order ${
-        order.orderId
-      } requested for ${order.contents}`,
+      { timestamp: new Date(), message: order },
       ...messages.value,
     ].slice(0, Math.max(messages.value.length, 100));
   }
@@ -67,7 +67,17 @@ async function createOrder() {
       <span>{{ orderCount }} orders sent</span>
     </div>
   </div>
-  <textarea rows="3" readonly v-text="messages.join('\n')" />
+  <MessageContainer :messages="messages" v-slot="{ message }">
+    <span>{{ message.timestamp.toLocaleTimeString() }}</span>
+    <span>Order</span>
+    <span
+      class="coloured"
+      :class="store.selectedMessage === message.message.orderId && 'selected'"
+      >{{ message.message.orderId }}</span
+    >
+    <span>requested for</span>
+    <span class="coloured">{{ message.message.contents.join(", ") }}</span>
+  </MessageContainer>
 </template>
 
 <style scoped>
@@ -75,6 +85,7 @@ async function createOrder() {
   display: flex;
   gap: 0.5em;
   align-items: baseline;
+  flex-wrap: wrap;
 }
 
 .requestCount {
@@ -84,10 +95,5 @@ async function createOrder() {
 .valueChangeControl {
   display: flex;
   gap: 0.25em;
-}
-
-textarea {
-  margin-top: 0.5em;
-  width: 100%;
 }
 </style>
