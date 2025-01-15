@@ -12,11 +12,13 @@ import {
 } from "./types";
 import MessageContainer from "./MessageContainer.vue";
 import { store } from "./shared";
+import OnOffSwitch from "./OnOffSwitch.vue";
 
 var { connection, state } = useSignalR("http://localhost:5001/salesHub");
 
 const processedCount = ref(0);
 const erroredCount = ref(0);
+const shouldFailRetries = ref(false);
 const messages = ref<MessageOrError[]>([]);
 
 connection.on("ProcessingMessage", (order: Order) => {
@@ -49,19 +51,36 @@ connection.on("OrderPlaced", (order: Order) => {
   }
 });
 
-connection.on("MessagesProcessed", (processed, errored) => {
+connection.on("SyncValues", (processed, errored, failRetries) => {
   processedCount.value = processed;
   erroredCount.value = errored;
+  shouldFailRetries.value = failRetries;
 });
+
+function toggleFailOnRetries() {
+  connection.invoke("SetFailRetries", !shouldFailRetries.value);
+}
 </script>
 
 <template>
-  <EndpointHeader label="Sales Endpoint" :state="state" />
-  <div class="counter-info">
-    <span>
-      {{ processedCount }} messages processed /
-      <span class="red"> {{ erroredCount }} errored</span>
-    </span>
+  <div class="endpoint-header">
+    <div>
+      <EndpointHeader label="Sales Endpoint" :state="state" />
+      <div class="counter-info">
+        <span>
+          {{ processedCount }} messages processed /
+          <span class="red"> {{ erroredCount }} errored</span>
+        </span>
+      </div>
+    </div>
+    <div>
+      <OnOffSwitch
+        id="failOnRetries"
+        label="Fail Retries"
+        @toggle="toggleFailOnRetries"
+        :value="shouldFailRetries"
+      />
+    </div>
   </div>
   <MessageContainer :messages="messages" v-slot="{ message }">
     <span>{{ message.timestamp.toLocaleTimeString() }}</span>
@@ -76,7 +95,7 @@ connection.on("MessagesProcessed", (processed, errored) => {
       <span>failed.</span>
       <a
         target="_blank"
-        :href="`http://localhost:5173/#/failed-messages/message/${message.messageId}`"
+        href="http://localhost:5173/#/failed-messages/all-failed-messages"
       >
         View failure in ServicePulse
       </a>
@@ -102,3 +121,11 @@ connection.on("MessagesProcessed", (processed, errored) => {
     </template>
   </MessageContainer>
 </template>
+
+<style scoped>
+.endpoint-header {
+  margin-top: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+</style>
