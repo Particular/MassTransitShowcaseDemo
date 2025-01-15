@@ -2,38 +2,130 @@
 import { ref } from "vue";
 import useSignalR from "../composables/useSignalR";
 import EndpointHeader from "./EndpointHeader.vue";
+import {
+  isError,
+  isOrderBilled,
+  OrderBilled,
+  OrderPlaced,
+  type MessageOrError,
+  type Order,
+} from "./types";
+import { store } from "./shared";
+import MessageContainer from "./MessageContainer.vue";
+import OnOffSwitch from "./OnOffSwitch.vue";
 
 var { connection, state } = useSignalR("http://localhost:5002/billingHub");
 
-const failureRate = ref(0);
+const processedCount = ref(0);
+const erroredCount = ref(0);
+const shouldFailRetries = ref(false);
+const messages = ref<MessageOrError[]>([]);
 
-connection.on("FailureRateChanged", function (newValue) {
-  failureRate.value = newValue;
+connection.on("ProcessingMessage", (order: Order) => {
+  if (order) {
+    messages.value = [
+      { timestamp: new Date(), message: new OrderPlaced(order) },
+      ...messages.value,
+    ].slice(0, Math.max(messages.value.length, 100));
+  }
+});
+connection.on("MessageError", (order: Order, messageId: string) => {
+  if (order) {
+    messages.value = [
+      {
+        timestamp: new Date(),
+        message: new OrderPlaced(order),
+        isError: true,
+        messageId,
+      },
+      ...messages.value,
+    ].slice(0, Math.max(messages.value.length, 100));
+  }
+});
+connection.on("OrderBilled", (order: Order) => {
+  if (order) {
+    messages.value = [
+      { timestamp: new Date(), message: new OrderBilled(order) },
+      ...messages.value,
+    ].slice(0, Math.max(messages.value.length, 100));
+  }
 });
 
-async function changeBillingRateUp() {
-  await connection.invoke("IncreaseFailureRate");
-}
+connection.on("SyncValues", (processed, errored, failRetries) => {
+  processedCount.value = processed;
+  erroredCount.value = errored;
+  shouldFailRetries.value = failRetries;
+});
 
-async function changeBillingRateDown() {
-  await connection.invoke("DecreaseFailureRate");
+function toggleFailOnRetries() {
+  connection.invoke("SetFailRetries", !shouldFailRetries.value);
 }
 </script>
 
 <template>
-  <EndpointHeader label="Billing Endpoint" :state="state" />
-  <!-- TODO: make this into a RateChange control -->
-  <div class="valueChangeControl">
-    <label>Billing Endpoint Failure Rate:</label>
-    <button type="button" @click="changeBillingRateDown">-</button>
-    <div>{{ failureRate }}%</div>
-    <button type="button" @click="changeBillingRateUp">+</button>
+  <div class="endpoint-header">
+    <div>
+      <EndpointHeader label="Billing Endpoint" :state="state" />
+      <div class="counter-info">
+        <span>
+          {{ processedCount }} messages processed /
+          <span class="red"> {{ erroredCount }} errored</span>
+        </span>
+      </div>
+    </div>
+    <div>
+      <OnOffSwitch
+        id="failOnRetries"
+        label="Fail Retries"
+        @toggle="toggleFailOnRetries"
+        :value="shouldFailRetries"
+      />
+    </div>
   </div>
+  <MessageContainer :messages="messages" v-slot="{ message }">
+    <span>{{ message.timestamp.toLocaleTimeString() }}</span>
+    <template v-if="isError(message)">
+      <span>Order</span>
+      <span
+        class="coloured error"
+        :class="store.selectedMessage === message.message.orderId && 'selected'"
+      >
+        {{ message.message.orderId }}
+      </span>
+      <span>failed.</span>
+      <a
+        target="_blank"
+        href="http://localhost:5173/#/failed-messages/all-failed-messages"
+      >
+        View failure in ServicePulse
+      </a>
+    </template>
+    <template v-else-if="isOrderBilled(message.message)">
+      <span>Order</span>
+      <span
+        class="coloured"
+        :class="store.selectedMessage === message.message.orderId && 'selected'"
+      >
+        {{ message.message.orderId }}
+      </span>
+      <span>billed</span>
+    </template>
+    <template v-else>
+      <span>Received order placed</span>
+      <span
+        class="coloured"
+        :class="store.selectedMessage === message.message.orderId && 'selected'"
+      >
+        {{ message.message.orderId }}
+      </span>
+    </template>
+  </MessageContainer>
 </template>
 
 <style scoped>
-.valueChangeControl {
+.endpoint-header {
+  margin-top: 1em;
   display: flex;
-  gap: 0.25em;
+  justify-content: space-between;
 }
 </style>

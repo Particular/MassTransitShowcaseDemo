@@ -27,9 +27,21 @@ export class OrderPlaced implements Order {
   }
 }
 
+export class OrderBilled implements Order {
+  readonly type = "OrderBilled";
+
+  orderId: string;
+  contents: string[];
+
+  constructor(order: Order) {
+    this.orderId = order.orderId;
+    this.contents = order.contents;
+  }
+}
+
 export interface Message {
   timestamp: Date;
-  message: PlaceOrder | OrderPlaced;
+  message: PlaceOrder | OrderPlaced | OrderBilled;
 }
 
 export interface ErrorMessage extends Message {
@@ -44,7 +56,13 @@ export function isError(message: MessageOrError): message is ErrorMessage {
 }
 
 export function isOrderPlaced(
-  message: OrderPlaced | PlaceOrder
+  message: PlaceOrder | OrderPlaced | OrderBilled
 ): message is OrderPlaced {
   return message.type === "OrderPlaced";
+}
+
+export function isOrderBilled(
+  message: PlaceOrder | OrderPlaced | OrderBilled
+): message is OrderBilled {
+  return message.type === "OrderBilled";
 }

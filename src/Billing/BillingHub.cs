@@ -6,12 +6,14 @@
     {
         public override async Task OnConnectedAsync()
         {
-            await Clients.Caller.SendAsync("FailureRateChanged", Math.Round(simulationEffects.FailureRate * 100, 0));
+            await Clients.Caller.SendAsync("SyncValues", simulationEffects.MessagesProcessed, simulationEffects.MessagesErrored, simulationEffects.ShouldFailRetries);
             await base.OnConnectedAsync();
         }
 
-        public async Task IncreaseFailureRate() => await simulationEffects.IncreaseFailureRate();
-        public async Task DecreaseFailureRate() => await simulationEffects.DecreaseFailureRate();
-
+        public async Task SetFailRetries(bool shouldFailRetries)
+        {
+            simulationEffects.ShouldFailRetries = shouldFailRetries;
+            await Clients.Caller.SendAsync("SyncValues", simulationEffects.MessagesProcessed, simulationEffects.MessagesErrored, simulationEffects.ShouldFailRetries);
+        }
     }
 }

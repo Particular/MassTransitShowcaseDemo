@@ -12,7 +12,7 @@ public class SimulationEffects(IHubContext<SalesHub> salesHub)
     public bool ShouldFailRetries { get; set; } = false;
 
 
-    public async Task SimulateMessageProcessing(ConsumeContext<PlaceOrder> context)
+    public async Task SimulateSalesProcessing(ConsumeContext<PlaceOrder> context)
     {
         try
         {
@@ -23,7 +23,7 @@ public class SimulationEffects(IHubContext<SalesHub> salesHub)
                     && (!isRetry || ShouldFailRetries))
             {
                 MessagesErrored++;
-                throw new Exception($"A simulated failure occurred in Sales");
+                throw new Exception($"A simulated failure occurred in Sales, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
             MessagesProcessed++;

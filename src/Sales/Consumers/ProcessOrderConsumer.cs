@@ -12,8 +12,9 @@ public class ProcessOrderConsumer(SimulationEffects simulationEffects, IHubConte
         await salesHub.Clients.All.SendAsync("ProcessingMessage", context.Message, context.CancellationToken);
         try
         {
-            await simulationEffects.SimulateMessageProcessing(context);
+            await simulationEffects.SimulateSalesProcessing(context);
         }
+        catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested) { throw; }
         catch
         {
             await salesHub.Clients.All.SendAsync("MessageError", context.Message, context.MessageId, context.CancellationToken);

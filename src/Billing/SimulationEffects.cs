@@ -1,47 +1,36 @@
 ﻿namespace Billing;
 
+using MassTransit;
+using Messages;
 using Microsoft.AspNetCore.SignalR;
 
 public class SimulationEffects(IHubContext<BillingHub> billingHub)
 {
-    public event EventHandler RateChanged;
-    public double FailureRate { get; private set; }
+    public int MessagesProcessed { get; private set; } = 0;
+    public int MessagesErrored { get; private set; } = 0;
 
-    public async Task IncreaseFailureRate()
+    public bool ShouldFailRetries { get; set; } = false;
+
+
+    public async Task SimulateBillingProcessing(ConsumeContext<OrderPlaced> context)
     {
-        FailureRate = Math.Min(1, FailureRate + FailureRateIncrement);
-        await NotifyOfRateChange();
-    }
-
-    public async Task DecreaseFailureRate()
-    {
-        FailureRate = Math.Max(0, FailureRate - FailureRateIncrement);
-        await NotifyOfRateChange();
-    }
-
-    public void WriteState(TextWriter output) => output.WriteLine("Failure rate: {0:P0}", FailureRate);
-
-    public async Task SimulatedMessageProcessing(CancellationToken cancellationToken = default)
-    {
-        await Task.Delay(200, cancellationToken);
-
-        if (Random.Shared.NextDouble() < FailureRate)
+        try
         {
-            throw new Exception("BOOM! A failure occurred");
+            context.TryGetHeader("FailOn", out string failOn);
+            //Retries leave ServiceControl headers on the ReceiveContext. Choosing one at random here...
+            var isRetry = context.ReceiveContext.TransportHeaders.TryGetHeader("ServiceControl.RetryTo", out var _);
+            if (Enum.TryParse(failOn, out EndpointNames endpointName) && endpointName == EndpointNames.Billing
+                    && (!isRetry || ShouldFailRetries))
+            {
+                MessagesErrored++;
+                throw new Exception($"A simulated failure occurred in Billing, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+            }
+
+            MessagesProcessed++;
+        }
+        finally
+        {
+            await billingHub.Clients.All.SendAsync("SyncValues", MessagesProcessed, MessagesErrored, ShouldFailRetries, context.CancellationToken);
         }
     }
-
-    public async Task Reset()
-    {
-        FailureRate = 0;
-        await NotifyOfRateChange();
-    }
-
-    async Task NotifyOfRateChange()
-    {
-        await billingHub.Clients.All.SendAsync("FailureRateChanged", Math.Round(FailureRate * 100, 0));
-        RateChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    const double FailureRateIncrement = 0.1;
 }

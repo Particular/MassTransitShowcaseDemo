@@ -54,6 +54,6 @@ const props = defineProps<{
 }
 
 :slotted(.message .selected) {
-  background-color: antiquewhite;
+  background-color: rgb(242, 152, 33);
 }
 </style>
