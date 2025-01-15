@@ -29,14 +29,16 @@ connection.on("ProcessingMessage", (order: Order) => {
     ].slice(0, Math.max(messages.value.length, 100));
   }
 });
-connection.on("MessageError", (order: Order, messageId: string) => {
+connection.on("MessageError", (order: Order, messageId: string, messageViewId:string) => {
   if (order) {
+    console.log(messageViewId);
     messages.value = [
       {
         timestamp: new Date(),
         message: new PlaceOrder(order),
         isError: true,
         messageId,
+        messageViewId
       },
       ...messages.value,
     ].slice(0, Math.max(messages.value.length, 100));
@@ -65,7 +67,7 @@ function toggleFailOnRetries() {
 <template>
   <div class="endpoint-header">
     <div>
-      <EndpointHeader label="Sales Endpoint" :state="state" />
+      <EndpointHeader label="Sales" :state="state" />
       <div class="counter-info">
         <span>
           {{ processedCount }} messages processed /
@@ -92,13 +94,15 @@ function toggleFailOnRetries() {
       >
         {{ message.message.orderId }}
       </span>
-      <span>failed.</span>
-      <a
-        target="_blank"
-        href="http://localhost:5173/#/failed-messages/all-failed-messages"
+      <span>
+        containing :
+        <span class="coloured">{{ message.message.contents.join(", ") }}</span>
+        failed.</span
       >
-        View failure in ServicePulse
-      </a>
+
+      <a  target="_blank" :href="`http://localhost:9090/#/failed-messages/message/${message.messageViewId}`"> View failure in ServicePulse</a>
+
+
     </template>
     <template v-else-if="isOrderPlaced(message.message)">
       <span>Order</span>
@@ -116,8 +120,11 @@ function toggleFailOnRetries() {
         class="coloured"
         :class="store.selectedMessage === message.message.orderId && 'selected'"
       >
-        {{ message.message.orderId }}
+        {{ message.message.orderId }},
+    </br>
       </span>
+      containing :
+      <span class="coloured">{{ message.message.contents.join(", ") }}</span>
     </template>
   </MessageContainer>
 </template>

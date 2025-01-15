@@ -4,6 +4,7 @@ using Messages;
 using MassTransit;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Helper;
 
 public class ProcessOrderConsumer(SimulationEffects simulationEffects, IHubContext<SalesHub> salesHub) : IConsumer<PlaceOrder>
 {
@@ -17,7 +18,9 @@ public class ProcessOrderConsumer(SimulationEffects simulationEffects, IHubConte
         catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested) { throw; }
         catch
         {
-            await salesHub.Clients.All.SendAsync("MessageError", context.Message, context.MessageId, context.CancellationToken);
+            var messageViewId = ConsoleHelper.GetTheViewId(context.MessageId.ToString(), context.ReceiveContext.InputAddress.ToString());
+
+            await salesHub.Clients.All.SendAsync("MessageError", context.Message, context.MessageId, messageViewId, context.CancellationToken);
             throw;
         }
 

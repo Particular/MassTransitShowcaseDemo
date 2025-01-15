@@ -65,7 +65,7 @@ function toggleFailOnRetries() {
 <template>
   <div class="endpoint-header">
     <div>
-      <EndpointHeader label="Billing Endpoint" :state="state" />
+      <EndpointHeader label="Billing" :state="state" />
       <div class="counter-info">
         <span>
           {{ processedCount }} messages processed /

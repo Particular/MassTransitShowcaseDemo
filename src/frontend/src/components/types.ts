@@ -47,6 +47,7 @@ export interface Message {
 export interface ErrorMessage extends Message {
   isError: true;
   messageId: string;
+  messageViewId: string;
 }
 
 export type MessageOrError = Message | ErrorMessage;

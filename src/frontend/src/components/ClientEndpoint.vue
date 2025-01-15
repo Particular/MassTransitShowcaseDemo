@@ -34,7 +34,7 @@ connection.on("Initialise", (currentCount, endpointNames) => {
 
 async function createOrder() {
   try {
-    GA4.showcaseMessageSent();
+    //   GA4.showcaseMessageSent();
   } catch (e) {
     console.error(e);
   }
@@ -51,7 +51,7 @@ async function createOrder() {
   <div class="withCount">
     <span>Request</span>
     <input class="requestCount" type="number" v-model.number="requestCount" />
-    <span>orders, failing on Endpoint</span>
+    <span>order(s), failing on Endpoint</span>
     <select v-model="requestFailureEndpoint">
       <option
         v-for="endpointName in failureEndpointNames"
@@ -60,9 +60,9 @@ async function createOrder() {
         {{ endpointName }}
       </option>
     </select>
-    <button type="button" @click="createOrder">Request Order(s)</button>
+    <button type="button" @click="createOrder">Place Order(s)</button>
     <div class="counter-info">
-      <span>{{ orderCount }} orders sent</span>
+      <span>{{ orderCount }} total orders sent</span>
     </div>
   </div>
   <MessageContainer :messages="messages" v-slot="{ message }">
