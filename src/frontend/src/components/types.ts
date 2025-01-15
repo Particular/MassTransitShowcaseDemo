@@ -32,6 +32,17 @@ export interface Message {
   message: PlaceOrder | OrderPlaced;
 }
 
+export interface ErrorMessage extends Message {
+  isError: true;
+  messageId: string;
+}
+
+export type MessageOrError = Message | ErrorMessage;
+
+export function isError(message: MessageOrError): message is ErrorMessage {
+  return (message as ErrorMessage).isError;
+}
+
 export function isOrderPlaced(
   message: OrderPlaced | PlaceOrder
 ): message is OrderPlaced {

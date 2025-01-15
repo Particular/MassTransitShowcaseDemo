@@ -10,8 +10,15 @@ public class ProcessOrderConsumer(SimulationEffects simulationEffects, IHubConte
     public async Task Consume(ConsumeContext<PlaceOrder> context)
     {
         await salesHub.Clients.All.SendAsync("ProcessingMessage", context.Message, context.CancellationToken);
-        // Simulate the time taken to process a message
-        await simulationEffects.SimulateMessageProcessing(context);
+        try
+        {
+            await simulationEffects.SimulateMessageProcessing(context);
+        }
+        catch
+        {
+            await salesHub.Clients.All.SendAsync("MessageError", context.Message, context.MessageId, context.CancellationToken);
+            throw;
+        }
 
         var orderPlaced = new OrderPlaced
         {

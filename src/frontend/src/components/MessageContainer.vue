@@ -48,6 +48,11 @@ const props = defineProps<{
   font-weight: bold;
 }
 
+:slotted(.message .coloured.error) {
+  color: rgb(179, 19, 19);
+  font-weight: bold;
+}
+
 :slotted(.message .selected) {
   background-color: antiquewhite;
 }
