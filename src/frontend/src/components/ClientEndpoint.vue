@@ -60,9 +60,7 @@ async function createOrder() {
         {{ endpointName }}
       </option>
     </select>
-    <div class="valueChangeControl">
-      <button type="button" @click="createOrder">Request Order(s)</button>
-    </div>
+    <button type="button" @click="createOrder">Request Order(s)</button>
     <div class="counter-info">
       <span>{{ orderCount }} orders sent</span>
     </div>
@@ -90,10 +88,5 @@ async function createOrder() {
 
 .requestCount {
   width: 3em;
-}
-
-.valueChangeControl {
-  display: flex;
-  gap: 0.25em;
 }
 </style>

@@ -102,5 +102,3 @@ connection.on("MessagesProcessed", (processed, errored) => {
     </template>
   </MessageContainer>
 </template>
-
-<style scoped></style>
