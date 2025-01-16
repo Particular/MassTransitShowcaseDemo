@@ -1,88 +1,61 @@
 ﻿namespace Shipping;
 
-public class SimulationEffects
+using MassTransit;
+using Messages;
+using Microsoft.AspNetCore.SignalR;
+
+public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
 {
-    public void WriteState(TextWriter output)
-    {
-        output.WriteLine("Base time to handle each OrderBilled event: {0} seconds", baseProcessingTime.TotalSeconds);
+    public int OrderBilledProcessed { get; private set; } = 0;
+    public int OrderBilledErrored { get; private set; } = 0;
 
-        output.Write("Simulated degrading resource: ");
-        output.WriteLine(degradingResourceSimulationStarted.HasValue ? "ON" : "OFF");
-        output.WriteLine("Failure rate: {0:P0}", failureRate);
-    }
+    public int OrderPlacedProcessed { get; private set; } = 0;
+    public int OrderPlacedErrored { get; private set; } = 0;
 
-    public Task SimulateOrderBilledMessageProcessing(CancellationToken cancellationToken = default)
+    public bool ShouldFailRetries { get; set; } = false;
+
+
+    public async Task SimulateOrderBilledProcessing(ConsumeContext<OrderBilled> context)
     {
-        if (Random.Shared.NextDouble() < failureRate)
+        try
         {
-            throw new Exception("BOOM! A failure occurred");
+            context.TryGetHeader("FailOn", out string failOn);
+            //Retries leave ServiceControl headers on the ReceiveContext. Choosing one at random here...
+            var isRetry = context.ReceiveContext.TransportHeaders.TryGetHeader("ServiceControl.RetryTo", out var _);
+            if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.ShippingOrderBilled
+                    && (!isRetry || ShouldFailRetries))
+            {
+                OrderBilledErrored++;
+                throw new Exception($"A simulated failure occurred in Shipping Order Billed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+            }
+
+            OrderBilledProcessed++;
         }
-
-        return Task.Delay(baseProcessingTime, cancellationToken);
-    }
-
-    public void ProcessMessagesFaster()
-    {
-        if (baseProcessingTime > TimeSpan.Zero)
+        finally
         {
-            baseProcessingTime -= increment;
+            await shippingHub.Clients.All.SendAsync("SyncValues", OrderPlacedProcessed, OrderPlacedErrored, OrderBilledProcessed, OrderBilledErrored, ShouldFailRetries, context.CancellationToken);
         }
     }
 
-    public void ProcessMessagesSlower()
+    public async Task SimulateOrderPlacedProcessing(ConsumeContext<OrderPlaced> context)
     {
-        baseProcessingTime += increment;
-    }
-
-    public Task SimulateOrderPlacedMessageProcessing(CancellationToken cancellationToken = default)
-    {
-        if (Random.Shared.NextDouble() < failureRate)
+        try
         {
-            throw new Exception("BOOM! A failure occurred");
+            context.TryGetHeader("FailOn", out string failOn);
+            //Retries leave ServiceControl headers on the ReceiveContext. Choosing one at random here...
+            var isRetry = context.ReceiveContext.TransportHeaders.TryGetHeader("ServiceControl.RetryTo", out var _);
+            if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.ShippingOrderPlaced
+                    && (!isRetry || ShouldFailRetries))
+            {
+                OrderPlacedErrored++;
+                throw new Exception($"A simulated failure occurred in Shipping Order Placed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+            }
+
+            OrderPlacedProcessed++;
         }
-
-        var delay = TimeSpan.FromMilliseconds(200) + Degradation();
-        return Task.Delay(delay, cancellationToken);
-    }
-
-    public void ToggleDegradationSimulation()
-    {
-        degradingResourceSimulationStarted = degradingResourceSimulationStarted.HasValue ? default(DateTime?) : DateTime.UtcNow;
-    }
-
-    TimeSpan Degradation()
-    {
-        var timeSinceDegradationStarted = DateTime.UtcNow - (degradingResourceSimulationStarted ?? DateTime.MaxValue);
-        if (timeSinceDegradationStarted < TimeSpan.Zero)
+        finally
         {
-            return TimeSpan.Zero;
+            await shippingHub.Clients.All.SendAsync("SyncValues", OrderPlacedProcessed, OrderPlacedErrored, OrderBilledProcessed, OrderBilledErrored, ShouldFailRetries, context.CancellationToken);
         }
-
-        return new TimeSpan(timeSinceDegradationStarted.Ticks / degradationRate);
-    }
-
-    public void IncreaseFailureRate()
-    {
-        failureRate = Math.Min(1, failureRate + failureRateIncrement);
-    }
-
-    public void DecreaseFailureRate()
-    {
-        failureRate = Math.Max(0, failureRate - failureRateIncrement);
-    }
-
-    TimeSpan baseProcessingTime = TimeSpan.FromMilliseconds(700);
-    readonly TimeSpan increment = TimeSpan.FromMilliseconds(100);
-
-    DateTime? degradingResourceSimulationStarted;
-    const int degradationRate = 5;
-
-    double failureRate;
-    const double failureRateIncrement = 0.1;
-
-    public void Reset()
-    {
-        failureRate = 0;
-        baseProcessingTime = TimeSpan.Zero;
     }
 }

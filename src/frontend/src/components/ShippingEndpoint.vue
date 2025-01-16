@@ -5,6 +5,7 @@ import EndpointHeader from "./EndpointHeader.vue";
 import {
   isError,
   isOrderPlaced,
+  OrderBilled,
   OrderPlaced,
   PlaceOrder,
   type MessageOrError,
@@ -14,17 +15,27 @@ import MessageContainer from "./MessageContainer.vue";
 import { store } from "./shared";
 import OnOffSwitch from "./OnOffSwitch.vue";
 
-var { connection, state } = useSignalR("http://localhost:5001/salesHub");
+var { connection, state } = useSignalR("http://localhost:5003/shippingHub");
 
-const processedCount = ref(0);
-const erroredCount = ref(0);
+const processedOrderPlacedCount = ref(0);
+const processedOrderBilledCount = ref(0);
+const erroredOrderPlacedCount = ref(0);
+const erroredOrderBilledCount = ref(0);
 const shouldFailRetries = ref(false);
 const messages = ref<MessageOrError[]>([]);
 
-connection.on("ProcessingMessage", (order: Order) => {
+connection.on("ProcessingOrderPlacedMessage", (order: Order) => {
   if (order) {
     messages.value = [
-      { timestamp: new Date(), message: new PlaceOrder(order) },
+      { timestamp: new Date(), message: new OrderPlaced(order) },
+      ...messages.value,
+    ].slice(0, Math.max(messages.value.length, 100));
+  }
+});
+connection.on("ProcessingOrderBilledMessage", (order: Order) => {
+  if (order) {
+    messages.value = [
+      { timestamp: new Date(), message: new OrderBilled(order) },
       ...messages.value,
     ].slice(0, Math.max(messages.value.length, 100));
   }
@@ -37,7 +48,7 @@ connection.on(
       messages.value = [
         {
           timestamp: new Date(),
-          message: new PlaceOrder(order),
+          message: order,
           isError: true,
           messageId,
           messageViewId,
@@ -47,20 +58,23 @@ connection.on(
     }
   }
 );
-connection.on("OrderPlaced", (order: Order) => {
-  if (order) {
-    messages.value = [
-      { timestamp: new Date(), message: new OrderPlaced(order) },
-      ...messages.value,
-    ].slice(0, Math.max(messages.value.length, 100));
-  }
-});
 
-connection.on("SyncValues", (processed, errored, failRetries) => {
-  processedCount.value = processed;
-  erroredCount.value = errored;
-  shouldFailRetries.value = failRetries;
-});
+connection.on(
+  "SyncValues",
+  (
+    processedOrderPlaced,
+    erroredOrderPlaced,
+    processedOrderBilled,
+    erroredOrderBilled,
+    failRetries
+  ) => {
+    processedOrderPlacedCount.value = processedOrderPlaced;
+    erroredOrderPlacedCount.value = erroredOrderPlaced;
+    processedOrderBilledCount.value = processedOrderBilled;
+    erroredOrderBilledCount.value = erroredOrderBilled;
+    shouldFailRetries.value = failRetries;
+  }
+);
 
 function toggleFailOnRetries() {
   connection.invoke("SetFailRetries", !shouldFailRetries.value);
@@ -70,11 +84,17 @@ function toggleFailOnRetries() {
 <template>
   <div class="endpoint-header">
     <div>
-      <EndpointHeader label="Sales" :state="state" />
+      <EndpointHeader label="Shipping" :state="state" />
       <div class="counter-info">
         <span>
-          {{ processedCount }} messages processed /
-          <span class="red"> {{ erroredCount }} errored</span>
+          {{ processedOrderPlacedCount }} order placed messages processed /
+          <span class="red"> {{ erroredOrderPlacedCount }} errored</span>
+        </span>
+      </div>
+      <div class="counter-info">
+        <span>
+          {{ processedOrderBilledCount }} order billed messages processed /
+          <span class="red"> {{ erroredOrderBilledCount }} errored</span>
         </span>
       </div>
     </div>
@@ -103,21 +123,15 @@ function toggleFailOnRetries() {
       <a
         target="_blank"
         :href="`http://localhost:5173/#/failed-messages/message/${message.messageViewId}`"
-        >View failure in ServicePulse</a
       >
-    </template>
-    <template v-else-if="isOrderPlaced(message.message)">
-      <span>Order</span>
-      <span
-        class="coloured"
-        :class="store.selectedMessage === message.message.orderId && 'selected'"
-      >
-        {{ message.message.orderId }}
-      </span>
-      <span>placed</span>
+        View failure in ServicePulse
+      </a>
     </template>
     <template v-else>
-      <span>Received order request</span>
+      <span v-if="isOrderPlaced(message.message)"
+        >Received order placed message</span
+      >
+      <span v-else>Received order billed message</span>
       <span
         class="coloured"
         :class="store.selectedMessage === message.message.orderId && 'selected'"

@@ -7,7 +7,7 @@
     {
         public override async Task OnConnectedAsync()
         {
-            await Clients.Caller.SendAsync("Initialise", simulatedCustomers.OrdersPlaced, Enum.GetValues<EndpointNames>().Select(x => x.ToString()));
+            await Clients.Caller.SendAsync("Initialise", simulatedCustomers.OrdersPlaced, Enum.GetValues<Consumers>().Select(x => x.ToString()));
             await base.OnConnectedAsync();
         }
 

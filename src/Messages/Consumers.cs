@@ -1,10 +1,11 @@
 ﻿namespace Messages
 {
-    public enum EndpointNames
+    public enum Consumers
     {
         None,
         Sales,
         Billing,
-        Shipping
+        ShippingOrderPlaced,
+        ShippingOrderBilled
     }
 }

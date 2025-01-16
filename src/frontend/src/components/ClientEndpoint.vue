@@ -12,7 +12,7 @@ var { connection, state } = useSignalR("http://localhost:5000/clientHub");
 const orderCount = ref(0);
 const messages = ref<Message[]>([]);
 const requestCount = ref(1);
-const requestFailureEndpoint = ref("");
+const requestFailureConsumer = ref("");
 const failureEndpointNames = ref<string[]>([]);
 
 connection.on("OrderRequested", (order: PlaceOrder, currentCount: number) => {
@@ -28,20 +28,20 @@ connection.on("OrderRequested", (order: PlaceOrder, currentCount: number) => {
 connection.on("Initialise", (currentCount, endpointNames) => {
   orderCount.value = currentCount ?? 0;
   failureEndpointNames.value = endpointNames;
-  requestFailureEndpoint.value =
-    requestFailureEndpoint.value || endpointNames[0];
+  requestFailureConsumer.value =
+    requestFailureConsumer.value || endpointNames[0];
 });
 
 async function createOrder() {
   try {
-    //   GA4.showcaseMessageSent();
+    GA4.showcaseMessageSent();
   } catch (e) {
     console.error(e);
   }
   await connection.invoke(
     "CreateOrder",
     requestCount.value,
-    requestFailureEndpoint.value
+    requestFailureConsumer.value
   );
 }
 </script>
@@ -51,8 +51,8 @@ async function createOrder() {
   <div class="withCount">
     <span>Request</span>
     <input class="requestCount" type="number" v-model.number="requestCount" />
-    <span>order(s), failing on Endpoint</span>
-    <select v-model="requestFailureEndpoint">
+    <span>order(s), failing on Consumer</span>
+    <select v-model="requestFailureConsumer">
       <option
         v-for="endpointName in failureEndpointNames"
         :value="endpointName"

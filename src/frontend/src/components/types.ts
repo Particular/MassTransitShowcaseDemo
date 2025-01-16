@@ -41,7 +41,7 @@ export class OrderBilled implements Order {
 
 export interface Message {
   timestamp: Date;
-  message: PlaceOrder | OrderPlaced | OrderBilled;
+  message: PlaceOrder | OrderPlaced | OrderBilled | Order;
 }
 
 export interface ErrorMessage extends Message {
@@ -57,13 +57,17 @@ export function isError(message: MessageOrError): message is ErrorMessage {
 }
 
 export function isOrderPlaced(
-  message: PlaceOrder | OrderPlaced | OrderBilled
+  message: PlaceOrder | OrderPlaced | OrderBilled | Order
 ): message is OrderPlaced {
-  return message.type === "OrderPlaced";
+  return (
+    (message as PlaceOrder | OrderPlaced | OrderBilled).type === "OrderPlaced"
+  );
 }
 
 export function isOrderBilled(
-  message: PlaceOrder | OrderPlaced | OrderBilled
+  message: PlaceOrder | OrderPlaced | OrderBilled | Order
 ): message is OrderBilled {
-  return message.type === "OrderBilled";
+  return (
+    (message as PlaceOrder | OrderPlaced | OrderBilled).type === "OrderBilled"
+  );
 }

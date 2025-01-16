@@ -20,11 +20,11 @@ public class SimulatedCustomers(IServiceScopeFactory factory)
             Contents = orderGenerator.Generate()
         };
 
-        var failureEndpoint = Enum.TryParse(typeof(EndpointNames), failOn, out var _failureEndpoint) ? (EndpointNames)_failureEndpoint : EndpointNames.None;
+        var failureEndpointConsumer = Enum.TryParse(typeof(Consumers), failOn, out var _failureEndpoint) ? (Consumers)_failureEndpoint : Consumers.None;
 
         await scope.ServiceProvider.GetRequiredService<IPublishEndpoint>().Publish(
             placeOrderCommand,
-            context => context.Headers.Set("FailOn", failureEndpoint.ToString()),
+            context => context.Headers.Set("FailOn", failureEndpointConsumer.ToString()),
             cancellationToken);
         OrdersPlaced++;
         return placeOrderCommand;

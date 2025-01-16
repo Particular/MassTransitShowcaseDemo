@@ -18,7 +18,7 @@ public class ProcessOrderConsumer(SimulationEffects simulationEffects, IHubConte
         catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested) { throw; }
         catch
         {
-            var messageViewId = ConsoleHelper.GetTheViewId(context.MessageId.ToString(), context.ReceiveContext.InputAddress.ToString());
+            var messageViewId = DeterministicGuid.GetTheViewId(context.MessageId.ToString(), context.ReceiveContext.InputAddress.ToString());
 
             await salesHub.Clients.All.SendAsync("MessageError", context.Message, context.MessageId, messageViewId, context.CancellationToken);
             throw;
