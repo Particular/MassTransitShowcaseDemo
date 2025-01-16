@@ -1,4 +1,5 @@
 ﻿using dotenv.net;
+using Helper;
 using MassTransit;
 
 public static class BusRegistrationConfiguratorExt
@@ -43,10 +44,8 @@ public static class BusRegistrationConfiguratorExt
                     h.Username("guest");
                     h.Password("guest");
                 });
-
                 cfg.ConfigureEndpoints(context);
             });
-
             selectedTransport = "RabbitMQ";
         }
         else

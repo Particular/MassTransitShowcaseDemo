@@ -25,12 +25,35 @@ body {
 }
 /* Main Container */
 #app {
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin: 0 auto;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 2rem;
+}
+
+.container {
+  display: flex; /* Enables horizontal layout */
+  width: 100%; /* Full width of the viewport */
+}
+
+.left-section {
+  flex: 3; /* Takes 2 parts */
+  background-color: #f4f4f4; /* Light grey background */
+  padding: 1rem;
+}
+
+.right-section {
+  flex: 1; /* Takes 1 part */
+  padding: 1rem;
+}
+
+.bolder {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 16px;
+  padding-bottom: 0.5rem;
 }
 
 /* Heading Styles */
@@ -87,4 +110,5 @@ div[data-v-eeef44d9] {
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: none;
 }
