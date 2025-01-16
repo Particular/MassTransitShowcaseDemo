@@ -12,10 +12,15 @@ import FloatingButton from "./components/FloatingButton.vue";
   <h2>Simulating customers placing orders on a website</h2>
   <div class="container">
     <div class="left-section">
-      <ClientEndpoint />
-      <SalesEndpoint />
-      <BillingEndpoint />
-      <ShippingEndpoint />
+      <div>
+        <ClientEndpoint />
+        <SalesEndpoint />
+        <BillingEndpoint />
+        <ShippingEndpoint />
+      </div>
+      <div style="padding-top: 2rem" class="container">
+        <img src="/src/assets/small-diagram.svg" alt="Particular Software" />
+      </div>
     </div>
     <div class="right-section"><TryItOut /></div>
     <floating-button icon="&#43;" color="#ff5722" />
