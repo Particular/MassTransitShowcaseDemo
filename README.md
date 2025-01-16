@@ -28,22 +28,6 @@ Run docker command below from the `src` folder in a CLI
 docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
 ```
 
-## **Amazon SQS**
-
-Configure the access to your SQS namespace by editing the variables in `src/sqs.env`  
-
-```env
-AWS_REGION="<region>"
-AWS_ACCESS_KEY_ID="<access-key>"
-AWS_SECRET_ACCESS_KEY="<secret-access-key>"
-```
-
-Run docker command below from the `src` folder in a CLI
-
-```cmd
-docker compose -f docker-compose-base.yml -f compose-sqs.yml --env-file sqs.env up -d
-```
-
 ## Running the code
 
 
