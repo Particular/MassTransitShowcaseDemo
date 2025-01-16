@@ -1,6 +1,7 @@
 ﻿namespace Billing;
 
 using System.Threading.Tasks;
+using Helper;
 using MassTransit;
 using Messages;
 using Microsoft.AspNetCore.SignalR;
@@ -17,7 +18,9 @@ public class BillOrderConsumer(SimulationEffects simulationEffects, IHubContext<
         catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested) { throw; }
         catch
         {
-            await billingHub.Clients.All.SendAsync("MessageError", context.Message, context.MessageId, context.CancellationToken);
+            var messageViewId = DeterministicGuid.GetTheViewId(context.MessageId.ToString(), context.ReceiveContext.InputAddress.ToString());
+
+            await billingHub.Clients.All.SendAsync("MessageError", context.Message, context.MessageId, messageViewId, context.CancellationToken);
             throw;
         }
 

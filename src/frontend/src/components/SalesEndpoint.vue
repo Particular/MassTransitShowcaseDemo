@@ -37,7 +37,7 @@ connection.on(
       messages.value = [
         {
           timestamp: new Date(),
-          message: new PlaceOrder(order),
+          message: order,
           isError: true,
           messageId,
           messageViewId,

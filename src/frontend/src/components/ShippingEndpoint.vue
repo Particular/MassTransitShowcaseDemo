@@ -7,7 +7,6 @@ import {
   isOrderPlaced,
   OrderBilled,
   OrderPlaced,
-  PlaceOrder,
   type MessageOrError,
   type Order,
 } from "./types";

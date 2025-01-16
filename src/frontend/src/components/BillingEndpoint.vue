@@ -29,19 +29,23 @@ connection.on("ProcessingMessage", (order: Order) => {
     ].slice(0, Math.max(messages.value.length, 100));
   }
 });
-connection.on("MessageError", (order: Order, messageId: string) => {
-  if (order) {
-    messages.value = [
-      {
-        timestamp: new Date(),
-        message: new OrderPlaced(order),
-        isError: true,
-        messageId,
-      },
-      ...messages.value,
-    ].slice(0, Math.max(messages.value.length, 100));
+connection.on(
+  "MessageError",
+  (order: Order, messageId: string, messageViewId: string) => {
+    if (order) {
+      messages.value = [
+        {
+          timestamp: new Date(),
+          message: order,
+          isError: true,
+          messageId,
+          messageViewId,
+        },
+        ...messages.value,
+      ].slice(0, Math.max(messages.value.length, 100));
+    }
   }
-});
+);
 connection.on("OrderBilled", (order: Order) => {
   if (order) {
     messages.value = [
@@ -92,10 +96,12 @@ function toggleFailOnRetries() {
       >
         {{ message.message.orderId }}
       </span>
+      <span>containing</span>
+      <span class="coloured">{{ message.message.contents.join(", ") }}</span>
       <span>failed.</span>
       <a
         target="_blank"
-        href="http://localhost:5173/#/failed-messages/all-failed-messages"
+        :href="`http://localhost:5173/#/failed-messages/message/${message.messageViewId}`"
       >
         View failure in ServicePulse
       </a>
@@ -118,6 +124,8 @@ function toggleFailOnRetries() {
       >
         {{ message.message.orderId }}
       </span>
+      <span>containing</span>
+      <span class="coloured">{{ message.message.contents.join(", ") }}</span>
     </template>
   </MessageContainer>
 </template>
