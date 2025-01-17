@@ -47,7 +47,9 @@ async function createOrder() {
 </script>
 
 <template>
-  <EndpointHeader label="Customer Order Client" :state="state" />
+  <div class="endpoint-header">
+    <EndpointHeader label="Customer Order Client" :state="state" />
+  </div>
   <div class="withCount">
     <span>Request</span>
     <input class="requestCount" type="number" v-model.number="requestCount" />
@@ -79,6 +81,10 @@ async function createOrder() {
 </template>
 
 <style scoped>
+.endpoint-header {
+  margin-top: 0.5em;
+}
+
 .withCount {
   display: flex;
   gap: 0.5em;

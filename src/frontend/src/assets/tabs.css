@@ -1,10 +1,15 @@
 .tabs {
   border-bottom: 1px solid #e6e6e6;
   padding: 0;
-  margin-bottom: -1px;
+  font-size: 1.5em;
+  display: flex;
+  gap: 1em;
+  margin: 0.5rem 0;
 }
 
 .tabs h5 {
+  text-transform: uppercase;
+  font-weight: bold;
   display: inline;
   padding-bottom: 10px;
   margin-bottom: 0;

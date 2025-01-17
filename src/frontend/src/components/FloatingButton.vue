@@ -1,11 +1,7 @@
 <script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    text: string;
-    color?: string;
-  }>(),
-  { color: "#007bff" }
-);
+defineProps<{
+  text: string;
+}>();
 </script>
 
 <template>
@@ -20,7 +16,7 @@ const props = withDefaults(
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #007bff; /* Nice blue color */
+  background-color: #00a3c4; /* Nice blue color */
   color: white; /* Text color */
   padding: 12px 24px;
   border-radius: 30px;
@@ -37,14 +33,14 @@ const props = withDefaults(
 
 /* Hover Effect */
 .floating-button:hover {
-  background-color: #0056b3; /* Slightly darker blue */
+  background-color: #00729c; /* Slightly darker blue */
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
 }
 
 /* Active (Pressed) Effect */
 .floating-button:active {
-  background-color: #003f7f; /* Even darker blue */
+  background-color: #01445c; /* Even darker blue */
   transform: scale(0.95);
 }
 </style>

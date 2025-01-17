@@ -26,7 +26,7 @@ const props = defineProps<{
   width: 100%;
   height: 6em;
   border-radius: 0.5em;
-  box-shadow: 0 2px 10px rgba(24, 10, 113, 0.749);
+  box-shadow: 0 2px 10px #2c3e50;
   overflow: auto;
   resize: vertical;
 }

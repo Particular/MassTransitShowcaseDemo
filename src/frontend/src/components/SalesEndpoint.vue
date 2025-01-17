@@ -132,7 +132,7 @@ function toggleFailOnRetries() {
 
 <style scoped>
 .endpoint-header {
-  margin-top: 1em;
+  margin-top: 0.5em;
   display: flex;
   justify-content: space-between;
 }
