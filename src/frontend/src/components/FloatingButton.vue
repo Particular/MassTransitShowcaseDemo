@@ -1,24 +1,18 @@
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    text: string;
+    color?: string;
+  }>(),
+  { color: "#007bff" }
+);
+</script>
+
 <template>
   <button class="floating-button" @click="$emit('click')">
     <span>{{ text }}</span>
   </button>
 </template>
-
-<script>
-export default {
-  name: "FloatingButton",
-  props: {
-    text: {
-      type: String,
-      default: "Still having issues? Ping us", // Default button text
-    },
-    color: {
-      type: String,
-      default: "#007bff", // Default button color (blue)
-    },
-  },
-};
-</script>
 
 <style scoped>
 /* Floating Button Styling */
