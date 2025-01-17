@@ -6,8 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 public class SimulatedCustomers(IServiceScopeFactory factory)
 {
-    public long OrdersPlaced { get; private set; } = 0;
-
+    long ordersPlaced = 0;
+    
+    public long OrdersPlaced { get => ordersPlaced; private set => ordersPlaced = value; }
     static readonly OrderGenerator orderGenerator = new();
 
     public async Task<PlaceOrder> PlaceSingleOrder(string failOn, CancellationToken cancellationToken)
@@ -26,7 +27,7 @@ public class SimulatedCustomers(IServiceScopeFactory factory)
             placeOrderCommand,
             context => context.Headers.Set("FailOn", failureEndpointConsumer.ToString()),
             cancellationToken);
-        OrdersPlaced++;
+        Interlocked.Increment(ref ordersPlaced);
         return placeOrderCommand;
     }
 }

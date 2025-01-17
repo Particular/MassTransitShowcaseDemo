@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.SignalR;
 
 public class SimulationEffects(IHubContext<SalesHub> salesHub)
 {
-    public int MessagesProcessed { get; private set; } = 0;
-    public int MessagesErrored { get; private set; } = 0;
+    int messagesProcessed = 0;
+    int messagesErrored = 0;
 
+    public int MessagesProcessed { get => messagesProcessed; private set => messagesProcessed = value; }
+    public int MessagesErrored { get => messagesErrored; private set => messagesErrored = value; }
     public bool ShouldFailRetries { get; set; } = false;
 
 
@@ -22,11 +24,11 @@ public class SimulationEffects(IHubContext<SalesHub> salesHub)
             if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.Sales
                     && (!isRetry || ShouldFailRetries))
             {
-                MessagesErrored++;
+                Interlocked.Increment(ref messagesErrored);
                 throw new Exception($"A simulated failure occurred in Sales, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
-            MessagesProcessed++;
+            Interlocked.Increment(ref messagesProcessed);
         }
         finally
         {

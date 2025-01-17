@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.SignalR;
 
 public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
 {
-    public int OrderBilledProcessed { get; private set; } = 0;
-    public int OrderBilledErrored { get; private set; } = 0;
+    int orderBilledProcessed = 0;
+    int orderBilledErrored = 0;
+    int orderPlacedProcessed = 0;
+    int orderPlacedErrored = 0;
 
-    public int OrderPlacedProcessed { get; private set; } = 0;
-    public int OrderPlacedErrored { get; private set; } = 0;
-
+    public int OrderBilledProcessed { get => orderBilledProcessed; private set => orderBilledProcessed = value; }
+    public int OrderBilledErrored { get => orderBilledErrored; private set => orderBilledErrored = value; }
+    public int OrderPlacedProcessed { get => orderPlacedProcessed; private set => orderPlacedProcessed = value; }
+    public int OrderPlacedErrored { get => orderPlacedErrored; private set => orderPlacedErrored = value; }
     public bool ShouldFailRetries { get; set; } = false;
 
 
@@ -25,11 +28,11 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
             if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.ShippingOrderBilled
                     && (!isRetry || ShouldFailRetries))
             {
-                OrderBilledErrored++;
+                Interlocked.Increment(ref orderBilledErrored);
                 throw new Exception($"A simulated failure occurred in Shipping Order Billed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
-            OrderBilledProcessed++;
+            Interlocked.Increment(ref orderBilledProcessed);
         }
         finally
         {
@@ -47,11 +50,11 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
             if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.ShippingOrderPlaced
                     && (!isRetry || ShouldFailRetries))
             {
-                OrderPlacedErrored++;
+                Interlocked.Increment(ref orderPlacedErrored);
                 throw new Exception($"A simulated failure occurred in Shipping Order Placed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
-            OrderPlacedProcessed++;
+            Interlocked.Increment(ref orderPlacedProcessed);
         }
         finally
         {
