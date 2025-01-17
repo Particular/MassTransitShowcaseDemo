@@ -56,6 +56,7 @@ const tab = ref("showcase");
 
 .sections > div {
   border-top: 1px solid #2c3e50;
+  border-bottom: 1px solid #2c3e50;
   border-radius: 1em;
   margin: 0 -0.5em;
   padding: 0 0.5em;

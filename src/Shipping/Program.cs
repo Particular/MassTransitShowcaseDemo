@@ -22,6 +22,7 @@ class Program
                  {
                      services.AddMassTransit(x =>
                      {
+                         x.SetKebabCaseEndpointNameFormatter();
                          x.AddConsumers(Assembly.GetExecutingAssembly());
                          x.SetupTransport(args);
                      });

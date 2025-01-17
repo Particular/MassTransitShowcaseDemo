@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Helper;
 
+[EntityName("processorder")]
 public class ProcessOrderConsumer(SimulationEffects simulationEffects, IHubContext<SalesHub> salesHub) : IConsumer<PlaceOrder>
 {
     public async Task Consume(ConsumeContext<PlaceOrder> context)

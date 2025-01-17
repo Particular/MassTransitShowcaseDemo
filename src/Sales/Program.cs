@@ -8,6 +8,7 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
+using Helper;
 
 class Program
 {
@@ -22,6 +23,7 @@ class Program
                 {
                     services.AddMassTransit(x =>
                     {
+                        x.SetKebabCaseEndpointNameFormatter();                    
                         x.AddConsumers(Assembly.GetExecutingAssembly());
                         x.SetupTransport(args);
                     });
