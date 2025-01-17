@@ -79,7 +79,7 @@ function toggleFailOnRetries() {
     </div>
     <div>
       <OnOffSwitch
-        id="failOnRetries"
+        id="failOnRetriesBilling"
         label="Fail Retries"
         @toggle="toggleFailOnRetries"
         :value="shouldFailRetries"
