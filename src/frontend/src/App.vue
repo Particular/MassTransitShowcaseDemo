@@ -38,7 +38,10 @@ const tab = ref("showcase");
       </div>
     </div>
     <div v-show="tab === 'tryit'"><TryItOut /></div>
-    <floating-button text="Any issues? Ping us" color="#ff5722" />
+    <floating-button
+      text="Any issues? Ping us"
+      location="https://discuss.particular.net"
+    />
   </div>
 </template>
 

@@ -1,11 +1,17 @@
 <script setup lang="ts">
 defineProps<{
   text: string;
+  location?: string;
 }>();
 </script>
 
 <template>
-  <button class="floating-button" @click="$emit('click')">
+  <a v-if="location" target="_blank" :href="location">
+    <button class="floating-button" @click="$emit('click')">
+      <span>{{ text }}</span>
+    </button>
+  </a>
+  <button v-else class="floating-button" @click="$emit('click')">
     <span>{{ text }}</span>
   </button>
 </template>
