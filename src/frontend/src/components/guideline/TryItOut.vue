@@ -30,3 +30,12 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.bolder {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 16px;
+  padding-bottom: 0.5rem;
+}
+</style>

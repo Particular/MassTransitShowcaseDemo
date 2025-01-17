@@ -1,0 +1,51 @@
+.tabs {
+  border-bottom: 1px solid #e6e6e6;
+  padding: 0;
+  margin-bottom: -1px;
+}
+
+.tabs h5 {
+  display: inline;
+  padding-bottom: 10px;
+  margin-bottom: 0;
+}
+
+.tabs h5:hover {
+  text-decoration: none;
+}
+
+.tabs h5.active {
+  border-bottom: 3px solid #181919;
+  color: #181919;
+}
+
+.tabs h5.active {
+  color: #181919;
+  text-decoration: none;
+}
+
+.tabs h5 {
+  color: #00a3c4;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.tabs h5:hover {
+  color: #00729c;
+}
+
+.tabs h5.active:hover {
+  color: #181919;
+  cursor: default;
+  text-decoration: none;
+}
+
+.tabs h5.disabled {
+  color: #aaa;
+  cursor: default;
+  text-decoration: none;
+}
+
+.tabs h5.disabled:hover {
+  cursor: not-allowed;
+}
