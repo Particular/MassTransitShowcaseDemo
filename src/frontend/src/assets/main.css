@@ -73,8 +73,16 @@ button {
   transition: background-color 0.3s ease;
 }
 
+button.secondary {
+  background-color: #555;
+}
+
 button:hover {
-  background-color: #34495e;
+  background-color: #5b7ea1;
+}
+
+button.secondary:hover {
+  background-color: #8c8c8c;
 }
 
 /* div[data-v-492dd3e4],

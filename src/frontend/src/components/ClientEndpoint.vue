@@ -44,28 +44,57 @@ async function createOrder() {
     requestFailureConsumer.value
   );
 }
+
+async function runScenario() {
+  try {
+    GA4.showcaseMessageSent();
+  } catch (e) {
+    console.error(e);
+  }
+  await connection.invoke("RunScenario");
+}
 </script>
 
 <template>
   <div class="endpoint-header">
     <EndpointHeader label="Customer Order Client" :state="state" />
   </div>
-  <div class="withCount">
-    <span>Request</span>
-    <input class="requestCount" type="number" v-model.number="requestCount" />
-    <span>order(s), failing on Consumer</span>
-    <select v-model="requestFailureConsumer">
-      <option
-        v-for="endpointName in failureEndpointNames"
-        :value="endpointName"
-      >
-        {{ endpointName }}
-      </option>
-    </select>
-    <button type="button" @click="createOrder">Place Order(s)</button>
-    <div class="counter-info">
-      <span>{{ orderCount }} total orders sent</span>
+  <div>
+    <label
+      >Run a scenario with multiple failures occuring in each consumer
+    </label>
+    <div class="inline">
+      <button type="button" @click="runScenario">Run Scenario</button>
+      <a target="_blank" href="http://localhost:5173/#/failed-messages/">
+        <button type="button" class="secondary">
+          View Failures in ServicePulse
+        </button>
+      </a>
     </div>
+  </div>
+  <div class="or-line">
+    <hr />
+    <span>OR</span>
+  </div>
+  <div>
+    <label>Manually create orders, specifying where they will fail</label>
+    <div class="inline">
+      <span>Request</span>
+      <input class="requestCount" type="number" v-model.number="requestCount" />
+      <span>order(s), failing on Consumer</span>
+      <select v-model="requestFailureConsumer">
+        <option
+          v-for="endpointName in failureEndpointNames"
+          :value="endpointName"
+        >
+          {{ endpointName }}
+        </option>
+      </select>
+      <button type="button" @click="createOrder">Place Order(s)</button>
+    </div>
+  </div>
+  <div class="counter-info">
+    <span>{{ orderCount }} total orders sent</span>
   </div>
   <MessageContainer :messages="messages" v-slot="{ message }">
     <span>{{ message.timestamp.toLocaleTimeString() }}</span>
@@ -85,7 +114,7 @@ async function createOrder() {
   margin-top: 0.5em;
 }
 
-.withCount {
+.inline {
   display: flex;
   gap: 0.5em;
   align-items: baseline;
@@ -94,5 +123,29 @@ async function createOrder() {
 
 .requestCount {
   width: 3em;
+}
+
+.or-line {
+  width: 50%;
+  height: 2em;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.or-line > * {
+  position: absolute;
+  text-align: center;
+  flex: 1;
+}
+
+.or-line > hr {
+  width: 100%;
+}
+
+.or-line > span {
+  background-color: white;
+  padding: 0 0.5em;
 }
 </style>
