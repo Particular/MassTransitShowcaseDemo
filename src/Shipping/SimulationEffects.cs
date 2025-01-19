@@ -25,6 +25,10 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
             context.TryGetHeader("FailOn", out string failOn);
             //Retries leave ServiceControl headers on the ReceiveContext. Choosing one at random here...
             var isRetry = context.ReceiveContext.TransportHeaders.TryGetHeader("ServiceControl.RetryTo", out var _);
+            if (isRetry)
+            {
+                await shippingHub.Clients.All.SendAsync("RetryAttempted");
+            }
             if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.ShippingOrderBilled
                     && (!isRetry || ShouldFailRetries))
             {
@@ -47,6 +51,10 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
             context.TryGetHeader("FailOn", out string failOn);
             //Retries leave ServiceControl headers on the ReceiveContext. Choosing one at random here...
             var isRetry = context.ReceiveContext.TransportHeaders.TryGetHeader("ServiceControl.RetryTo", out var _);
+            if (isRetry)
+            {
+                await shippingHub.Clients.All.SendAsync("RetryAttempted");
+            }
             if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.ShippingOrderPlaced
                     && (!isRetry || ShouldFailRetries))
             {

@@ -47,6 +47,12 @@ const GA4 = (() => {
         solution_version: SOLUTION_VERSION,
       });
     },
+    showcaseRetryAttempted: () => {
+      console.log("mt_showcase_retry_attempted");
+      sendGA4Event("mt_showcase_retry_attempted", {
+        solution_version: SOLUTION_VERSION,
+      });
+    },
     showcaseDisplayedLicenseButton: () => {
       sendGA4Event("mt_showcase_display_get_free_license", {
         solution_version: SOLUTION_VERSION,

@@ -13,6 +13,7 @@ import {
 import MessageContainer from "./MessageContainer.vue";
 import { store } from "./shared";
 import OnOffSwitch from "./OnOffSwitch.vue";
+import { GA4 } from "../utils/analytics";
 
 var { connection, state } = useSignalR("http://localhost:5003/shippingHub");
 
@@ -57,7 +58,6 @@ connection.on(
     }
   }
 );
-
 connection.on(
   "SyncValues",
   (
@@ -74,6 +74,13 @@ connection.on(
     shouldFailRetries.value = failRetries;
   }
 );
+connection.on("RetryAttempted", () => {
+  try {
+    GA4.showcaseRetryAttempted();
+  } catch (e) {
+    console.error(e);
+  }
+});
 
 function toggleFailOnRetries() {
   connection.invoke("SetFailRetries", !shouldFailRetries.value);

@@ -13,6 +13,7 @@ import {
 import { store } from "./shared";
 import MessageContainer from "./MessageContainer.vue";
 import OnOffSwitch from "./OnOffSwitch.vue";
+import { GA4 } from "../utils/analytics";
 
 var { connection, state } = useSignalR("http://localhost:5002/billingHub");
 
@@ -52,6 +53,13 @@ connection.on("OrderBilled", (order: Order) => {
       { timestamp: new Date(), message: new OrderBilled(order) },
       ...messages.value,
     ].slice(0, Math.max(messages.value.length, 100));
+  }
+});
+connection.on("RetryAttempted", () => {
+  try {
+    GA4.showcaseRetryAttempted();
+  } catch (e) {
+    console.error(e);
   }
 });
 
