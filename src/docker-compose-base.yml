@@ -15,7 +15,7 @@ services:
       - 33333:33333
     environment:
       - TRANSPORTTYPE
-      - CONNECTIONSTRING
+      - CONNECTIONSTRING=${CONNECTION_STRING}
       - RAVENDB_CONNECTIONSTRING=http://servicecontrol-db:8080
       - ALLOWMESSAGEEDITING=true
       - SHOW_PENDING_RETRY=true
@@ -24,11 +24,13 @@ services:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.2
-    command: "--setup-and-run"
+    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.3
+    configs:
+      - source: queues
+        target: /app/queues.txt
     environment:
-      - TRANSPORTTYPE
-      - CONNECTIONSTRING
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
   service-pulse:
     depends_on:
       service-control:
@@ -44,3 +46,12 @@ services:
 
 volumes:
   sc-data:
+
+configs:
+  queues:
+    content: |
+      BillOrder_error
+      PrepareOrder_error
+      ProcessOrder_error
+      ShipOrder_error
+
