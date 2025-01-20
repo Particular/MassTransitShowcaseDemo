@@ -21,6 +21,10 @@ public class SimulationEffects(IHubContext<SalesHub> salesHub)
             context.TryGetHeader("FailOn", out string failOn);
             //Retries leave ServiceControl headers on the ReceiveContext. Choosing one at random here...
             var isRetry = context.ReceiveContext.TransportHeaders.TryGetHeader("ServiceControl.RetryTo", out var _);
+            if (isRetry)
+            {
+                await salesHub.Clients.All.SendAsync("RetryAttempted");
+            }
             if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.Sales
                     && (!isRetry || ShouldFailRetries))
             {
