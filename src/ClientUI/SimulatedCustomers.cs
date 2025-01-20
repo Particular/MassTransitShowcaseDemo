@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 public class SimulatedCustomers(IServiceScopeFactory factory)
 {
     long ordersPlaced = 0;
-    
+
     public long OrdersPlaced { get => ordersPlaced; private set => ordersPlaced = value; }
     static readonly OrderGenerator orderGenerator = new();
 
