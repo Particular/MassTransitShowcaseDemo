@@ -71,6 +71,11 @@
         "Path": "Shipping\\Shipping.csproj",
         "Action": "Start",
         "DebugTarget": "RabbitMQ"
+      },
+      {
+        "Path": "frontend\\frontend.esproj",
+        "Action": "Start",
+        "DebugTarget": "localhost (Edge)"
       }
     ]
   }
