@@ -50,8 +50,8 @@ volumes:
 configs:
   queues:
     content: |
-      BillOrder_error
-      PrepareOrder_error
-      ProcessOrder_error
-      ShipOrder_error
+      bill-order_error
+      prepare-order_error
+      process-order_error
+      ship-order_error
 

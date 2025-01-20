@@ -34,7 +34,7 @@ connection.on("Initialise", (currentCount, endpointNames) => {
 
 async function createOrder() {
   try {
-    GA4.showcaseMessageSent();
+    GA4.createOrderEvent();
   } catch (e) {
     console.error(e);
   }
@@ -47,7 +47,7 @@ async function createOrder() {
 
 async function runScenario() {
   try {
-    GA4.showcaseMessageSent();
+    GA4.runScenario();
   } catch (e) {
     console.error(e);
   }
@@ -65,7 +65,7 @@ async function runScenario() {
     </label>
     <div class="inline">
       <button type="button" @click="runScenario">Run Scenario</button>
-      <a target="_blank" href="http://localhost:5173/#/failed-messages/">
+      <a target="_blank" href="http://localhost:9090/#/failed-messages/">
         <button type="button" class="secondary">
           View Failures in ServicePulse
         </button>

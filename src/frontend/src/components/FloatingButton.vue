@@ -1,8 +1,17 @@
 <script setup lang="ts">
+import { GA4 } from "../utils/analytics";
 defineProps<{
   text: string;
   location?: string;
 }>();
+
+async function pingUs() {
+  try {
+    GA4.pingUsButton();
+  } catch (e) {
+    console.error(e);
+  }
+}
 </script>
 
 <template>

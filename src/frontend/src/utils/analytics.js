@@ -1,6 +1,6 @@
 // Environment variables for dynamic configuration
 const GA4_MEASUREMENT_ID =
-  import.meta.env.VITE_GA4_MEASUREMENT_ID || "YOUR-GA4-ID";
+  import.meta.env.VITE_GA4_MEASUREMENT_ID || "G-GMZ1FS541B";
 const SOLUTION_VERSION = import.meta.env.VITE_SOLUTION_VERSION || "VS2019";
 
 // Google Analytics 4 (Pre-Load)
@@ -15,6 +15,7 @@ var loadScript = function (url) {
     f.parentNode.insertBefore(s, f);
   }, 1);
 };
+
 // Load Google Analytics 4
 loadScript("//www.googletagmanager.com/gtag/js?id=G-GMZ1FS541B");
 
@@ -41,9 +42,21 @@ const GA4 = (() => {
         solution_version: SOLUTION_VERSION,
       });
     },
-    showcaseMessageSent: () => {
-      console.log("mt_showcase_sent_message");
-      sendGA4Event("mt_showcase_sent_message", {
+    runScenario: () => {
+      console.log("mt_showcase_run_scenario");
+      sendGA4Event("mt_showcase_run_scenario", {
+        solution_version: SOLUTION_VERSION,
+      });
+    },
+    pingUsButton: () => {
+      console.log("mt_showcase_pingus");
+      sendGA4Event("mt_showcase_pingus", {
+        solution_version: SOLUTION_VERSION,
+      });
+    },
+    createOrderEvent: () => {
+      console.log("mt_showcase_createOrder");
+      sendGA4Event("mt_showcase_createOrder", {
         solution_version: SOLUTION_VERSION,
       });
     },

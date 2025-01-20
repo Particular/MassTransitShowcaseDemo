@@ -128,7 +128,7 @@ function toggleFailOnRetries() {
       <span>failed.</span>
       <a
         target="_blank"
-        :href="`http://localhost:5173/#/failed-messages/message/${message.messageViewId}`"
+        :href="`http://localhost:9090/#/failed-messages/message/${message.messageViewId}`"
       >
         View failure in ServicePulse
       </a>
