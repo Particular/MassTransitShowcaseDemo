@@ -1,23 +1,7 @@
 // Environment variables for dynamic configuration
 const GA4_MEASUREMENT_ID =
-  import.meta.env.VITE_GA4_MEASUREMENT_ID || "G-GMZ1FS541B";
+  import.meta.env.VITE_GA4_MEASUREMENT_ID || "GTM-N895C5BN";
 const SOLUTION_VERSION = import.meta.env.VITE_SOLUTION_VERSION || "VS2019";
-
-// Google Analytics 4 (Pre-Load)
-var loadScript = function (url) {
-  setTimeout(function () {
-    var d = document,
-      f = d.getElementsByTagName("script")[0],
-      s = d.createElement("script");
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = url;
-    f.parentNode.insertBefore(s, f);
-  }, 1);
-};
-
-// Load Google Analytics 4
-loadScript("//www.googletagmanager.com/gtag/js?id=G-GMZ1FS541B");
 
 // Google Analytics 4 Initialization
 function initializeGA4() {

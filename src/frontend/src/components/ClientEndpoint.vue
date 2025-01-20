@@ -64,9 +64,11 @@ async function runScenario() {
       >Run a scenario with multiple failures occuring in each consumer
     </label>
     <div class="inline">
-      <button type="button" @click="runScenario">Run Scenario</button>
+      <button type="button" class="run-scenario" @click="runScenario">
+        Run Scenario
+      </button>
       <a target="_blank" href="http://localhost:9090/#/failed-messages/">
-        <button type="button" class="secondary">
+        <button type="button" class="secondary view-servicepulse">
           View Failures in ServicePulse
         </button>
       </a>
