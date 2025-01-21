@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipping", "Shipping\Shippi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Helper", "Helper\Helper.csproj", "{4D67822F-34B2-46D9-858B-3B63E457ABA0}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "frontend", "frontend\frontend.esproj", "{34EE966B-85B9-4EB9-8BF0-3A2BBF9BC739}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,12 +49,6 @@ Global
 		{4D67822F-34B2-46D9-858B-3B63E457ABA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D67822F-34B2-46D9-858B-3B63E457ABA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D67822F-34B2-46D9-858B-3B63E457ABA0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34EE966B-85B9-4EB9-8BF0-3A2BBF9BC739}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34EE966B-85B9-4EB9-8BF0-3A2BBF9BC739}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34EE966B-85B9-4EB9-8BF0-3A2BBF9BC739}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{34EE966B-85B9-4EB9-8BF0-3A2BBF9BC739}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34EE966B-85B9-4EB9-8BF0-3A2BBF9BC739}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34EE966B-85B9-4EB9-8BF0-3A2BBF9BC739}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
