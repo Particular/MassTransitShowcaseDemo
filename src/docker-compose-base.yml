@@ -1,7 +1,7 @@
 services:
   service-control-db:
     container_name: servicecontrol-db
-    image: particular/servicecontrol-ravendb:6
+    image: particular/servicecontrol-ravendb:latest
     volumes:
       - sc-data:/var/lib/ravendb/data
   service-control:
@@ -9,7 +9,7 @@ services:
       service-control-db:
         condition: service_healthy
     container_name: servicecontrol
-    image: particular/servicecontrol:6
+    image: particular/servicecontrol:latest
     command: "--setup-and-run"
     ports:
       - 33333:33333
@@ -24,10 +24,9 @@ services:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.3
-    configs:
-      - source: queues
-        target: /app/queues.txt
+    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.4
+    volumes:
+      - ./queues.txt:/app/queues.txt:ro
     environment:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
@@ -46,12 +45,3 @@ services:
 
 volumes:
   sc-data:
-
-configs:
-  queues:
-    content: |
-      bill-order_error
-      prepare-order_error
-      process-order_error
-      ship-order_error
-
