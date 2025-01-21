@@ -27,3 +27,13 @@ jobs:
           dotnet-version: 8.0.x
       - name: Build
         run: dotnet build src --configuration Release -graph
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 21.6.x
+      - name: install frontend packages
+        run: npm install
+        working-directory: src/frontend
+      - name: build frontend
+        run: npm run build
+        working-directory: src/frontend
