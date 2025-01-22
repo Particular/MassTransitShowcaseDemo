@@ -74,7 +74,7 @@ async function runScenario() {
       </a>
     </div>
   </div>
-  <div class="or-line">
+  <!-- <div class="or-line">
     <hr />
     <span>OR</span>
   </div>
@@ -94,10 +94,10 @@ async function runScenario() {
       </select>
       <button type="button" @click="createOrder">Place Order(s)</button>
     </div>
-  </div>
-  <div class="counter-info">
+  </div> -->
+  <!-- <div class="counter-info">
     <span>{{ orderCount }} total orders sent</span>
-  </div>
+  </div> -->
   <MessageContainer :messages="messages" v-slot="{ message }">
     <span>{{ message.timestamp.toLocaleTimeString() }}</span>
     <span>Order</span>

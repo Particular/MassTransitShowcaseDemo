@@ -91,7 +91,7 @@ function toggleFailOnRetries() {
   <div class="endpoint-header">
     <div>
       <EndpointHeader label="Shipping" :state="state" />
-      <div class="counter-info">
+      <!-- <div class="counter-info">
         <span>
           {{ processedOrderPlacedCount }} order placed messages processed /
           <span class="red"> {{ erroredOrderPlacedCount }} errored</span>
@@ -102,16 +102,16 @@ function toggleFailOnRetries() {
           {{ processedOrderBilledCount }} order billed messages processed /
           <span class="red"> {{ erroredOrderBilledCount }} errored</span>
         </span>
-      </div>
+      </div> -->
     </div>
-    <div>
+    <!-- <div>
       <OnOffSwitch
         id="failOnRetriesShipping"
         label="Fail Retries"
         @toggle="toggleFailOnRetries"
         :value="shouldFailRetries"
       />
-    </div>
+    </div> -->
   </div>
   <MessageContainer :messages="messages" v-slot="{ message }">
     <span>{{ message.timestamp.toLocaleTimeString() }}</span>
