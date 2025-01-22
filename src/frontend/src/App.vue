@@ -27,14 +27,12 @@ const tab = ref("showcase");
   <div class="container">
     <div v-show="tab === 'showcase'">
       <h2>Simulating customers placing orders on a website</h2>
+      <div class="architecture-diagram"></div>
       <div class="sections">
         <div><ClientEndpoint /></div>
         <div><SalesEndpoint /></div>
         <div><BillingEndpoint /></div>
         <div><ShippingEndpoint /></div>
-      </div>
-      <div style="padding-top: 2rem">
-        <img src="/src/assets/small-diagram.svg" alt="Particular Software" />
       </div>
     </div>
     <div v-show="tab === 'tryit'"><TryItOut /></div>
@@ -47,6 +45,16 @@ const tab = ref("showcase");
 
 <style scoped>
 @import "./assets/tabs.css";
+
+.architecture-diagram {
+  background-image: url("./assets/data_flow.png");
+  height: 7.9rem;
+  width: 18rem;
+  position: fixed;
+  background-size: contain;
+  top: 1rem;
+  right: calc(50% - 640px + 7em);
+}
 
 .container {
   flex: 1;
