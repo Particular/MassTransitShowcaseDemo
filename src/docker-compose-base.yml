@@ -43,15 +43,52 @@ services:
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
   vue-app:
+    container_name: ui-app
     build:
-      context: ./frontend # Point to the frontend folder
-      dockerfile: Dockerfile # Use the Dockerfile in the frontend folder
-    container_name: vue-app-container
+      context: ./frontend  # Path to the folder containing Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - "61335:8080" # Map port 8080 in the container to 61335 on the host
+      - "8080:80"  # Map port 80 in the container to port 8080 on the host
+    depends_on:
+      - billing
     volumes:
-      - ./frontend:/app # Mount the frontend folder into the container
-      - /app/node_modules # Prevent overwriting node_modules
-    command: "npm install && npm run dev" # Development mode command
+      - ./frontend:/app  # Optional for hot reloading
+    restart: always
+  billing:
+    build:
+      context: ./
+      dockerfile: ./src/Billing/Dockerfile
+    container_name: billing 
+    ports:
+      - "5002:5002"
+    environment:
+      - ASPNETCORE_URLS=http://+:5002  
+  shipping:
+    build:
+      context: ./
+      dockerfile: ./src/Shipping/Dockerfile
+    container_name: shipping 
+    ports:
+      - "5003:5003"
+    environment:
+      - ASPNETCORE_URLS=http://+:5003  
+  sales:
+    build:
+      context: ./
+      dockerfile: ./src/Sales/Dockerfile
+    container_name: sales 
+    ports:
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_URLS=http://+:5001  
+  clientui:
+    build:
+      context: ./
+      dockerfile: ./src/ClientUI/Dockerfile
+    container_name: clientui 
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_URLS=http://+:5000  
 volumes:
   sc-data:
