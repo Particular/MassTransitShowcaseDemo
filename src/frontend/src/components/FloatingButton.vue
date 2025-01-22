@@ -4,30 +4,19 @@ defineProps<{
   text: string;
   location?: string;
 }>();
-
-async function pingUs() {
-  try {
-    GA4.pingUsButton();
-  } catch (e) {
-    console.error(e);
-  }
-}
 </script>
 
 <template>
-  <a v-if="location" target="_blank" :href="location">
-    <button class="floating-button" @click="$emit('click')">
-      <span>{{ text }}</span>
-    </button>
+  <a class="floating-button" v-if="location" target="_blank" :href="location">
+    <span @click="$emit('click')">
+      {{ text }}
+    </span>
   </a>
-  <button v-else class="floating-button" @click="$emit('click')">
-    <span>{{ text }}</span>
-  </button>
 </template>
 
 <style scoped>
 /* Floating Button Styling */
-.floating-button {
+a.floating-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -47,14 +36,14 @@ async function pingUs() {
 }
 
 /* Hover Effect */
-.floating-button:hover {
+a.floating-button:hover {
   background-color: #00729c; /* Slightly darker blue */
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
 }
 
 /* Active (Pressed) Effect */
-.floating-button:active {
+a.floating-button:active {
   background-color: #01445c; /* Even darker blue */
   transform: scale(0.95);
 }

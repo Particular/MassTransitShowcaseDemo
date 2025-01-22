@@ -1,66 +1,51 @@
-// Environment variables for dynamic configuration
-const GA4_MEASUREMENT_ID =
-  import.meta.env.VITE_GA4_MEASUREMENT_ID || "GTM-N895C5BN";
-const SOLUTION_VERSION = import.meta.env.VITE_SOLUTION_VERSION || "VS2019";
-
-// Google Analytics 4 Initialization
-function initializeGA4() {
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    dataLayer.push(arguments);
-  }
-
-  gtag("js", new Date());
-  gtag("config", GA4_MEASUREMENT_ID);
-}
-
-// GA4 Event Wrapper
 const GA4 = (() => {
-  const sendGA4Event = (eventName, parameters) => {
-    gtag("event", eventName, parameters);
+  // Function to send events via the dataLayer for GTM
+  const sendGA4Event = (eventName, parameters = {}) => {
+    if (!window.dataLayer) {
+      console.error("GTM is not initialized. Unable to send GA4 event.");
+      return;
+    }
+
+    window.dataLayer.push({
+      event: eventName,
+      ...parameters,
+    });
+
+    console.log(`GA4 event sent: ${eventName}`, parameters);
   };
 
+  // Return an object with functions for specific events
   return {
     showcaseRunning: () => {
-      sendGA4Event("mt_showcase_running", {
-        solution_version: SOLUTION_VERSION,
-      });
+      sendGA4Event("mt_showcase_running");
     },
     runScenario: () => {
       console.log("mt_showcase_run_scenario");
-      sendGA4Event("mt_showcase_run_scenario", {
-        solution_version: SOLUTION_VERSION,
-      });
+      sendGA4Event("mt_showcase_run_scenario");
     },
     pingUsButton: () => {
       console.log("mt_showcase_pingus");
-      sendGA4Event("mt_showcase_pingus", {
-        solution_version: SOLUTION_VERSION,
-      });
+      sendGA4Event("mt_showcase_pingus");
     },
     createOrderEvent: () => {
       console.log("mt_showcase_createOrder");
-      sendGA4Event("mt_showcase_createOrder", {
-        solution_version: SOLUTION_VERSION,
-      });
+      sendGA4Event("mt_showcase_createOrder");
     },
     showcaseRetryAttempted: () => {
       console.log("mt_showcase_retry_attempted");
-      sendGA4Event("mt_showcase_retry_attempted", {
-        solution_version: SOLUTION_VERSION,
-      });
+      sendGA4Event("mt_showcase_retry_attempted");
     },
     showcaseDisplayedLicenseButton: () => {
-      sendGA4Event("mt_showcase_display_get_free_license", {
-        solution_version: SOLUTION_VERSION,
-      });
+      sendGA4Event("mt_showcase_display_get_free_license");
     },
     showcaseClickedLicenseButton: () => {
-      sendGA4Event("mt_showcase_license_btn_click", {
-        solution_version: SOLUTION_VERSION,
-      });
+      sendGA4Event("mt_showcase_license_btn_click");
     },
     disableAllAdvertisingFeatures: () => {
+      if (!window.gtag) {
+        console.error("GA4 has not been initialized.");
+        return;
+      }
       gtag("set", "allow_google_signals", false);
     },
   };

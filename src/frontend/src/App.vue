@@ -11,7 +11,7 @@ const tab = ref("showcase");
 </script>
 
 <template>
-  <h1>Mass Transit message retry showcase</h1>
+  <h1>MassTransit recoverability Showcase</h1>
   <div class="tabs">
     <h5
       class="tab"
@@ -20,7 +20,12 @@ const tab = ref("showcase");
     >
       Showcase
     </h5>
-    <h5 class="tab" :class="{ active: tab === 'tryit' }" @click="tab = 'tryit'">
+    <h5
+      class="tab"
+      id="try-it"
+      :class="{ active: tab === 'tryit' }"
+      @click="tab = 'tryit'"
+    >
       Try retries with <i>your</i> system
     </h5>
   </div>
@@ -38,7 +43,7 @@ const tab = ref("showcase");
     <div v-show="tab === 'tryit'"><TryItOut /></div>
     <floating-button
       text="Any issues? Ping us"
-      location="https://discuss.particular.net"
+      location="https://discuss.particular.net/tag/masstransit"
     />
   </div>
 </template>

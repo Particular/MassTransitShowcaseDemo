@@ -79,21 +79,7 @@ function toggleFailOnRetries() {
   <div class="endpoint-header">
     <div>
       <EndpointHeader label="Sales" :state="state" />
-      <!-- <div class="counter-info">
-        <span>
-          {{ processedCount }} messages processed /
-          <span class="red"> {{ erroredCount }} errored</span>
-        </span>
-      </div> -->
     </div>
-    <!-- <div>
-      <OnOffSwitch
-        id="failOnRetriesSales"
-        label="Fail Retries"
-        @toggle="toggleFailOnRetries"
-        :value="shouldFailRetries"
-      />
-    </div> -->
   </div>
   <MessageContainer :messages="messages" v-slot="{ message }">
     <span>{{ message.timestamp.toLocaleTimeString() }}</span>

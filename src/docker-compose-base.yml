@@ -42,6 +42,16 @@ services:
         SERVICECONTROL_URL: http://localhost:33333/api/
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
-
+  vue-app:
+    build:
+      context: ./frontend # Point to the frontend folder
+      dockerfile: Dockerfile # Use the Dockerfile in the frontend folder
+    container_name: vue-app-container
+    ports:
+      - "61335:8080" # Map port 8080 in the container to 61335 on the host
+    volumes:
+      - ./frontend:/app # Mount the frontend folder into the container
+      - /app/node_modules # Prevent overwriting node_modules
+    command: "npm install && npm run dev" # Development mode command
 volumes:
   sc-data:

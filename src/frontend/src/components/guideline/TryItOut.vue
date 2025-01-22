@@ -19,7 +19,7 @@ onMounted(async () => {
     <h3 class="bolder">Want to try it in your system?</h3>
     <div>
       Select your transport:
-      <select v-model="selection">
+      <select v-model="selection" id="transport">
         <option value="rabbit">RabbitMq</option>
         <option value="azure">Azure Service Bus</option>
       </select>
