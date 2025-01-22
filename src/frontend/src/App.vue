@@ -52,6 +52,15 @@ const tab = ref("showcase");
   flex: 1;
   overflow: auto;
   padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+}
+
+.container > div {
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .sections > div {
