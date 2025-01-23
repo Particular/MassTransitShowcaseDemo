@@ -4,12 +4,12 @@ ARG TARGETARCH
 WORKDIR /src
 
 COPY . .
-RUN dotnet publish src/Sales -c $BUILD_CONFIGURATION -o /app/publish --arch $TARGETARCH /p:UseAppHost=false
+RUN dotnet publish Sales -c $BUILD_CONFIGURATION -o /app/publish --arch $TARGETARCH /p:UseAppHost=false
 
 
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-
+EXPOSE 80
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "Sales.dll"]
