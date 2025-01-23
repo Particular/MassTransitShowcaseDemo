@@ -1,5 +1,10 @@
 # The Particular Platform for MassTransit
 
+The sample consists of 4 console applications hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
+
+![System Overview](diagram.svg "width=680")
+
+
 ## Launching the Showcase
 
 To run the code sample you have 2 options in terms of transports:
@@ -44,8 +49,3 @@ After opening the solutions (from Visual Studio or Rider), choose one of the run
 Run the solution to start the demo.
 
 Navigate to http://localhost:9090/ to see the UI
-## High-level solution overview
-
-The sample consists of 4 console applications hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
-
-![System Overview](diagram.svg "width=680")
