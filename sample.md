@@ -90,7 +90,7 @@ Navigate to [http://localhost:9090](http://localhost:9090) to see the details on
 
 ![Service Pulse Dashboard](service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
 
-#### Scheduing message reprocessing
+#### Scheduling message reprocessing
 
 Click on the "Failed Messages" button at the top of the page to see all failed messages ingested by the platform grouped by the exception trype and stack trace.
 
