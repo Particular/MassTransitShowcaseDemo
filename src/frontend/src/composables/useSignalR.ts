@@ -4,8 +4,10 @@ import { onMounted, ref } from "vue";
 export default function useSignalR(url: string) {
   const state = ref(HubConnectionState.Disconnected);
 
-  var connection = new HubConnectionBuilder()
-    .withUrl(url)
+  const connection = new HubConnectionBuilder()
+    .withUrl(url, {
+      withCredentials: true
+  })
     .withAutomaticReconnect()
     .build();
 

@@ -12,6 +12,7 @@
 
 ```cmd
 // Your code goes here
- docker compose down
- docker compose up
+docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env down
+
+docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
 ```

@@ -12,10 +12,9 @@ import {
 } from "./types";
 import { store } from "./shared";
 import MessageContainer from "./MessageContainer.vue";
-import OnOffSwitch from "./OnOffSwitch.vue";
 import { GA4 } from "../utils/analytics";
 
-var { connection, state } = useSignalR("http://localhost:5002/billingHub");
+const {connection, state} = useSignalR(`http://${import.meta.env.BILLING_SIGNALR ?? "localhost:5002"}/billingHub`);
 
 const processedCount = ref(0);
 const erroredCount = ref(0);

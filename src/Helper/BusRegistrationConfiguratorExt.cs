@@ -1,60 +1,50 @@
 ﻿using dotenv.net;
-using Helper;
 using MassTransit;
 
 public static class BusRegistrationConfiguratorExt
 {
     public static void SetupTransport(this IBusRegistrationConfigurator x, string[] args)
     {
-        string selectedTransport;
+        string selectedTransport = Environment.GetEnvironmentVariable("TRANSPORT_TYPE") ?? "RabbitMQ";
 
-        if (args.Contains("--amazonsqs"))
+        switch (selectedTransport)
         {
-            x.UsingAmazonSqs((ctx, cfg) =>
-            {
-                var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../sqs.env")]));
-                cfg.Host(envs["AWS_REGION"], h =>
+            case "AmazonSQS":
+                x.UsingAmazonSqs((ctx, cfg) =>
                 {
-                    h.AccessKey(envs["AWS_ACCESS_KEY_ID"]);
-                    h.SecretKey(envs["AWS_SECRET_ACCESS_KEY"]);
+                    var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../sqs.env")]));
+                    cfg.Host(envs["AWS_REGION"], h =>
+                    {
+                        h.AccessKey(envs["AWS_ACCESS_KEY_ID"]);
+                        h.SecretKey(envs["AWS_SECRET_ACCESS_KEY"]);
+                    });
+
+                    cfg.ConfigureEndpoints(ctx);
                 });
-
-                cfg.ConfigureEndpoints(ctx);
-            });
-            selectedTransport = "AmazonSQS";
-        }
-        else if (args.Contains("--azureservicebus"))
-        {
-            var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../asb.env")], ignoreExceptions: false));
-            x.UsingAzureServiceBus((context, cfg) =>
-            {
-                cfg.Host(envs["CONNECTIONSTRING"]);
-
-                cfg.ConfigureEndpoints(context);
-            });
-
-            selectedTransport = "Azure Service Bus";
-        }
-        else if (args.Contains("--rabbitmq"))
-        {
-            x.UsingRabbitMq((context, cfg) =>
-            {
-                cfg.Host("localhost", 33721, "/", h =>
+                break;
+            case "AzureServiceBus":
+                var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../asb.env")], ignoreExceptions: false));
+                x.UsingAzureServiceBus((context, cfg) =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
-                });
-                cfg.ConfigureEndpoints(context);
-            });
-            selectedTransport = "RabbitMQ";
-        }
-        else
-        {
-            throw new ArgumentException("No transport is chosen");
-        }
+                    cfg.Host(envs["CONNECTION_STRING"]);
 
-        var name = Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs()[0]);
-        Console.Title = name + " - " + selectedTransport;
+                    cfg.ConfigureEndpoints(context);
+                });
+                break;
+            case "RabbitMQ":
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host("rabbitmq", 5672, "/", h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+                    cfg.ConfigureEndpoints(context);
+                });
+                break;
+            default:
+                throw new ArgumentException("No transport is chosen");
+        }
 
         x.AddConfigureEndpointsCallback((name, cfg) =>
         {
