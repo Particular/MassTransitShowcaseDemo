@@ -26,4 +26,4 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 
 # Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

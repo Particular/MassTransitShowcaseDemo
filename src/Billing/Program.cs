@@ -31,10 +31,10 @@ class Program
                     services.AddSignalR(options => { options.EnableDetailedErrors = true; });
                     services.AddSingleton<SimulationEffects>();
                 });
-                webBuilder.UseUrls("http://*:5002");
+                webBuilder.UseUrls($"http://*:{Environment.GetEnvironmentVariable("LISTENING_PORT") ?? "5002"}");
                 webBuilder.Configure(app =>
                 {
-                    app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:61335").AllowCredentials());
+                    app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins(Environment.GetEnvironmentVariable("ORIGIN_URL") ?? "http://localhost:61335").AllowCredentials());
                     app.UseRouting();
                     app.UseEndpoints(endpoints =>
                     {
