@@ -1,6 +1,4 @@
 ﻿namespace Billing;
-
-using Helper;
 using MassTransit;
 using Messages;
 using Microsoft.AspNetCore.SignalR;

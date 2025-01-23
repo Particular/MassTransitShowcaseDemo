@@ -1,4 +1,4 @@
-﻿namespace Helper
+﻿namespace Shipping
 {
     public class OrderBilledException : Exception
     {

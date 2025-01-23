@@ -1,4 +1,4 @@
-﻿namespace Helper
+﻿namespace Sales
 {
 
     public class SalesProcessingException : Exception

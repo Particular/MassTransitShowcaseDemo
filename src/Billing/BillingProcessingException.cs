@@ -1,4 +1,4 @@
-﻿namespace Helper
+﻿namespace Billing
 {
     using System;
 

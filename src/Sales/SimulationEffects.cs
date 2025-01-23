@@ -1,6 +1,4 @@
 ﻿namespace Sales;
-
-using Helper;
 using MassTransit;
 using Messages;
 using Microsoft.AspNetCore.SignalR;
