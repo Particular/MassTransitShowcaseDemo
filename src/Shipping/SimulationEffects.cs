@@ -1,5 +1,6 @@
 ﻿namespace Shipping;
 
+using Helper;
 using MassTransit;
 using Messages;
 using Microsoft.AspNetCore.SignalR;
@@ -33,7 +34,7 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
                     && (!isRetry || ShouldFailRetries))
             {
                 Interlocked.Increment(ref orderBilledErrored);
-                throw new Exception($"A simulated failure occurred in Shipping Order Billed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+                throw new OrderBilledException($"A simulated failure occurred in Shipping Order Billed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
             Interlocked.Increment(ref orderBilledProcessed);
@@ -59,7 +60,7 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
                     && (!isRetry || ShouldFailRetries))
             {
                 Interlocked.Increment(ref orderPlacedErrored);
-                throw new Exception($"A simulated failure occurred in Shipping Order Placed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+                throw new OrderPlacedException($"A simulated failure occurred in Shipping Order Placed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
             Interlocked.Increment(ref orderPlacedProcessed);

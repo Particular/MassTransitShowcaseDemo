@@ -1,5 +1,6 @@
 ﻿namespace Sales;
 
+using Helper;
 using MassTransit;
 using Messages;
 using Microsoft.AspNetCore.SignalR;
@@ -29,7 +30,7 @@ public class SimulationEffects(IHubContext<SalesHub> salesHub)
                     && (!isRetry || ShouldFailRetries))
             {
                 Interlocked.Increment(ref messagesErrored);
-                throw new Exception($"A simulated failure occurred in Sales, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+                throw new SalesProcessingException($"A simulated failure occurred in Sales, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
             Interlocked.Increment(ref messagesProcessed);
