@@ -48,10 +48,67 @@ services:
       context: ./frontend  # Path to the folder containing Dockerfile
       dockerfile: Dockerfile
     ports:
-      - "61335:8080" # Map port 8080 in the container to 61335 on the host
+      - "61335:80"
+    depends_on:
+      - billing 
+      - shipping
+      - clientui
+      - sales  
     volumes:
-      - ./frontend:/app # Mount the frontend folder into the container
-      - /app/node_modules # Prevent overwriting node_modules
-    command: "npm install && npm run dev" # Development mode command
+      - ./frontend:/app  # Optional for hot reloading
+    environment:
+      - BILLING_SIGNALR=billing:5002
+      - CLIENT_SIGNALR=clientui:5000
+      - SALES_SIGNALR=sales:5001
+      - SHIPPING_SIGNALR=shipping:5003
+  billing:
+    build:
+      context: ./
+      dockerfile: ./Billing/Dockerfile
+    container_name: billing
+    ports:
+      - "5002:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+  shipping:
+    build:
+      context: ./
+      dockerfile: ./Shipping/Dockerfile
+    container_name: shipping
+    ports:
+      - "5003:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+  sales:
+    build:
+      context: ./
+      dockerfile: ./Sales/Dockerfile
+    container_name: sales
+    ports:
+      - "5001:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+  clientui:
+    build:
+      context: ./
+      dockerfile: ./ClientUI/Dockerfile
+    container_name: clientui
+    ports:
+      - "5000:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+
 volumes:
   sc-data:

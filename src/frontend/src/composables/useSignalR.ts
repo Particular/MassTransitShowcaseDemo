@@ -5,7 +5,9 @@ export default function useSignalR(url: string) {
   const state = ref(HubConnectionState.Disconnected);
 
   const connection = new HubConnectionBuilder()
-    .withUrl(url)
+    .withUrl(url, {
+      withCredentials: true
+  })
     .withAutomaticReconnect()
     .build();
 
