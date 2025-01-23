@@ -18,8 +18,9 @@ services:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-logs:/var/log/rabbitmq
     ports:
-      - 56721:5672
+      - 33721:5672
       - 15672:15672
+      
     configs:
       - source: plugins
         target: /etc/rabbitmq/enabled_plugins

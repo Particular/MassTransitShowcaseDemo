@@ -1,28 +1,42 @@
 ﻿namespace Billing;
 
-public class SimulationEffects
+using MassTransit;
+using Messages;
+using Microsoft.AspNetCore.SignalR;
+
+public class SimulationEffects(IHubContext<BillingHub> billingHub)
 {
-    public void IncreaseFailureRate() => failureRate = Math.Min(1, failureRate + FailureRateIncrement);
+    int messagesErrored = 0;
+    int messagesProcessed = 0;
 
-    public void DecreaseFailureRate() => failureRate = Math.Max(0, failureRate - FailureRateIncrement);
+    public int MessagesProcessed { get => messagesProcessed; private set => messagesProcessed = value; }
+    public int MessagesErrored { get => messagesErrored; private set => messagesErrored = value; }
+    public bool ShouldFailRetries { get; set; } = false;
 
-    public void WriteState(TextWriter output) => output.WriteLine("Failure rate: {0:P0}", failureRate);
 
-    public async Task SimulatedMessageProcessing(CancellationToken cancellationToken = default)
+    public async Task SimulateBillingProcessing(ConsumeContext<OrderPlaced> context)
     {
-        await Task.Delay(200, cancellationToken);
-
-        if (Random.Shared.NextDouble() < failureRate)
+        try
         {
-            throw new Exception("BOOM! A failure occurred");
+            context.TryGetHeader("FailOn", out string failOn);
+            //Retries leave ServiceControl headers on the ReceiveContext. Choosing one at random here...
+            var isRetry = context.ReceiveContext.TransportHeaders.TryGetHeader("ServiceControl.RetryTo", out var _);
+            if (isRetry)
+            {
+                await billingHub.Clients.All.SendAsync("RetryAttempted");
+            }
+            if (Enum.TryParse(failOn, out Consumers endpointName) && endpointName == Consumers.Billing
+                    && (!isRetry || ShouldFailRetries))
+            {
+                Interlocked.Increment(ref messagesErrored);
+                throw new Exception($"A simulated failure occurred in Billing, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+            }
+
+            Interlocked.Increment(ref messagesProcessed);
         }
-    }
-
-    double failureRate;
-    const double FailureRateIncrement = 0.1;
-
-    public void Reset()
-    {
-        failureRate = 0;
+        finally
+        {
+            await billingHub.Clients.All.SendAsync("SyncValues", MessagesProcessed, MessagesErrored, ShouldFailRetries, context.CancellationToken);
+        }
     }
 }

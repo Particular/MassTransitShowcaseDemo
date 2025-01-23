@@ -1,7 +1,7 @@
 services:
   service-control-db:
     container_name: servicecontrol-db
-    image: particular/servicecontrol-ravendb:6
+    image: particular/servicecontrol-ravendb:latest
     volumes:
       - sc-data:/var/lib/ravendb/data
   service-control:
@@ -9,7 +9,7 @@ services:
       service-control-db:
         condition: service_healthy
     container_name: servicecontrol
-    image: particular/servicecontrol:6
+    image: particular/servicecontrol:latest
     command: "--setup-and-run"
     ports:
       - 33333:33333
@@ -24,10 +24,9 @@ services:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.3
-    configs:
-      - source: queues
-        target: /app/queues.txt
+    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.4
+    volumes:
+      - ./queues.txt:/app/queues.txt:ro
     environment:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
@@ -43,15 +42,16 @@ services:
         SERVICECONTROL_URL: http://localhost:33333/api/
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
-
+  vue-app:
+    build:
+      context: ./frontend # Point to the frontend folder
+      dockerfile: Dockerfile # Use the Dockerfile in the frontend folder
+    container_name: vue-app-container
+    ports:
+      - "61335:8080" # Map port 8080 in the container to 61335 on the host
+    volumes:
+      - ./frontend:/app # Mount the frontend folder into the container
+      - /app/node_modules # Prevent overwriting node_modules
+    command: "npm install && npm run dev" # Development mode command
 volumes:
   sc-data:
-
-configs:
-  queues:
-    content: |
-      BillOrder_error
-      PrepareOrder_error
-      ProcessOrder_error
-      ShipOrder_error
-

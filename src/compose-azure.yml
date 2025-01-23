@@ -1,9 +1,1 @@
 name: particular-platform-masstransit-recoverability-azure
-
-configs:
-  queues:
-    content: |
-      billorder_error
-      prepareorder_error
-      processorder_error
-      shiporder_error

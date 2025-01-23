@@ -1,0 +1,102 @@
+@import "./base.css";
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+/* General Reset */
+/* * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+} */
+
+/* Body Styles */
+
+body {
+  font-family: "Lato", sans-serif;
+  background-color: #f2f6f7;
+  height: 100%;
+  color: #444;
+}
+/* Main Container */
+#app {
+  max-width: 1200px;
+  max-height: 100vh;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Heading Styles */
+h2 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.red {
+  color: red;
+  font-weight: bolder;
+}
+.counter-info {
+  color: #00a3c4;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+label {
+  font-weight: bold;
+  color: #555;
+}
+
+button {
+  background-color: #2c3e50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button.secondary {
+  background-color: #555;
+}
+
+button:hover {
+  background-color: #5b7ea1;
+}
+
+button.secondary:hover {
+  background-color: #8c8c8c;
+}
+
+/* div[data-v-492dd3e4],
+div[data-v-ca6007f9],
+div[data-v-eeef44d9] {
+  font-size: 1rem;
+  color: #333;
+} */
+
+/* Notification Wrapper (Optional) */
+#sp-notification-wrapper {
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: none;
+}

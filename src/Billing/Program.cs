@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 
 class Program
 {
@@ -14,16 +16,31 @@ class Program
         Console.OutputEncoding = Encoding.UTF8;
         var host = Host.CreateDefaultBuilder(args)
             .ConfigureLogging(cfg => cfg.SetMinimumLevel(LogLevel.Warning))
-            .ConfigureServices((hostContext, services) =>
+            .ConfigureWebHostDefaults(webBuilder =>
             {
-                services.AddMassTransit(x =>
+                webBuilder.ConfigureServices(services =>
                 {
-                    x.AddConsumers(Assembly.GetExecutingAssembly());
-                    x.SetupTransport(args);
-                });
+                    services.AddMassTransit(x =>
+                    {
+                        x.SetKebabCaseEndpointNameFormatter();
+                        x.AddConsumers(Assembly.GetExecutingAssembly());
+                        x.SetupTransport(args);
+                    });
 
-                services.AddSingleton<SimulationEffects>();
-                services.AddHostedService<ConsoleBackgroundService>();
+                    services.AddCors();
+                    services.AddSignalR(options => { options.EnableDetailedErrors = true; });
+                    services.AddSingleton<SimulationEffects>();
+                });
+                webBuilder.UseUrls("http://*:5002");
+                webBuilder.Configure(app =>
+                {
+                    app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:61335").AllowCredentials());
+                    app.UseRouting();
+                    app.UseEndpoints(endpoints =>
+                    {
+                        endpoints.MapHub<BillingHub>("/billingHub");
+                    });
+                });
             });
 
         return host;
