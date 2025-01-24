@@ -14,7 +14,7 @@ import MessageContainer from "./MessageContainer.vue";
 import { store } from "./shared";
 import { GA4 } from "../utils/analytics";
 
-const { connection, state } = useSignalR(`http://${import.meta.env.SALES_SIGNALR ?? "localhost:5001"}/salesHub`);
+const { connection, state } = useSignalR(`http://${import.meta.env.VITE_SALES_SIGNALR ?? "localhost:5001"}/salesHub`);
 
 const processedCount = ref(0);
 const erroredCount = ref(0);

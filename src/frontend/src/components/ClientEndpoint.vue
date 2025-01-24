@@ -7,7 +7,7 @@ import { store } from "./shared";
 import type { PlaceOrder, Message } from "./types";
 import MessageContainer from "./MessageContainer.vue";
 
-const { connection, state } = useSignalR(`http://${import.meta.env.CLIENT_SIGNALR ?? "localhost:5000"}/clientHub`);
+const { connection, state } = useSignalR(`http://${import.meta.env.VITE_CLIENT_SIGNALR ?? "localhost:5000"}/clientHub`);
 
 const orderCount = ref(0);
 const messages = ref<Message[]>([]);
