@@ -1,4 +1,4 @@
-This samples shows how the errors in an existing MassTransit system can be managed using the Particular Service Platform.
+This sample shows how the errors in an existing MassTransit system can be managed using the Particular Service Platform.
 
 > [!NOTE]
 > This sample uses RabbitMQ as the messaging infrastructure. Refer to [the setup documentation](https://docs.particular.net/servicecontrol/masstransit/#settings) for Azure Service Bus setup instructions.
