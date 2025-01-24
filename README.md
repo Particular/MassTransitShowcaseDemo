@@ -1,5 +1,10 @@
 # The Particular Platform for MassTransit
 
+The sample consists of 4 console applications hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
+
+![System Overview](diagram.svg "width=680")
+
+
 ## Launching the Showcase
 
 To run the code sample you have 2 options in terms of transports:
@@ -29,6 +34,18 @@ Run docker command below from the `src` folder in a CLI
 docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
 ```
 
-## [Running the Sample](docs.md#Running-the-sample)
+## [Running the Showcase](docs.md#Running-the-sample)
 
-## [Read more about how it works](docs.md#Walkthrough)
+> [!WARNING]
+> When using Visual Studio, ensure you have the "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2022 "multi-launch" so you can easily select the profile you want to run.
+>
+> It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
+
+After opening the solutions (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
+
+- `RabbitMQ`
+- `Azure Service Bus`
+
+Run the solution to start the demo.
+
+Navigate to http://localhost:9090/ to see the UI
