@@ -39,7 +39,7 @@ services:
     ports:
         - 9090:9090
     environment:
-        SERVICECONTROL_URL: http://servicecontrol:33333/api/
+        SERVICECONTROL_URL: http://localhost:33333/api/
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
   frontend:
