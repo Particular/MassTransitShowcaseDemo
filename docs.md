@@ -31,7 +31,7 @@ fail: MassTransit.ReceiveTransport[0]
 
 #### Running the sample
 
-In order to see how the Particular Platfrom improves the failed messages management, start the containers responsible for running the platform:
+To see how the Particular Platfrom improves failed message management, start the containers responsible for running the platform:
 
 ### **RabbitMQ**
 
@@ -83,5 +83,8 @@ A failed message can be scheduled for reprocessing by clicking the `Retry messag
 Go to the details page for one of the failed messages and click the `Edit & retry` button. The pop-up window shows the headers collection and the message body in two separate tabs.
 
 Navigate to the `Message Body` tab, change the last digit of the `orderId` value, and click "Retry" to schedule the message for reprocessing.
+
+> [!WARNING]
+> Changing or deleting header values may change or cause issues with the subsequent re-processing. It is recommended that these values are not changed if you are unsure of their purpose.
 
 ![Edit Message View](service-pulse-edit-before-retry.png "Edit & Retry view showing the message body")
