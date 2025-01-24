@@ -34,10 +34,10 @@ Run docker command below from the `src` folder in a CLI
 docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
 ```
 
-## [Running the Sample](docs.md#Running-the-sample)
+## [Running the Showcase](docs.md#Running-the-sample)
 
 > [!WARNING]
-> When using Visual Studio, make sure you have "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2024 "multi-launch" so you can easily select the profile you want to run.
+> When using Visual Studio, ensure you have the "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2022 "multi-launch" so you can easily select the profile you want to run.
 >
 > It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
 
