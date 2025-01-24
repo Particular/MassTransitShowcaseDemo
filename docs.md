@@ -1,11 +1,11 @@
-This sample shows the usage of the Particular Service Platform with an existing MassTransit system.
+This samples shows how the errors in an existing MassTransit system can be managed using the Particular Service Platform.
 
 > [!NOTE]
 > This sample uses RabbitMQ as the messaging infrastructure. Refer to [the setup documentation](https://docs.particular.net/servicecontrol/masstransit/#settings) for Azure Service Bus setup instructions.
 
 ## Walkthrough
 
-The sample consists of 4 applications hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
+The sample consists of 4 processes hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
 
 ![System Overview](diagram.svg "width=680")
 
