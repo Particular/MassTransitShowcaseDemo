@@ -1,11 +1,11 @@
-This sample shows how the errors in an existing MassTransit system can be managed using the Particular Service Platform.
+This showcase shows how the errors in an existing MassTransit system can be managed using the Particular Service Platform.
 
 > [!NOTE]
-> This sample uses RabbitMQ as the messaging infrastructure. Refer to [the setup documentation](https://docs.particular.net/servicecontrol/masstransit/#settings) for Azure Service Bus setup instructions.
+> This showcase uses RabbitMQ as the messaging infrastructure. Refer to [the setup documentation](https://docs.particular.net/servicecontrol/masstransit/#settings) for Azure Service Bus setup instructions.
 
 ## Walkthrough
 
-The sample consists of 4 processes hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
+The showcase consists of 4 processes hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
 
 ![System Overview](diagram.svg "width=680")
 
@@ -29,9 +29,9 @@ fail: MassTransit.ReceiveTransport[0]
 
 ### Handling failures with the Particular Platform
 
-#### Running the sample
+#### Running the showcase
 
-To see how the Particular Platfrom improves failed message management, start the containers responsible for running the platform:
+To see how the Particular Platform improves failed message management, start the containers responsible for running the platform:
 
 ### **RabbitMQ**
 
