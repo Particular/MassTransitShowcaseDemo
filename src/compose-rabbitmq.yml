@@ -14,13 +14,13 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
+      - RabbitMQ__Host=rabbitmq
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
       - rabbitmq-logs:/var/log/rabbitmq
     ports:
       - 33721:5672
-      - 15672:15672
-      
+      - 15672:15672     
     configs:
       - source: plugins
         target: /etc/rabbitmq/enabled_plugins

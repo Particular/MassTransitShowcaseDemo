@@ -2,9 +2,12 @@ import { defineConfig } from 'vite';
 import plugin from '@vitejs/plugin-vue';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(() => {
+  return {
     plugins: [plugin()],
     server: {
-        port: 61335,
+      port: process.env.PORT ? parseInt(process.env.PORT) : 61335,
     }
-})
+  }
+}
+);

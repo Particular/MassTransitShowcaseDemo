@@ -24,7 +24,7 @@ services:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image:  particular/servicecontrol-connector-masstransit:0.1.0-alpha.4
+    image:  particular/servicecontrol-masstransit-connector:0.1.0-alpha.6
     volumes:
       - ./queues.txt:/app/queues.txt:ro
     environment:
@@ -42,16 +42,81 @@ services:
         SERVICECONTROL_URL: http://localhost:33333/api/
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
-  vue-app:
+  frontend:
+    container_name: frontend
     build:
-      context: ./frontend # Point to the frontend folder
-      dockerfile: Dockerfile # Use the Dockerfile in the frontend folder
-    container_name: vue-app-container
+      context: ./frontend  # Path to the folder containing Dockerfile
+      dockerfile: Dockerfile
+      args:
+        BILLING_SIGNALR: localhost:5002
+        CLIENT_SIGNALR: localhost:5004
+        SALES_SIGNALR: localhost:5001
+        SHIPPING_SIGNALR: localhost:5003
     ports:
-      - "61335:8080" # Map port 8080 in the container to 61335 on the host
+      - 61335:80
+    depends_on:
+      - billing 
+      - shipping
+      - clientui
+      - sales  
     volumes:
-      - ./frontend:/app # Mount the frontend folder into the container
-      - /app/node_modules # Prevent overwriting node_modules
-    command: "npm install && npm run dev" # Development mode command
+      - ./frontend:/app  # Optional for hot reloading
+  billing:
+    build:
+      context: ./
+      dockerfile: ./Billing/Dockerfile
+    container_name: billing
+    ports:
+      - "5002:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+    depends_on:
+      - service-control 
+  shipping:
+    build:
+      context: ./
+      dockerfile: ./Shipping/Dockerfile
+    container_name: shipping
+    ports:
+      - "5003:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+    depends_on:
+      - service-control 
+  sales:
+    build:
+      context: ./
+      dockerfile: ./Sales/Dockerfile
+    container_name: sales
+    ports:
+      - "5001:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+    depends_on:
+      - service-control 
+  clientui:
+    build:
+      context: ./
+      dockerfile: ./ClientUI/Dockerfile
+    container_name: clientui
+    ports:
+      - "5004:80"
+    environment:
+      - LISTENING_PORT=80
+      - ORIGIN_URL=http://frontend:8080
+      - TRANSPORT_TYPE
+      - CONNECTION_STRING
+    depends_on:
+      - service-control 
+
 volumes:
   sc-data:

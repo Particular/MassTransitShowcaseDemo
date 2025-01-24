@@ -12,10 +12,9 @@ import {
 } from "./types";
 import MessageContainer from "./MessageContainer.vue";
 import { store } from "./shared";
-import OnOffSwitch from "./OnOffSwitch.vue";
 import { GA4 } from "../utils/analytics";
 
-var { connection, state } = useSignalR("http://localhost:5003/shippingHub");
+const { connection, state } = useSignalR(`http://${import.meta.env.VITE_SHIPPING_SIGNALR ?? "localhost:5003"}/shippingHub`);
 
 const processedOrderPlacedCount = ref(0);
 const processedOrderBilledCount = ref(0);

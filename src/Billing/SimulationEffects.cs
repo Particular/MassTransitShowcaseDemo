@@ -1,5 +1,4 @@
 ﻿namespace Billing;
-
 using MassTransit;
 using Messages;
 using Microsoft.AspNetCore.SignalR;
@@ -29,7 +28,7 @@ public class SimulationEffects(IHubContext<BillingHub> billingHub)
                     && (!isRetry || ShouldFailRetries))
             {
                 Interlocked.Increment(ref messagesErrored);
-                throw new Exception($"A simulated failure occurred in Billing, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+                throw new BillingProcessingException($"A simulated failure occurred in Billing, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
 
             Interlocked.Increment(ref messagesProcessed);

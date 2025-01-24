@@ -27,11 +27,18 @@ class Program
                         x.SetupTransport(args);
                     });
 
-                    services.AddCors();
+                    services.AddCors(options =>
+                    {
+                        options.AddPolicy("AllowSpecificOrigin",
+                            builder => builder.WithOrigins("http://localhost:61335")
+                                              .AllowAnyHeader()
+                                              .AllowAnyMethod()
+                                              .AllowCredentials());
+                    });
                     services.AddSignalR(options => { options.EnableDetailedErrors = true; });
                     services.AddSingleton<SimulationEffects>();
                 });
-                webBuilder.UseUrls("http://*:5001");
+                webBuilder.UseUrls($"http://*:{Environment.GetEnvironmentVariable("LISTENING_PORT") ?? "5001"}");
                 webBuilder.Configure(app =>
                 {
                     app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:61335").AllowCredentials());
