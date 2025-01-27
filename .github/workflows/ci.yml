@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: dotnet build src --configuration Release -graph
       - name: Set up Node.js
-        uses: actions/setup-node@v4.1.0
+        uses: actions/setup-node@v4.2.0
         with:
           node-version: 21.6.x
       - name: install frontend packages
