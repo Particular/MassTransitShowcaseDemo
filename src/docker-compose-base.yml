@@ -24,7 +24,7 @@ services:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image:  particular/servicecontrol-masstransit-connector:0.1.0-alpha.6
+    image:  particular/servicecontrol-masstransit-connector:latest
     volumes:
       - ./queues.txt:/app/queues.txt:ro
     environment:
@@ -40,6 +40,7 @@ services:
         - 9090:9090
     environment:
         SERVICECONTROL_URL: http://localhost:33333/api/
+        MONITORING_URL: "!"
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
   frontend:
@@ -74,7 +75,8 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy
   shipping:
     build:
       context: ./
@@ -88,7 +90,8 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy
   sales:
     build:
       context: ./
@@ -102,7 +105,8 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy 
   clientui:
     build:
       context: ./
@@ -116,7 +120,8 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy
 
 volumes:
   sc-data:
