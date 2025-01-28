@@ -7,15 +7,15 @@ The sample consists of 4 console applications hosting MassTransit message produc
 
 ## Launching the Showcase with Docker
 
-The showcase requires a transport (by default RabbitMQ), ServiceControl, ServicePulse and the MassTransit Connector for ServiceControl. All of these processes are run from a Docker compose file.
+The showcase requires a broker (by default RabbitMQ), [ServiceControl](https://github.com/Particular/ServiceControl), [ServicePulse](https://github.com/Particular/ServicePulse) and the [MassTransit Connector for ServiceControl](https://github.com/Particular/ServiceControl.Connector.MassTransit). Containers for these are run from a Docker compose file.
 
-Run docker command below from the `src` folder in a CLI
+Run the docker command below from the `src` folder in a CLI
 
 ```cmd
 docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
 ```
 
-## **Azure ServiceBus**
+### **Azure ServiceBus**
 
 The showcase can also be run using ASB rather than RabbitMQ. Configure the access to your Azure Service Bus namespace by editing the variables in `src/asb.env`
 
@@ -29,7 +29,7 @@ Run docker command below from the `src` folder in a CLI
 docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
 ```
 
-## Debugging the Showcase
+## Running from an IDE
 
 > [!WARNING]
 > When using Visual Studio, ensure you have the "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2022 "multi-launch" so you can easily select the profile you want to run.
@@ -37,7 +37,7 @@ docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.en
 > It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
 
 > [!NOTE]
-> Debugging the showcase still requires a transport, ServiceControl, ServicePulse and the MassTransit Connector for ServiceControl. These can also be debugged locally, or they can be started as part of the Docker compose above, with the showcase process containers stopped/removed.
+> Running the showcase still requires a broker, ServiceControl, ServicePulse and the MassTransit Connector for ServiceControl. These can also be debugged locally, or they can be started as part of the Docker compose above. Ensure that the other showcase containers are stopped/removed.
 
 After opening the solutions (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
 
