@@ -38,8 +38,13 @@ docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.en
 
 To start the required infrastructure run the following docker command below from the `src` folder in a CLI
 
+RabbitMQ
 ```cmd
 docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure up -d
+```
+ASB
+```cmd
+docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure up -d
 ```
 
 After opening the solution (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
