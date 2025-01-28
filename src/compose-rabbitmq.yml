@@ -2,6 +2,7 @@ name: particular-platform-masstransit-recoverability-rabbit
 
 services:
   rabbitmq:
+    profiles: ['', infrastructure]
     container_name: "rabbitmq"
     image: rabbitmq:management-alpine
     restart: unless-stopped
