@@ -36,8 +36,11 @@ docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.en
 >
 > It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
 
-> [!NOTE]
-> Running the showcase still requires a broker, ServiceControl, ServicePulse and the MassTransit Connector for ServiceControl. These can also be debugged locally, or they can be started as part of the Docker compose above. Ensure that the other showcase containers are stopped/removed.
+To start the required infrastructure run the following docker command below from the `src` folder in a CLI
+
+```cmd
+docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure up -d
+```
 
 After opening the solutions (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
 
