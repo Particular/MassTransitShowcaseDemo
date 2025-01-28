@@ -1,10 +1,12 @@
 services:
   service-control-db:
+    profiles: ['', infrastructure]
     container_name: servicecontrol-db
     image: particular/servicecontrol-ravendb:latest
     volumes:
       - sc-data:/var/lib/ravendb/data
   service-control:
+    profiles: ['', infrastructure]
     depends_on:
       service-control-db:
         condition: service_healthy
@@ -20,17 +22,19 @@ services:
       - ALLOWMESSAGEEDITING=true
       - SHOW_PENDING_RETRY=true
   masstransit-connector:
+    profiles: ['', infrastructure]
     depends_on:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image:  particular/servicecontrol-masstransit-connector:0.1.0-alpha.6
+    image:  particular/servicecontrol-masstransit-connector:latest
     volumes:
       - ./queues.txt:/app/queues.txt:ro
     environment:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
   service-pulse:
+    profiles: ['', infrastructure]
     depends_on:
       service-control:
         condition: service_healthy
@@ -40,9 +44,11 @@ services:
         - 9090:9090
     environment:
         SERVICECONTROL_URL: http://localhost:33333/api/
+        MONITORING_URL: "!"
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
   frontend:
+    profiles: ['', infrastructure]
     container_name: frontend
     build:
       context: ./frontend  # Path to the folder containing Dockerfile
@@ -54,14 +60,10 @@ services:
         SHIPPING_SIGNALR: localhost:5003
     ports:
       - 61335:80
-    depends_on:
-      - billing 
-      - shipping
-      - clientui
-      - sales  
     volumes:
       - ./frontend:/app  # Optional for hot reloading
   billing:
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./Billing/Dockerfile
@@ -74,8 +76,10 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy
   shipping:
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./Shipping/Dockerfile
@@ -88,8 +92,10 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy
   sales:
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./Sales/Dockerfile
@@ -102,8 +108,10 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy 
   clientui:
+    profiles: ['']
     build:
       context: ./
       dockerfile: ./ClientUI/Dockerfile
@@ -116,7 +124,8 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      - service-control 
+      service-control:
+        condition: service_healthy
 
 volumes:
   sc-data:
