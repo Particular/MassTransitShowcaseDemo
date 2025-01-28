@@ -42,7 +42,7 @@ To start the required infrastructure run the following docker command below from
 docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure up -d
 ```
 
-After opening the solutions (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
+After opening the solution (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
 
 - `RabbitMQ`
 - `Azure Service Bus`
