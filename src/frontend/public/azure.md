@@ -1,15 +1,12 @@
-# Azure Service Bus
+# Running against your own Azure Service Bus system
 
-1. Open this azure.env file and provide your namespace
-2. Paste the code below to make sure you have your container ready.
-   `//your docker stuff here`
-3. provide the list of queues you want to monitor by editing the `queues.txt` file. e.g. `myqueue_error`
-4. Open a CLI of preference and run these commands:
+##
+
+1. Open the `src/asb.env` file in an editor and update the `CONNECTION_STRING` to point to your own Azure Service Bus namespace.
+2. Update the list of queues you want to monitor by editing the `queues.txt` file from the `src` folder. Remember that Azure Service Bus queues are all lowercased.
+3. Open a terminal and run these commands:
 
 ```cmd
-
-// Your code goes here
-docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env down
-
-docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
+docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env down
+docker compose -f docker-compose-base.yml --env-file asb.env --profile infrastructure up
 ```
