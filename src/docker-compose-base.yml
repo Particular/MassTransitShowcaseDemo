@@ -48,7 +48,7 @@ services:
         ENABLE_REVERSE_PROXY: false
         SHOW_PENDING_RETRY: false
   frontend:
-    profiles: ['', infrastructure]
+    profiles: ['', 'frontend']
     container_name: frontend
     build:
       context: ./frontend  # Path to the folder containing Dockerfile
