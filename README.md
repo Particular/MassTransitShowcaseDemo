@@ -1,6 +1,6 @@
 # The Particular Platform for MassTransit
 
-The showcase consists of 4 endpoints hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
+This showcase consists of 4 processes hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
 
 ![System Overview](diagram.svg "width=680")
 
