@@ -59,3 +59,35 @@ Run the solution to start the demo.
 ## Opening the showcase UI
 
 Navigate to http://localhost:61335/ to see the UI.
+
+## Handling failures with the Particular Platform
+
+### Inspecting failures
+
+Navigate to [http://localhost:9090](http://localhost:9090), or click the `View in ServicePulse` button to see the details on failures ingested by the platform.
+
+![Service Pulse Dashboard](docs/service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
+
+### Scheduling message reprocessing
+
+Click on the "Failed Messages" button at the top of the page to see all failed messages ingested by the platform, grouped by the exception type and stack trace.
+
+![Service Pulse Failed Messages](docs/service-pulse-dashboard-failed-messages-groups.png "Failed messages grouping")
+
+Drill into an existing group to see the list of individual processing failures. Clicking on any of the rows in the list shows detailed information of a given failed message in the headers and message body tabs.
+
+A failed message can be scheduled for reprocessing by clicking the `Retry message` button.
+
+![Service Pulse Failed Message View](docs/service-pulse-failed-message-view.png "Failed message details view")
+
+### Editing messages before reprocessing
+
+Go to the details page for one of the failed messages and click the `Edit & retry` button. The pop-up window shows the headers collection and the message body in two separate tabs.
+
+Navigate to the `Message Body` tab, change the last digit of the `orderId` value, and click "Retry" to schedule the message for reprocessing.
+
+> [!WARNING]
+> Changing or deleting header values may change or cause issues with the subsequent re-processing. It is recommended that these values are not changed if you are unsure of their purpose.
+
+![Edit Message View](docs/service-pulse-edit-before-retry.png "Edit & Retry view showing the message body")
+
