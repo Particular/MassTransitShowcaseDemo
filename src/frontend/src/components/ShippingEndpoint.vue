@@ -80,6 +80,7 @@ connection.on(
 );
 connection.on("RetryAttempted", () => {
   try {
+    store.setMessageRetried();
     GA4.showcaseRetryAttempted();
   } catch (e) {
     console.error(e);

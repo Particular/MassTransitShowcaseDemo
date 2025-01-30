@@ -72,6 +72,7 @@ connection.on("SyncValues", (processed, errored, failRetries) => {
 });
 connection.on("RetryAttempted", () => {
   try {
+    store.setMessageRetried();
     GA4.showcaseRetryAttempted();
   } catch (e) {
     console.error(e);
