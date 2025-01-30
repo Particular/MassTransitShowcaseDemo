@@ -35,7 +35,7 @@ const tab = ref("showcase");
       <h2>Simulating customers placing orders on a website</h2>
       <div v-if="store.messageRetried">
         Thanks for trying our showcase. 
-        <a href="https://gleam.io/competitions/ViON2-rabbitmq-mastery-giveaway">
+        <a href="https://gleam.io/ViON2/manning-ebook-giveaway">
           Get your free eBook now!
         </a>
       </div>
