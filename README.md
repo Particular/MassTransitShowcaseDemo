@@ -2,7 +2,7 @@
 
 This showcase consists of 4 processes hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
 
-![System Overview](diagram.svg "width=680")
+![System Overview](docs/diagram.svg "width=680")
 
 
 ## Launching the Showcase in Docker
