@@ -14,12 +14,15 @@ import MessageContainer from "./MessageContainer.vue";
 import { store } from "./shared";
 import { GA4 } from "../utils/analytics";
 
-const { connection, state } = useSignalR(`http://${import.meta.env.VITE_SALES_SIGNALR ?? "localhost:5001"}/salesHub`);
+const { connection, state } = useSignalR(
+  `http://${import.meta.env.VITE_SALES_SIGNALR ?? "localhost:5001"}/salesHub`
+);
 
 const processedCount = ref(0);
 const erroredCount = ref(0);
 const shouldFailRetries = ref(false);
 const messages = ref<MessageOrError[]>([]);
+let retrySuccessful: string[] = [];
 
 connection.on("ProcessingMessage", (order: Order) => {
   if (order) {
@@ -50,7 +53,13 @@ connection.on(
 connection.on("OrderPlaced", (order: Order) => {
   if (order) {
     messages.value = [
-      { timestamp: new Date(), message: new OrderPlaced(order) },
+      {
+        timestamp: new Date(),
+        message: new OrderPlaced(
+          order,
+          retrySuccessful.includes(order.orderId)
+        ),
+      },
       ...messages.value,
     ].slice(0, Math.max(messages.value.length, 100));
   }
@@ -67,6 +76,12 @@ connection.on("RetryAttempted", () => {
   } catch (e) {
     console.error(e);
   }
+});
+connection.on("RetrySuccessful", (orderId: string) => {
+  retrySuccessful = [orderId, ...retrySuccessful].slice(
+    0,
+    Math.max(messages.value.length, 100)
+  );
 });
 
 function toggleFailOnRetries() {
@@ -108,6 +123,9 @@ function toggleFailOnRetries() {
         {{ message.message.orderId }}
       </span>
       <span>placed</span>
+      <span v-if="message.message.retrySuccessful" class="success">
+        (After successful retry of PlaceOrder message)
+      </span>
     </template>
     <template v-else>
       <span>Received order request</span>

@@ -30,6 +30,10 @@ public class SimulationEffects(IHubContext<SalesHub> salesHub)
                 Interlocked.Increment(ref messagesErrored);
                 throw new SalesProcessingException($"A simulated failure occurred in Sales, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
+            else if (isRetry)
+            {
+                await salesHub.Clients.All.SendAsync("RetrySuccessful", context.Message.OrderId);
+            }
 
             Interlocked.Increment(ref messagesProcessed);
         }

@@ -53,6 +53,11 @@ const props = defineProps<{
   font-weight: bold;
 }
 
+:slotted(.message .success) {
+  color: green;
+  font-weight: bold;
+}
+
 :slotted(.message .selected) {
   background-color: rgb(242, 152, 33);
 }
