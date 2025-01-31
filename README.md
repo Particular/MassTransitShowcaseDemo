@@ -107,3 +107,10 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 ### Viewing retries
 
 Return to the showcase UI to see that the retries have now been successfully handled.
+
+### Troubleshooting
+
+Having issues?
+
+- Check logs in docker. Ensure that there are no port clashes with existing containers or services on your machine.
+- Ask any questions on [our forum](https://discuss.particular.net/tag/masstransit)
