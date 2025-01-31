@@ -15,8 +15,9 @@ Run the docker command below from the `src` folder in a terminal.
 docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
 ```
 
-### To run against **Azure Service Bus**
+### (Alternative) Run in Docker against **Azure Service Bus**
 
+<details>
 The showcase can also be run using Azure Service Bus rather than RabbitMQ.  
 First configure the access to your Azure Service Bus namespace by editing the variables in `src/asb.env`.
 
@@ -30,14 +31,17 @@ Run docker command below from the `src` folder in a terminal.
 docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
 ```
 
-## Running from an IDE
+</details>
 
+### (Alternative) Run from an IDE
+
+<details>
 > [!WARNING]
 > When using Visual Studio, ensure you have the "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2022 "multi-launch" so you can easily select the profile you want to run.
 >
 > It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
 
-To start the required infrastructure run the following docker command below from the `src` folder in a terminal.
+To start the required infrastructure for the showcase, run one of the docker command below from the `src` folder in a terminal.
 
 RabbitMQ
 
@@ -46,6 +50,8 @@ docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rab
 ```
 
 Azure Service Bus
+
+See [ASB setup](#alternative-run-from-azure-service-bus) above for setting the connection string to your Azure Service Bus namespace
 
 ```cmd
 docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
@@ -58,15 +64,17 @@ After opening the solution (from Visual Studio or Rider), choose one of the run 
 
 Run the solution to start the demo.
 
+</details>
+
 ## Opening the showcase UI
 
-Navigate to http://localhost:61335/ to see the UI.
+Navigate to http://localhost:61335/ to see the UI. Click `Run Scenario` to start the showcase scenario and generate some simulated message handling failures.
 
 ## Handling failures with the Particular Platform
 
 ### Inspecting failures
 
-Navigate to [http://localhost:9090](http://localhost:9090), or click the `View in ServicePulse` button to see the details on failures ingested by the platform.
+Navigate to [http://localhost:9090](http://localhost:9090) in a new tab, or click the `View in ServicePulse` button, to see the details on failures ingested by the platform.
 
 ![Service Pulse Dashboard](docs/service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
 
@@ -95,3 +103,7 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 > Changing or deleting header values may change or cause issues with the subsequent re-processing. It is recommended that these values are not changed if you are unsure of their purpose.
 
 ![Edit Message View](docs/service-pulse-edit-before-retry.png "Edit & Retry view showing the message body")
+
+### Viewing retries
+
+Return to the showcase UI to see that the retries have now been successfully handled.
