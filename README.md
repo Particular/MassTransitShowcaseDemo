@@ -1,4 +1,4 @@
-# The Particular Platform for MassTransit
+# MassTransit Error Management - Showcase
 
 This showcase consists of 4 processes hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
 
