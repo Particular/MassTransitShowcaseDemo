@@ -34,6 +34,10 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
                 Interlocked.Increment(ref orderBilledErrored);
                 throw new OrderBilledException($"A simulated failure occurred in Shipping Order Billed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
             }
+            else if (isRetry)
+            {
+                await shippingHub.Clients.All.SendAsync("RetrySuccessfulOrderBilled", context.Message.OrderId);
+            }
 
             Interlocked.Increment(ref orderBilledProcessed);
         }
@@ -59,6 +63,10 @@ public class SimulationEffects(IHubContext<ShippingHub> shippingHub)
             {
                 Interlocked.Increment(ref orderPlacedErrored);
                 throw new OrderPlacedException($"A simulated failure occurred in Shipping Order Placed handling, OrderId: {context.Message.OrderId}, Contents: {string.Join(", ", context.Message.Contents)}");
+            }
+            else if (isRetry)
+            {
+                await shippingHub.Clients.All.SendAsync("RetrySuccessfulOrderPlaced", context.Message.OrderId);
             }
 
             Interlocked.Increment(ref orderPlacedProcessed);

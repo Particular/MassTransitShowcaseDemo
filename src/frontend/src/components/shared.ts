@@ -8,4 +8,8 @@ export const store = reactive({
   clearSelectedMessage() {
     this.selectedMessage = "";
   },
+  messageRetried: false,
+  setMessageRetried() {
+    this.messageRetried = true;
+  },
 });
