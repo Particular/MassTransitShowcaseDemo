@@ -38,7 +38,7 @@ class Program
                     services.AddSignalR(options => { options.EnableDetailedErrors = true; });
                     services.AddSingleton<SimulatedCustomers>();
                 });
-                webBuilder.UseUrls($"http://*:{Environment.GetEnvironmentVariable("LISTENING_PORT") ?? "5000"}");
+                webBuilder.UseUrls($"http://*:{Environment.GetEnvironmentVariable("LISTENING_PORT") ?? "5004"}");
                 webBuilder.Configure(app =>
                 {
                     app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:61335").AllowCredentials());

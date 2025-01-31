@@ -7,7 +7,9 @@ import { store } from "./shared";
 import type { PlaceOrder, Message } from "./types";
 import MessageContainer from "./MessageContainer.vue";
 
-const { connection, state } = useSignalR(`http://${import.meta.env.VITE_CLIENT_SIGNALR ?? "localhost:5000"}/clientHub`);
+const { connection, state } = useSignalR(
+  `http://${import.meta.env.VITE_CLIENT_SIGNALR ?? "localhost:5004"}/clientHub`
+);
 
 const orderCount = ref(0);
 const messages = ref<Message[]>([]);
@@ -72,6 +74,10 @@ async function runScenario() {
           View Failures in ServicePulse
         </button>
       </a>
+      <span class="note">
+        NOTE: it may take several seconds after retrying a message for it to
+        appear again in the consumer's input queue
+      </span>
     </div>
   </div>
   <!-- <div class="or-line">
@@ -149,5 +155,9 @@ async function runScenario() {
 .or-line > span {
   background-color: white;
   padding: 0 0.5em;
+}
+
+.note {
+  font-size: 0.85em;
 }
 </style>

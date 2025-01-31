@@ -6,6 +6,7 @@ import ShippingEndpoint from "./components/ShippingEndpoint.vue";
 import TryItOut from "./components/guideline/TryItOut.vue";
 import FloatingButton from "./components/FloatingButton.vue";
 import { ref } from "vue";
+import { store } from "./components/shared";
 
 const tab = ref("showcase");
 </script>
@@ -32,6 +33,12 @@ const tab = ref("showcase");
   <div class="container">
     <div v-show="tab === 'showcase'">
       <h2>Simulating customers placing orders on a website</h2>
+      <div v-if="store.messageRetried">
+        Thanks for trying our showcase. 
+        <a href="https://gleam.io/ViON2/manning-ebook-giveaway">
+          Get your free eBook now!
+        </a>
+      </div>
       <div class="architecture-diagram"></div>
       <div class="sections">
         <div><ClientEndpoint /></div>

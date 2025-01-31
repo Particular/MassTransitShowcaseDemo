@@ -1,6 +1,7 @@
 export interface Order {
   orderId: string;
   contents: string[];
+  retrySuccessful: boolean;
 }
 
 export class PlaceOrder implements Order {
@@ -8,6 +9,7 @@ export class PlaceOrder implements Order {
 
   orderId: string;
   contents: string[];
+  retrySuccessful = false;
 
   constructor(order: Order) {
     this.orderId = order.orderId;
@@ -20,10 +22,12 @@ export class OrderPlaced implements Order {
 
   orderId: string;
   contents: string[];
+  retrySuccessful: boolean;
 
-  constructor(order: Order) {
+  constructor(order: Order, retrySuccessful = false) {
     this.orderId = order.orderId;
     this.contents = order.contents;
+    this.retrySuccessful = retrySuccessful;
   }
 }
 
@@ -32,10 +36,12 @@ export class OrderBilled implements Order {
 
   orderId: string;
   contents: string[];
+  retrySuccessful: boolean;
 
-  constructor(order: Order) {
+  constructor(order: Order, retrySuccessful = false) {
     this.orderId = order.orderId;
     this.contents = order.contents;
+    this.retrySuccessful = retrySuccessful;
   }
 }
 

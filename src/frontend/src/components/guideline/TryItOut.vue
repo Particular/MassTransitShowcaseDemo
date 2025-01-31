@@ -84,4 +84,10 @@ onMounted(async () => {
 :deep(p) {
   margin: 0.5em 0;
 }
+
+:deep(pre) {
+  margin: 0.5em;
+  padding-left: 1em;
+  background-color: lightgray;
+}
 </style>
