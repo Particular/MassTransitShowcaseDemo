@@ -21,7 +21,7 @@ services:
       - rabbitmq-logs:/var/log/rabbitmq
     ports:
       - 33721:5672
-      - 15672:15672     
+      - 33672:15672     
     configs:
       - source: plugins
         target: /etc/rabbitmq/enabled_plugins
@@ -30,6 +30,10 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    environment:
+      - LICENSINGCOMPONENT_RABBITMQ_APIURL=${RABBITMQ_MANAGEMENT_API_URL}
+      - LICENSINGCOMPONENT_RABBITMQ_USERNAME=${RABBITMQ_MANAGEMENT_API_USERNAME}
+      - LICENSINGCOMPONENT_RABBITMQ_PASSWORD=${RABBITMQ_MANAGEMENT_API_PASSWORD}
 
   masstransit-connector:
     environment:
