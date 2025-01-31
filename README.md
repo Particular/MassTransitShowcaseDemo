@@ -12,7 +12,7 @@ To help getting started we have created a few docker compose files that orchestr
 Run the docker command below from the `src` folder in a terminal.
 
 ```cmd
-docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
 ```
 
 ### (Alternative) Run in Docker against **Azure Service Bus**
@@ -28,7 +28,7 @@ CONNECTIONSTRING="Endpoint=sb://[NAMESPACE].servicebus.windows.net/;SharedAccess
 Run docker command below from the `src` folder in a terminal.
 
 ```cmd
-docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
 ```
 
 </details>
@@ -46,7 +46,7 @@ To start the required infrastructure for the showcase, run one of the docker com
 RabbitMQ
 
 ```cmd
-docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
 ```
 
 Azure Service Bus
@@ -54,7 +54,7 @@ Azure Service Bus
 See [ASB setup](#alternative-run-from-azure-service-bus) above for setting the connection string to your Azure Service Bus namespace
 
 ```cmd
-docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
 ```
 
 After opening the solution (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
