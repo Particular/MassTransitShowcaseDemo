@@ -4,7 +4,6 @@ This showcase consists of 4 processes hosting MassTransit message producers and 
 
 ![System Overview](docs/diagram.svg "width=680")
 
-
 ## Launching the Showcase in Docker
 
 The showcase requires a connection to a broker (by default RabbitMQ), [ServiceControl](https://hub.docker.com/r/particular/servicecontrol) container, [ServicePulse](https://hub.docker.com/r/particular/servicepulse) container and the [MassTransit Connector for ServiceControl](https://hub.docker.com/r/particular/servicecontrol-masstransit-connector) container.  
@@ -41,10 +40,13 @@ docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.en
 To start the required infrastructure run the following docker command below from the `src` folder in a terminal.
 
 RabbitMQ
+
 ```cmd
 docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
 ```
+
 Azure Service Bus
+
 ```cmd
 docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
 ```
@@ -78,16 +80,18 @@ Drill into an existing group to see the list of individual processing failures. 
 
 A failed message can be scheduled for reprocessing by clicking the `Retry message` button.
 
+> [!NOTE]
+> It may take several seconds after retrying a message for it to appear again in the consumer's input queue
+
 ![Service Pulse Failed Message View](docs/service-pulse-failed-message-view.png "Failed message details view")
 
 ### Editing messages before reprocessing
 
 Go to the details page for one of the failed messages and click the `Edit & retry` button. The pop-up window shows the headers collection and the message body in two separate tabs.
 
-Navigate to the `Message Body` tab, change the last digit of the `orderId` value, and click "Retry" to schedule the message for reprocessing.
+Navigate to the `Message Body` tab and change some of the contents of the message, ensuring it's still valid JSON matching the message type, and click "Retry" to schedule the message for reprocessing.
 
 > [!WARNING]
 > Changing or deleting header values may change or cause issues with the subsequent re-processing. It is recommended that these values are not changed if you are unsure of their purpose.
 
 ![Edit Message View](docs/service-pulse-edit-before-retry.png "Edit & Retry view showing the message body")
-
