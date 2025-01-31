@@ -89,5 +89,6 @@ onMounted(async () => {
   margin: 0.5em;
   padding-left: 1em;
   background-color: lightgray;
+  overflow: auto;
 }
 </style>

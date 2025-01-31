@@ -9,6 +9,6 @@
 3. Open a terminal and run these commands:
 
 ```cmd
-docker compose -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env down
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env down
 docker compose -p particular-platform -f docker-compose-base.yml -f compose_rabbitmq-user.yml --env-file rabbit.env --profile infrastructure up
 ```

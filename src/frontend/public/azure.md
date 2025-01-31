@@ -7,6 +7,6 @@
 3. Open a terminal and run these commands:
 
 ```cmd
-docker compose -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env down
-docker compose -f docker-compose-base.yml --env-file asb.env --profile infrastructure up
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env down
+docker compose -p particular-platform -f docker-compose-base.yml --env-file asb.env --profile infrastructure up
 ```
