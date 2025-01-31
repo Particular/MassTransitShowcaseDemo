@@ -1,10 +1,12 @@
-# The Particular Platform for MassTransit
+# MassTransit Error Management - Showcase
 
 This showcase consists of 4 processes hosting MassTransit message producers and consumers that implement a simplified order processing logic from an e-commerce system.
 
 ![System Overview](docs/diagram.svg "width=680")
 
 ## Launching the Showcase in Docker
+
+If you aren't using Docker, go to the details in the [IDE section](https://github.com/Particular/MassTransitShowcaseDemo?tab=readme-ov-file#alternative-run-from-an-ide).
 
 The showcase requires a connection to a broker (by default RabbitMQ), [ServiceControl](https://hub.docker.com/r/particular/servicecontrol) container, [ServicePulse](https://hub.docker.com/r/particular/servicepulse) container and the [MassTransit Connector for ServiceControl](https://hub.docker.com/r/particular/servicecontrol-masstransit-connector) container.  
 To help getting started we have created a few docker compose files that orchestrate all this setup for you.
