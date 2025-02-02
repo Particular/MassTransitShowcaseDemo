@@ -69,7 +69,9 @@ Run the solution to start the demo.
 
 ## Opening the showcase UI
 
-Navigate to http://localhost:61335/ to see the UI. Click `Run Scenario` to start the showcase scenario and generate some simulated message handling failures.
+Navigate to http://localhost:61335/ to see the UI.
+
+Click `Run Scenario` to send some messages and generate some simulated failures.
 
 ## Handling failures with the Particular Platform
 
