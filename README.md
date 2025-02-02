@@ -77,7 +77,7 @@ Click `Run Scenario` to send some messages and generate some simulated failures.
 
 ### Inspecting failures
 
-Navigate to [http://localhost:9090](http://localhost:9090) in a new tab, or click the `View in ServicePulse` button, to see the details on failures ingested by the platform.
+Navigate to [http://localhost:9090](http://localhost:9090) in a new tab, or click the `View Failures` button, to see the details on failures ingested by the platform.
 
 ![Service Pulse Dashboard](docs/service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
 
