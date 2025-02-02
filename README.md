@@ -8,7 +8,9 @@ This showcase consists of 4 processes hosting MassTransit message producers and 
 
 To help getting started we have created a few docker compose files that orchestrate all this setup for you.
 
-Run the docker command below from the `src` folder in a terminal.
+* First, make sure you've pulled down the repository to your machine.
+* Second, open a terminal and navigate to the `src` folder in your local copy of the repository.
+* Third, run the following command:
 
 ```cmd
 docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
