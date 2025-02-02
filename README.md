@@ -73,19 +73,17 @@ Navigate to http://localhost:61335/ to see the UI.
 
 Click `Run Scenario` to send some messages and generate some simulated failures.
 
-## Handling failures with the Particular Platform
-
-### Inspecting failures
+## Managing errors
 
 Navigate to [http://localhost:9090](http://localhost:9090) in a new tab, or click the `View Failures` button, to see the details on failures ingested by the platform.
 
-![Service Pulse Dashboard](docs/service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
+![Dashboard](docs/service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
 
 ### Scheduling message reprocessing
 
 Click on the "Failed Messages" button at the top of the page to see all failed messages ingested by the platform, grouped by the exception type and stack trace.
 
-![Service Pulse Failed Messages](docs/service-pulse-dashboard-failed-messages-groups.png "Failed messages grouping")
+![Failed Messages](docs/service-pulse-dashboard-failed-messages-groups.png "Failed messages grouping")
 
 Drill into an existing group to see the list of individual processing failures. Clicking on any of the rows in the list shows detailed information of a given failed message in the headers and message body tabs.
 
@@ -94,7 +92,7 @@ A failed message can be scheduled for reprocessing by clicking the `Retry messag
 > [!NOTE]
 > It may take several seconds after retrying a message for it to appear again in the consumer's input queue
 
-![Service Pulse Failed Message View](docs/service-pulse-failed-message-view.png "Failed message details view")
+![Failed Message View](docs/service-pulse-failed-message-view.png "Failed message details view")
 
 ### Editing messages before reprocessing
 
@@ -109,11 +107,11 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 
 ### Viewing retries
 
-Return to the showcase UI to see that the retries have now been successfully handled.
+Return to the Showcase UI to see that the retries have now been successfully handled.
 
 ### Troubleshooting
 
 Having issues?
 
 - Check logs in docker. Ensure that there are no port clashes with existing containers or services on your machine.
-- Ask any questions on [our forum](https://discuss.particular.net/tag/masstransit)
+- Ask any questions you may have on [our forum](https://discuss.particular.net/tag/masstransit)
