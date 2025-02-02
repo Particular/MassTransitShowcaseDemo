@@ -6,7 +6,6 @@ This showcase consists of 4 processes hosting MassTransit message producers and 
 
 ## Launching the Showcase in Docker
 
-The showcase requires a connection to a broker (by default RabbitMQ), [ServiceControl](https://hub.docker.com/r/particular/servicecontrol) container, [ServicePulse](https://hub.docker.com/r/particular/servicepulse) container and the [MassTransit Connector for ServiceControl](https://hub.docker.com/r/particular/servicecontrol-masstransit-connector) container.  
 To help getting started we have created a few docker compose files that orchestrate all this setup for you.
 
 Run the docker command below from the `src` folder in a terminal.
