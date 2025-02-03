@@ -1,5 +1,7 @@
 # Running with your own RabbitMQ system
 
+If you encounter any issues running the steps below, try the [troubleshooting](#troubleshooting) section or ask on [our forum](https://discuss.particular.net/tag/masstransit).
+
 1. Open a terminal and run the following command to shut down the showcase containers:
 
    ```cmd
@@ -26,4 +28,3 @@
 
 -
 -
-- If you encounter any other issues, ask on [our forum](https://discuss.particular.net/tag/masstransit)
