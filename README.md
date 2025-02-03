@@ -114,4 +114,9 @@ Return to the Showcase UI to see that the retries have now been successfully han
 Having issues?
 
 - Check logs in docker. Ensure that there are no port clashes with existing containers or services on your machine.
+- Check that all containers are running:
+  - RabbitMQ
+  - [ServicePulse](https://hub.docker.com/r/particular/servicepulse)
+  - [ServiceControl](https://hub.docker.com/r/particular/servicecontrol)
+  - [MassTransit Connector for ServiceControl](https://hub.docker.com/r/particular/servicecontrol-masstransit-connector)
 - Ask any questions you may have on [our forum](https://discuss.particular.net/tag/masstransit)
