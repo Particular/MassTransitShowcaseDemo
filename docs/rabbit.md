@@ -24,6 +24,11 @@ If you encounter any issues running the steps below, try the [troubleshooting](#
 
    - The containers should all show a status of `Healthy`
 
+1. Verify that the setup was correct by navigating to http://localhost:9090/#/configuration/mass-transit-connector.
+   - All of the configured queues for your system should show here
+   - For each row in the list of queues: if the queues exist, the status should be green `OK`. If the queues don't exist, i.e. there have never been any errors on that consumer, or if there is an issue connecting to the broker then the status will be red `Not ingesting`.
+     - If the status is `Not ingesting`, the reason for this can be found in the log entries shown below the queue list.
+
 ## Troubleshooting
 
 -
