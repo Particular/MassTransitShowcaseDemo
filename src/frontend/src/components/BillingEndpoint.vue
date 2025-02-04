@@ -128,7 +128,7 @@ function toggleFailOnRetries() {
         target="_blank"
         :href="`http://localhost:9090/#/failed-messages/message/${message.messageViewId}`"
       >
-        View failure in ServicePulse
+        View failure details
       </a>
     </template>
     <template v-else-if="isOrderBilled(message.message)">

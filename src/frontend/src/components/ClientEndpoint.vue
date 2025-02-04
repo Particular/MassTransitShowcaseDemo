@@ -71,7 +71,7 @@ async function runScenario() {
       </button>
       <a target="_blank" href="http://localhost:9090/#/failed-messages/">
         <button type="button" class="secondary view-servicepulse">
-          View Failures in ServicePulse
+          View Failures
         </button>
       </a>
       <span class="note">
