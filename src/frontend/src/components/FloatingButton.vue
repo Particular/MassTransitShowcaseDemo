@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { GA4 } from "../utils/analytics";
-defineProps<{
-  text: string;
-  location?: string;
-}>();
+withDefaults(
+  defineProps<{
+    text: string;
+    location?: string;
+    color?: string;
+  }>(),
+  { color: "#00a3c4" }
+);
 </script>
 
 <template>
-  <a class="floating-button" v-if="location" target="_blank" :href="location">
+  <a
+    class="floating-button"
+    v-if="location"
+    target="_blank"
+    :style="{ 'background-color': color }"
+    :href="location"
+  >
     <span @click="$emit('click')">
       {{ text }}
     </span>
@@ -17,10 +26,6 @@ defineProps<{
 <style scoped>
 /* Floating Button Styling */
 a.floating-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #00a3c4; /* Nice blue color */
   color: white; /* Text color */
   padding: 12px 24px;
   border-radius: 30px;
@@ -37,14 +42,14 @@ a.floating-button {
 
 /* Hover Effect */
 a.floating-button:hover {
-  background-color: #00729c; /* Slightly darker blue */
+  background-image: linear-gradient(rgb(0 0 0/15%) 0 0);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
   transform: scale(1.05);
 }
 
 /* Active (Pressed) Effect */
 a.floating-button:active {
-  background-color: #01445c; /* Even darker blue */
+  background-image: linear-gradient(rgb(0 0 0/25%) 0 0);
   transform: scale(0.95);
 }
 </style>
