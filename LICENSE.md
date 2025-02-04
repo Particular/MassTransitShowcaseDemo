@@ -1,5 +1,4 @@
-By accessing code under the [Particular Software GitHub Organization](https://github.com/Particular) (Particular Software) here, you are agreeing to the following licensing terms.
-If you do not agree to these terms, do not access Particular Software code.
+By accessing code under the [Particular Software GitHub Organization](https://github.com/Particular) (Particular Software) here, you are agreeing to the following licensing terms. If you do not agree to these terms, do not access Particular Software code.
 
 The MIT License
 
