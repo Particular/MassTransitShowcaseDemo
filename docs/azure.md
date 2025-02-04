@@ -1,8 +1,8 @@
 # Running against your own Azure Service Bus system
 
-If you encounter any issues running the steps below, try the [troubleshooting](#troubleshooting) section or ask on [our forum](https://discuss.particular.net/tag/masstransit).
+If you encounter any issues running the steps below, try the [troubleshooting](#troubleshooting) section or post a question on [our forum](https://discuss.particular.net/tag/masstransit).
 
-1. Open a terminal and run the following command to shut down the showcase containers:
+1. Open a terminal and run the following command to shut down the showcase containers if they are running:
 
    ```cmd
    docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env down
