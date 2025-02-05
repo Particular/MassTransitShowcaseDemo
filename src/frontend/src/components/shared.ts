@@ -10,6 +10,6 @@ export const store = reactive({
   },
   messageRetried: false,
   setMessageRetried() {
-    this.messageRetried = true;
+    setTimeout(() => (this.messageRetried = true), 5000);
   },
 });

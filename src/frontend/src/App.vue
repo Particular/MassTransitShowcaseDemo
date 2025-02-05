@@ -5,6 +5,7 @@ import SalesEndpoint from "./components/SalesEndpoint.vue";
 import ShippingEndpoint from "./components/ShippingEndpoint.vue";
 import TryItOut from "./components/guideline/TryItOut.vue";
 import FloatingButton from "./components/FloatingButton.vue";
+import FloatingContainer from "./components/FloatingContainer.vue";
 import { ref } from "vue";
 import { store } from "./components/shared";
 
@@ -33,12 +34,6 @@ const tab = ref("showcase");
   <div class="container">
     <div v-show="tab === 'showcase'">
       <h2>Simulating customers placing orders on a website</h2>
-      <div v-if="store.messageRetried">
-        Thanks for trying our showcase. 
-        <a href="https://gleam.io/ViON2/manning-ebook-giveaway">
-          Get your free eBook now!
-        </a>
-      </div>
       <div class="architecture-diagram"></div>
       <div class="sections">
         <div><ClientEndpoint /></div>
@@ -48,10 +43,18 @@ const tab = ref("showcase");
       </div>
     </div>
     <div v-show="tab === 'tryit'"><TryItOut /></div>
-    <floating-button
-      text="Any issues? Ping us"
-      location="https://discuss.particular.net/tag/masstransit"
-    />
+    <floating-container>
+      <floating-button
+        v-if="store.messageRetried"
+        text="Thanks for trying our showcase. Get your free eBook now!"
+        location="https://gleam.io/ViON2/manning-ebook-giveaway"
+        color="green"
+      />
+      <floating-button
+        text="Any issues? Ping us"
+        location="https://discuss.particular.net/tag/masstransit"
+      />
+    </floating-container>
   </div>
 </template>
 

@@ -6,10 +6,11 @@ This showcase consists of 4 processes hosting MassTransit message producers and 
 
 ## Launching the Showcase in Docker
 
-The showcase requires a connection to a broker (by default RabbitMQ), [ServiceControl](https://hub.docker.com/r/particular/servicecontrol) container, [ServicePulse](https://hub.docker.com/r/particular/servicepulse) container and the [MassTransit Connector for ServiceControl](https://hub.docker.com/r/particular/servicecontrol-masstransit-connector) container.  
 To help getting started we have created a few docker compose files that orchestrate all this setup for you.
 
-Run the docker command below from the `src` folder in a terminal.
+* First, make sure you've pulled down the repository to your machine.
+* Second, open a terminal and navigate to the `src` folder in your local copy of the repository.
+* Third, run the following command:
 
 ```cmd
 docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d --build
@@ -70,21 +71,21 @@ Run the solution to start the demo.
 
 ## Opening the showcase UI
 
-Navigate to http://localhost:61335/ to see the UI. Click `Run Scenario` to start the showcase scenario and generate some simulated message handling failures.
+Navigate to http://localhost:61335/ to see the UI.
 
-## Handling failures with the Particular Platform
+Click `Run Scenario` to send some messages and generate some simulated failures.
 
-### Inspecting failures
+## Managing errors
 
-Navigate to [http://localhost:9090](http://localhost:9090) in a new tab, or click the `View in ServicePulse` button, to see the details on failures ingested by the platform.
+Navigate to [http://localhost:9090](http://localhost:9090) in a new tab, or click the `View Failures` button, to see the details on failures ingested by the platform.
 
-![Service Pulse Dashboard](docs/service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
+![Dashboard](docs/service-pulse-dashboard-failed-messages.png "Message processing errors summary view")
 
 ### Scheduling message reprocessing
 
 Click on the "Failed Messages" button at the top of the page to see all failed messages ingested by the platform, grouped by the exception type and stack trace.
 
-![Service Pulse Failed Messages](docs/service-pulse-dashboard-failed-messages-groups.png "Failed messages grouping")
+![Failed Messages](docs/service-pulse-dashboard-failed-messages-groups.png "Failed messages grouping")
 
 Drill into an existing group to see the list of individual processing failures. Clicking on any of the rows in the list shows detailed information of a given failed message in the headers and message body tabs.
 
@@ -93,7 +94,7 @@ A failed message can be scheduled for reprocessing by clicking the `Retry messag
 > [!NOTE]
 > It may take several seconds after retrying a message for it to appear again in the consumer's input queue
 
-![Service Pulse Failed Message View](docs/service-pulse-failed-message-view.png "Failed message details view")
+![Failed Message View](docs/service-pulse-failed-message-view.png "Failed message details view")
 
 ### Editing messages before reprocessing
 
@@ -108,11 +109,17 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 
 ### Viewing retries
 
-Return to the showcase UI to see that the retries have now been successfully handled.
+Return to the Showcase UI to see that the retries have now been successfully handled.
 
 ### Troubleshooting
 
 Having issues?
 
+- Check that all containers are running:
+  - RabbitMQ
+  - [ServicePulse](https://hub.docker.com/r/particular/servicepulse)
+  - [ServiceControl](https://hub.docker.com/r/particular/servicecontrol)
+  - [MassTransit Connector for ServiceControl](https://hub.docker.com/r/particular/servicecontrol-masstransit-connector)
 - Check logs in docker. Ensure that there are no port clashes with existing containers or services on your machine.
-- Ask any questions on [our forum](https://discuss.particular.net/tag/masstransit)
+
+And, if you need help, you can always head over to [our forum](https://discuss.particular.net/tag/masstransit).

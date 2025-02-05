@@ -3,6 +3,7 @@ services:
     profiles: ['', infrastructure]
     container_name: servicecontrol-db
     image: particular/servicecontrol-ravendb:latest
+    pull_policy: always
     volumes:
       - sc-data:/var/lib/ravendb/data
   service-control:
@@ -12,6 +13,7 @@ services:
         condition: service_healthy
     container_name: servicecontrol
     image: particular/servicecontrol:latest
+    pull_policy: always
     command: "--setup-and-run"
     ports:
       - 33333:33333
@@ -28,6 +30,7 @@ services:
         condition: service_healthy
     container_name: masstransit-connector
     image:  particular/servicecontrol-masstransit-connector:latest
+    pull_policy: always
     volumes:
       - ./queues.txt:/app/queues.txt:ro
     environment:
@@ -40,6 +43,7 @@ services:
         condition: service_healthy
     container_name: servicepulse
     image: particular/servicepulse:latest
+    pull_policy: always
     ports:
         - 9090:9090
     environment:
