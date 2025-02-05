@@ -149,7 +149,7 @@ function toggleFailOnRetries() {
         target="_blank"
         :href="`http://localhost:9090/#/failed-messages/message/${message.messageViewId}`"
       >
-        View failures
+      View failure details
       </a>
     </template>
     <template v-else>
