@@ -10,6 +10,8 @@ If you encounter any issues running the steps below, try the [troubleshooting](#
 
    - All of the containers should be shown as `Stopped` and there should no longer be any containers running under `particular-platform-showcase` in docker
 
+   ![Docker Compose Down](./compose-down-rabbit.png "Docker Compose down results")
+
 1. Open `src/rabbit.env` file, located in the folder that the showcase is cloned to, in an editor and update the RabbitMQ configuration to point to your own RabbitMQ instance.
    - `CONNECTION_STRING` A special connection string to connect to RabbitMQ, see https://docs.particular.net/servicecontrol/transports#rabbitmq for syntax format.
    - `RABBITMQ_MANAGEMENT_API_URL` The management API URL.
@@ -19,7 +21,7 @@ If you encounter any issues running the steps below, try the [troubleshooting](#
 1. Run the following command to start the required containers with the updated environment settings:
 
    ```cmd
-   docker compose -p particular-platform -f docker-compose-base.yml -f compose-rabbitmq-user.yml --env-file rabbit.env --profile infrastructure up
+   docker compose -p particular-platform -f docker-compose-base.yml -f compose-rabbitmq-user.yml --env-file rabbit.env --profile infrastructure up -d
    ```
 
    - The containers should all show a status of `Healthy`
