@@ -9,27 +9,13 @@ public static class BusRegistrationConfiguratorExt
 
         switch (selectedTransport)
         {
-            case "AmazonSQS":
-                x.UsingAmazonSqs((ctx, cfg) =>
-                {
-                    var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../sqs.env")]));
-                    cfg.Host(envs["AWS_REGION"], h =>
-                    {
-                        h.AccessKey(envs["AWS_ACCESS_KEY_ID"]);
-                        h.SecretKey(envs["AWS_SECRET_ACCESS_KEY"]);
-                    });
-
-                    cfg.ConfigureEndpoints(ctx);
-                });
-                break;
             case "AzureServiceBus":
-                var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [Path.GetFullPath("../../../asb.env")], ignoreExceptions: false));
+                string connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 x.UsingAzureServiceBus((context, cfg) =>
-                {
-                    cfg.Host(envs["CONNECTION_STRING"]);
-
-                    cfg.ConfigureEndpoints(context);
-                });
+                   {
+                       cfg.Host(connectionString);
+                       cfg.ConfigureEndpoints(context);
+                   });
                 break;
             case "RabbitMQ":
                 x.UsingRabbitMq((context, cfg) =>
