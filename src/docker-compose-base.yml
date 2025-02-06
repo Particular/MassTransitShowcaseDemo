@@ -29,7 +29,7 @@ services:
       service-control:
         condition: service_healthy
     container_name: masstransit-connector
-    image:  particular/servicecontrol-masstransit-connector:latest
+    image: particular/servicecontrol-masstransit-connector:latest
     pull_policy: always
     volumes:
       - ./queues.txt:/app/queues.txt:ro
@@ -66,6 +66,9 @@ services:
       - 61335:80
     volumes:
       - ./frontend:/app  # Optional for hot reloading
+    depends_on:
+      masstransit-connector:
+        condition: service_healthy
   billing:
     profiles: ['']
     build:
@@ -80,7 +83,7 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      service-control:
+      masstransit-connector:
         condition: service_healthy
   shipping:
     profiles: ['']
@@ -96,7 +99,7 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      service-control:
+      masstransit-connector:
         condition: service_healthy
   sales:
     profiles: ['']
@@ -112,8 +115,8 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      service-control:
-        condition: service_healthy 
+      masstransit-connector:
+        condition: service_healthy
   clientui:
     profiles: ['']
     build:
@@ -128,7 +131,7 @@ services:
       - TRANSPORT_TYPE
       - CONNECTION_STRING
     depends_on:
-      service-control:
+      masstransit-connector:
         condition: service_healthy
 
 volumes:
