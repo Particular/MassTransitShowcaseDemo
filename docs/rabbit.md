@@ -13,8 +13,8 @@ If you encounter any issues running the steps below, try the [troubleshooting](#
    ![Docker Compose Down](./compose-down-rabbit.png "Docker Compose down results")
 
 1. Open `src/rabbit.env` file, located in the folder that the showcase is cloned to, in an editor and update the RabbitMQ configuration to point to your own RabbitMQ instance.
-   - `CONNECTION_STRING` A special connection string to connect to RabbitMQ, see https://docs.particular.net/servicecontrol/transports#rabbitmq for syntax format.
-   - `RABBITMQ_MANAGEMENT_API_URL` The management API URL.
+   - `CONNECTION_STRING` A special connection string to connect to RabbitMQ, see https://docs.particular.net/servicecontrol/transports#rabbitmq for syntax format. NOTE: if your RabbitMQ instance is hosted locally in docker, your connection string will be `host=host.docker.internal;port=<external_docker_port_for_5672>`
+   - `RABBITMQ_MANAGEMENT_API_URL` The management API URL. NOTE: as above, if hosted locally in docker this will be `http://host.docker.internal:<external_docker_port_for_15672>`
    - `RABBITMQ_MANAGEMENT_API_USERNAME` The management API username.
    - `RABBITMQ_MANAGEMENT_API_PASSWORD` The management API password.
 1. Update the list of queues you want to monitor by editing the `src/queues.txt` file, also located in the folder that the showcase is cloned to. RabbitMQ is case-sensitive so make sure the names are exact. e.g. `myqueue_error`.
@@ -24,7 +24,13 @@ If you encounter any issues running the steps below, try the [troubleshooting](#
    docker compose -p particular-platform -f docker-compose-base.yml -f compose-rabbitmq-user.yml --env-file rabbit.env --profile infrastructure up -d
    ```
 
-   - The containers should all show a status of `Healthy`
+   - ServiceControl should show a status of `Healthy`
+
+   ![Docker Compose Infrastructure](./compose-infrastructure-up.png "Docker Compose up infrastructure only").
+
+   - Docker should now show a `particular-platform` container group
+
+   ![Docker running infrastructure](./local-rabbit-docker.png "Docker running infrastructure")
 
 1. Verify that the setup was correct by navigating to http://localhost:9090/#/configuration/mass-transit-connector.
    - All of the configured queues for your system should show here
