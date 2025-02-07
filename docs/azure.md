@@ -8,6 +8,8 @@ If you encounter any issues running the steps below, try the [troubleshooting](#
    ```
    All of the containers should be shown as `Removed` and there should no longer be any containers running under `particular-platform-showcase` in docker.
 
+   ![Docker Compose Down](./compose-down-azure.png "Docker Compose down results")
+
 1. Open the `src/asb.env` file, located in the folder that the showcase is cloned to, in an editor and update the `CONNECTION_STRING` to point to your own Azure Service Bus namespace.
 1. To validate that the broker can be reached, run the following command:
    ```cmd
@@ -27,6 +29,11 @@ If you encounter any issues running the steps below, try the [troubleshooting](#
    ServiceControl should show a status of `Healthy`.
 
    ![Docker Compose Infrastructure](./compose-infrastructure-up.png "Docker Compose up infrastructure only").
+   
+   Docker should now show a `particular-platform` container group.
+   
+   ![Docker running infrastructure](./local-rabbit-docker.png "Docker running infrastructure")
+
 1. Verify that the setup was correct by navigating to http://localhost:9090/#/configuration/mass-transit-connector.
    - All of the configured queues for your system should show here.
    - For each row in the list of queues: if the queues exist, the status should be green. If the queues don't exist, i.e. there have never been any errors on that consumer, or if there is an issue connecting to the broker then the status will be red.
