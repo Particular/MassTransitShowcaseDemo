@@ -13,8 +13,10 @@ To help getting started we have created a few docker compose files that orchestr
 * Third, run the following command:
 
 ```cmd
-docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d --build
 ```
+
+![Docker Compose Up](docs/compose-up.png "Docker Compose up results")
 
 ### (Alternative) Run in Docker against **Azure Service Bus**
 
@@ -29,7 +31,7 @@ CONNECTIONSTRING="Endpoint=sb://[NAMESPACE].servicebus.windows.net/;SharedAccess
 Run docker command below from the `src` folder in a terminal.
 
 ```cmd
-docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env up -d --build
 ```
 
 </details>
