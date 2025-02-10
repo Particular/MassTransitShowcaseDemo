@@ -39,15 +39,23 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 ### (Alternative) Run from an IDE
 
 <details>
-> [!WARNING]
-> When using Visual Studio, ensure you have the "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2022 "multi-launch" so you can easily select the profile you want to run.
->
-> It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
+TIP
+When using Visual Studio, ensure you have the "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2022 "multi-launch" so you can easily select the profile you want to run.
+It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
 
 To start the required infrastructure for the showcase, run one of the docker command below from the `src` folder in a terminal.
 
 RabbitMQ
 
+Update `rabbit.env` file section named "Only used for the showcase processes" to:
+```env
+# Only used for the showcase processes
+RABBITMQ_HOST="localhost"
+RABBITMQ_PORT="33721"
+RABBITMQ_VIRTUALHOST="/"
+```
+
+Then run:
 ```cmd
 docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
 ```
