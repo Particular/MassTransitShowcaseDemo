@@ -10,30 +10,6 @@ public static class BusRegistrationConfiguratorExt
 
         switch (selectedTransport)
         {
-            case "AmazonSQS":
-                var awsRegion = Environment.GetEnvironmentVariable("AWS_REGION");
-                var awsClientId = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-                var awsSecret = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
-                envFile = Path.GetFullPath("../../../sqs.env");
-                if (File.Exists(envFile))
-                {
-                    var envs = DotEnv.Read(new DotEnvOptions(envFilePaths: [envFile]));
-                    awsRegion = envs["AWS_REGION"];
-                    awsClientId = envs["AWS_ACCESS_KEY_ID"];
-                    awsSecret = envs["AWS_SECRET_ACCESS_KEY"];
-                }
-
-                x.UsingAmazonSqs((ctx, cfg) =>
-                {
-                    cfg.Host(awsRegion, h =>
-                    {
-                        h.AccessKey(awsClientId);
-                        h.SecretKey(awsSecret);
-                    });
-
-                    cfg.ConfigureEndpoints(ctx);
-                });
-                break;
             case "AzureServiceBus":
                 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
                 envFile = Path.GetFullPath("../../../asb.env");
