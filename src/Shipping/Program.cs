@@ -42,7 +42,6 @@ class Program
                  webBuilder.UseUrls($"http://*:{Environment.GetEnvironmentVariable("LISTENING_PORT") ?? "5003"}");
                  webBuilder.Configure(app =>
                  {
-                     Console.WriteLine(Environment.GetEnvironmentVariable("ORIGIN_URL") ?? "http://localhost:61335");
                      app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:61335").AllowCredentials());
                      app.UseRouting();
                      app.UseEndpoints(endpoints =>
