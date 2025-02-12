@@ -5,7 +5,8 @@ public static class BusRegistrationConfiguratorExt
 {
     public static void SetupTransport(this IBusRegistrationConfigurator x, string[] args)
     {
-        var selectedTransport = Environment.GetEnvironmentVariable("TRANSPORT_TYPE") ?? "RabbitMQ";
+        var selectedTransport = Environment.GetEnvironmentVariable("TRANSPORT_TYPE") ?? (args.Contains("--azureservicebus") ? "AzureServiceBus" : "RabbitMQ");
+
         string envFile;
 
         switch (selectedTransport)
