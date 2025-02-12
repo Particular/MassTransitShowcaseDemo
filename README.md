@@ -21,6 +21,7 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 ### (Alternative) Run in Docker against **Azure Service Bus**
 
 <details>
+
 The showcase can also be run using Azure Service Bus rather than RabbitMQ.  
 First configure the access to your Azure Service Bus namespace by editing the variables in `src/asb.env`.
 
@@ -39,9 +40,9 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 ### (Alternative) Run from an IDE
 
 <details>
-TIP
-When using Visual Studio, ensure you have the "Enable Multi-Project Launch profiles" setting on. Allow Visual Studio 2022 "multi-launch" so you can easily select the profile you want to run.
-It can be activated by accessing the Tools menu -> Manage preview features- Enable Multi-Project Launch profiles.
+
+TIP  
+When using Visual Studio, ensure you have the ["Enable Multi-Project Launch profiles" setting on](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-set-multiple-startup-projects?view=vs-2022#enable-multi-project-launch-profile).
 
 To start the required infrastructure for the showcase, run one of the docker command below from the `src` folder in a terminal.
 
