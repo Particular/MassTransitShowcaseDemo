@@ -44,37 +44,37 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 TIP  
 When using Visual Studio, ensure you have the ["Enable Multi-Project Launch profiles" setting on](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-set-multiple-startup-projects?view=vs-2022#enable-multi-project-launch-profile).
 
-To start the required infrastructure for the showcase, run one of the docker command below from the `src` folder in a terminal.
+1. To start the required infrastructure for the showcase, run one of the docker command below from the `src` folder in a terminal.
 
-RabbitMQ
+    **For RabbitMQ**
+    
+    Update `rabbit.env` file section named "Only used for the showcase processes" to:
+    ```env
+    # Only used for the showcase processes
+    RABBITMQ_HOST="localhost"
+    RABBITMQ_PORT="33721"
+    RABBITMQ_VIRTUALHOST="/"
+    ```
+    
+    Then run:
+    ```cmd
+    docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
+    ```
+    
+    **For Azure Service Bus**
+    
+    See [ASB setup](#alternative-run-from-azure-service-bus) above for setting the connection string to your Azure Service Bus namespace
+    
+    ```cmd
+    docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
+    ```
 
-Update `rabbit.env` file section named "Only used for the showcase processes" to:
-```env
-# Only used for the showcase processes
-RABBITMQ_HOST="localhost"
-RABBITMQ_PORT="33721"
-RABBITMQ_VIRTUALHOST="/"
-```
+1. After opening the solution (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously
 
-Then run:
-```cmd
-docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
-```
-
-Azure Service Bus
-
-See [ASB setup](#alternative-run-from-azure-service-bus) above for setting the connection string to your Azure Service Bus namespace
-
-```cmd
-docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
-```
-
-After opening the solution (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously:
-
-- `RabbitMQ`
-- `Azure Service Bus`
-
-Run the solution to start the demo.
+    - `RabbitMQ`
+    - `Azure Service Bus`
+  
+1. Run the solution to start the demo.
 
 </details>
 
@@ -115,6 +115,10 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 > Changing or deleting header values may change or cause issues with the subsequent re-processing. It is recommended that these values are not changed if you are unsure of their purpose.
 
 ![Edit Message View](docs/service-pulse-edit-before-retry.png "Edit & Retry view showing the message body")
+
+### Learn more about ServicePulse
+
+If you want to learn more about ServicePulse head over to https://docs.particular.net/servicepulse/intro-failed-messages.
 
 ### Viewing retries
 
