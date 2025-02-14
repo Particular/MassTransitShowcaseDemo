@@ -1,5 +1,6 @@
 /assets
 /binaries
+/src/binaries
 /deploy
 /nugets
 build32
