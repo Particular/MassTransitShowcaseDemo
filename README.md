@@ -4,13 +4,13 @@ This showcase consists of 4 processes hosting MassTransit message producers and 
 
 ![System Overview](docs/diagram.svg "width=680")
 
-## Launching the Showcase in Docker
+## Launching the Showcase in Docker against **RabbitMQ**
 
 To help getting started we have created a few docker compose files that orchestrate all this setup for you.
 
-* First, make sure you've pulled down the repository to your machine.
-* Second, open a terminal and navigate to the `src` folder in your local copy of the repository.
-* Third, run the following command:
+- First, make sure you've pulled down the repository to your machine.
+- Second, open a terminal and navigate to the `src` folder in your local copy of the repository.
+- Third, run the following command:
 
 ```cmd
 docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env up -d --build
@@ -18,7 +18,7 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 
 ![Docker Compose Up](docs/compose-up.png "Docker Compose up results")
 
-### (Alternative) Run in Docker against **Azure Service Bus**
+### Run in Docker against **Azure Service Bus**
 
 <details>
 
@@ -37,44 +37,45 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 
 </details>
 
-### (Alternative) Run from an IDE
+## Run the code from an IDE
 
 <details>
 
-TIP  
-When using Visual Studio, ensure you have the ["Enable Multi-Project Launch profiles" setting on](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-set-multiple-startup-projects?view=vs-2022#enable-multi-project-launch-profile).
+> **Note:** When using Visual Studio, ensure you have the ["Enable Multi-Project Launch profiles" setting on](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-set-multiple-startup-projects?view=vs-2022#enable-multi-project-launch-profile).
 
-1. To start the required infrastructure for the showcase, run one of the docker command below from the `src` folder in a terminal.
+- To start the required infrastructure for the showcase, run one of the docker command below from the `src` folder in a terminal.
 
-    **For RabbitMQ**
-    
-    Update `rabbit.env` file section named "Only used for the showcase processes" to:
-    ```env
-    # Only used for the showcase processes
-    RABBITMQ_HOST="localhost"
-    RABBITMQ_PORT="33721"
-    RABBITMQ_VIRTUALHOST="/"
-    ```
-    
-    Then run:
-    ```cmd
-    docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
-    ```
-    
-    **For Azure Service Bus**
-    
-    See [ASB setup](#alternative-run-from-azure-service-bus) above for setting the connection string to your Azure Service Bus namespace
-    
-    ```cmd
-    docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
-    ```
+### **For RabbitMQ**
+
+Update `rabbit.env` file section named "Only used for the showcase processes" to:
+
+```env
+# Only used for the showcase processes
+RABBITMQ_HOST="localhost"
+RABBITMQ_PORT="33721"
+RABBITMQ_VIRTUALHOST="/"
+```
+
+Then run:
+
+```cmd
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-rabbitmq.yml --env-file rabbit.env --profile infrastructure --profile frontend up -d
+```
+
+### **For Azure Service Bus**
+
+See [ASB setup](#run-in-docker-against-azure-service-bus) above for setting the connection string to your Azure Service Bus namespace
+
+```cmd
+docker compose -p particular-platform-showcase -f docker-compose-base.yml -f compose-azure.yml --env-file asb.env --profile infrastructure --profile frontend up -d
+```
 
 1. After opening the solution (from Visual Studio or Rider), choose one of the run profiles that matches the transport configured previously
 
-    - `RabbitMQ`
-    - `Azure Service Bus`
-  
-1. Run the solution to start the demo.
+   - `RabbitMQ`
+   - `Azure Service Bus`
+
+2. Run the solution to start the demo.
 
 </details>
 
@@ -100,7 +101,7 @@ Drill into an existing group to see the list of individual processing failures. 
 
 A failed message can be scheduled for reprocessing by clicking the `Retry message` button.
 
-> [!NOTE]
+> ℹ️ **Note:**
 > It may take several seconds after retrying a message for it to appear again in the consumer's input queue
 
 ![Failed Message View](docs/service-pulse-failed-message-view.png "Failed message details view")
@@ -111,10 +112,14 @@ Go to the details page for one of the failed messages and click the `Edit & retr
 
 Navigate to the `Message Body` tab and change some of the contents of the message, ensuring it's still valid JSON matching the message type, and click "Retry" to schedule the message for reprocessing.
 
-> [!WARNING]
+> ⚠️**Warning**
 > Changing or deleting header values may change or cause issues with the subsequent re-processing. It is recommended that these values are not changed if you are unsure of their purpose.
 
 ![Edit Message View](docs/service-pulse-edit-before-retry.png "Edit & Retry view showing the message body")
+
+## View how this works on youtube
+
+[![YouTube Thumbnail](https://img.youtube.com/vi/h5gcHWizS7o/maxresdefault.jpg)](https://www.youtube.com/watch?v=h5gcHWizS7o&t=3s&ab_channel=ChrisPatterson)
 
 ### Learn more about ServicePulse
 
