@@ -18,7 +18,7 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 
 ![Docker Compose Up](docs/compose-up.png "Docker Compose up results")
 
-### Run in Docker against **Azure Service Bus**
+### (Alternative) Run in Docker with **Azure Service Bus**
 
 <details>
 
