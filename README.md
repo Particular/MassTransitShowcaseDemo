@@ -4,7 +4,7 @@ This showcase consists of 4 processes hosting MassTransit message producers and 
 
 ![System Overview](docs/diagram.svg "width=680")
 
-## Launching the Showcase in Docker against **RabbitMQ**
+## Launching the Showcase in Docker with **RabbitMQ**
 
 To help getting started we have created a few docker compose files that orchestrate all this setup for you.
 
@@ -37,7 +37,7 @@ docker compose -p particular-platform-showcase -f docker-compose-base.yml -f com
 
 </details>
 
-## Run the code from an IDE
+## (Alternative) Run from an IDE
 
 <details>
 
@@ -119,7 +119,7 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 
 ## View how this works on youtube
 
-[![YouTube Thumbnail](https://img.youtube.com/vi/h5gcHWizS7o/maxresdefault.jpg)](https://www.youtube.com/watch?v=h5gcHWizS7o&t=3s&ab_channel=ChrisPatterson)
+[![YouTube Thumbnail](https://github.com/user-attachments/assets/73fbdbdf-39c0-4a1e-a818-8e234c9ba714)](https://www.youtube.com/watch?v=h5gcHWizS7o&t=3s&ab_channel=ChrisPatterson)
 
 ### Learn more about ServicePulse
 
