@@ -121,6 +121,14 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 
 [![YouTube Thumbnail](https://github.com/user-attachments/assets/73fbdbdf-39c0-4a1e-a818-8e234c9ba714)](https://www.youtube.com/watch?v=h5gcHWizS7o&t=3s&ab_channel=ChrisPatterson)
 
+## Try it with your system
+
+Once you've tried the showcase, you can modify the error management infrastructure to point to your own system
+
+### [Using RabbitMQ](/docs/rabbit.md)
+
+### [Using Azure Service Bus](/docs/azure.md)
+
 ### Learn more about ServicePulse
 
 If you want to learn more about ServicePulse head over to https://docs.particular.net/servicepulse/intro-failed-messages.
