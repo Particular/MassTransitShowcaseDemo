@@ -123,6 +123,8 @@ Navigate to the `Message Body` tab and change some of the contents of the messag
 
 ## Try it with your system
 
+Once you've tried the showcase, you can modify the error management infrastructure to point to your own system
+
 ### [Using RabbitMQ](/docs/rabbit.md)
 
 ### [Using Azure Service Bus](/docs/azure.md)
