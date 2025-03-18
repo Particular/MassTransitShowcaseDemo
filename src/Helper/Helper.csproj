@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,7 +9,7 @@
     <PackageReference Include="dotenv.net" Version="3.2.1" />
     <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.3.6" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
-    <PackageReference Include="MassTransit.AmazonSQS" Version="8.3.6" />
+    <PackageReference Include="MassTransit.AmazonSQS" Version="8.4.0" />
   </ItemGroup>
 
 </Project>
