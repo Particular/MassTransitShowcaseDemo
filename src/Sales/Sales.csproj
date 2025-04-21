@@ -9,10 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.3.6" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
-    <PackageReference Include="MassTransit.AmazonSQS" Version="8.3.6" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <ProjectReference Include="..\Helper\Helper.csproj" />
+    <ProjectReference Include="..\Messages\Messages.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,7 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Helper\Helper.csproj" />
-    <ProjectReference Include="..\Messages\Messages.csproj" />
+    <PackageReference Include="MassTransit.AmazonSQS" Version="8.3.6" />
+    <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.3.6" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
   </ItemGroup>
+
 </Project>
