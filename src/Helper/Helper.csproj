@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="dotenv.net" Version="3.2.1" />
-    <PackageReference Include="MassTransit.AmazonSQS" Version="8.3.6" />
-    <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.3.6" />
-    <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.6" />
+    <PackageReference Include="dotenv.net" Version="4.0.0" />
+    <PackageReference Include="MassTransit.AmazonSQS" Version="8.5.1" />
+    <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.5.1" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.1" />
   </ItemGroup>
 
 </Project>
